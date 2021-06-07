@@ -1,0 +1,10 @@
+
+    struct data_extraction_parameters {
+        float max_range_in_m;           //maximum detection range for midsize vehicle (10 dBsm for radar) at bore sight
+        struct irradiation_pattern {        //beam pattern for lidar and antenna characteristics for radar
+            std::vector<float> elevation;
+            std::vector<float> azimuth;
+            std::vector<std::vector<double>> elevation_azimuth_power_values;
+        } irradiation_pattern;
+        float detection_threshold_dB_stdv;   //standard deviation for the detection threshold combined with the noise floor
+    } data_extraction_parameters;
