@@ -21,5 +21,12 @@ The files in folder lib/fmi2 are licensed by the copyright holders
    under the 2-Clause BSD License. See lib/fmi2/LICENCE.txt or
    https://opensource.org/licenses/BSD-2-Clause for licence text.
 
-The files in folder lib/eigen are licensed by the copyright holders
-   primarily under MPL2 with third-party code under BSD or LGPL licenses. See lib/eigen/COPYING.README.
+The work in folder lib/eigen is distributed under
+   Mozilla Public License, v. 2.0. See 
+   http://eigen.tuxfamily.org/index.php?title=Main_Page#License for licence text.
+
+The work in files src/model/strategies/front-end-strategy/include/frontendstrategy/clipper.* is distributed under
+   Boost Software License, v. 1.0.
+
+The work in files src/model/strategies/front-end-strategy/include/frontendstrategy/concaveman.* is distributed under
+   BSD 2-Clause License.

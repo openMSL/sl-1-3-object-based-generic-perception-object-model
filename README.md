@@ -1,5 +1,6 @@
 # Object Based Generic Perception Object Model
 
+<img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" width="100" />
 This model is a highly parameterizable generic perception sensor and tracking model.
 It can be parameterized as a Lidar or a Radar.
 The model is based on object lists and all modeling is performed on object level.
@@ -17,7 +18,7 @@ Depending on the sensor technology this can either be an antenna gain pattern fo
 
 ### Modeling Framework
 
-The outer layer of the model is the OSMP Model Framework.
+The outer layer of the model is the  [Modular OSMP Framework](https://gitlab.com/tuda-fzd/perception-sensor-modeling/modular-osmp-framework) by FZD.
 It specifies ways in which models  using the [Open Simulation Interface (OSI)](https://github.com/OpenSimulationInterface/open-simulation-interface) are to be packaged for their use in simulation environments using FMI 2.0.
 
 The actual logic of the model is packed in a so called strategy.
@@ -208,47 +209,55 @@ The **model profiles for parametrization** are stored in different header files 
 
 <a name="Vatti1992">3</a>: B. R. Vatti, “A generic solution to polygon clipping,”Communicationsof the ACM, vol. 35, no. 7, pp. 56–63, 1992.
 
-## Build Instructions
+## Build Instructions for Ubuntu 18.04 / 20.04
 
-When building and installing, the framework will build an fmu package, which can be used with a simulation tool like CarMaker, dSpace ASM or others.
+When building and installing, the framework will build an FMU package, which can be used with a simulation tool like CarMaker, dSpace ASM or others.
 
-### Dependencies
+### Install Dependencies
 
-Install `cmake` 3.12: e.g. with
+1. Install cmake 3.12: e.g. with
+   ```bash
+   $ git clone https://github.com/Kitware/CMake
+   $ sudo apt install libssl-dev
+   $ cd CMake
+   $ ./bootstrap
+   $ make -j
+   $ sudo make install
+   ```
+2. Install protobuf 3.0.0:
+   * Check your version via `protoc --version`. It should output: `libprotoc 3.0.0`
+   * If needed, you can install it via `sudo apt-get install libprotobuf-dev protobuf-compiler`
+   * or from source:
+     * Download it from https://github.com/protocolbuffers/protobuf/releases/tag/v3.0.0 and extract the archive.
+     * Try to run `./autogen.sh`, if it failes, download the gmock-1.7.0.zip from https://pkgs.fedoraproject.org/repo/pkgs/gmock/gmock-1.7.0.zip/073b984d8798ea1594f5e44d85b20d66/gmock-1.7.0.zip, extract it into the protobuf folder and rename the gmock-1.7.0 folter to gmock.
+     * Proceed with the install with
+     ```bash
+     $ make
+     $ sudo make install
+     $ sudo ldconfig # refresh shared library cache.
+     ```
 
-```bash
-$ git clone https://github.com/Kitware/CMake
-$ sudo apt install libssl-dev
-$ cd CMake
-$ ./bootstrap
-$ make -j
-$ sudo make install
-```
+### Clone with Submodules, Build, and Install
 
-Install `protobuf` 3.0.0:
+1. Clone this repository <ins>with submodules</ins>:
+    ```bash
+    $ git clone https://gitlab.com/tuda-fzd/perception-sensor-modeling/reflection-based-lidar-object-model.git --recurse-submodules
+    ```
+2. Build the model by executing in the extracted project root directory:
+    ```bash
+    $ mkdir cmake-build
+    $ cd cmake-build
+    # If FMU_INSTALL_DIR is not set, CMAKE_BINARY_DIR is used
+    $ cmake -DCMAKE_BUILD_TYPE=Release -DFMU_INSTALL_DIR:PATH=/opt/osifmu ..
+    $ make -j N_JOBS
+    ```
+3. Take FMU from `FMU_INSTALL_DIR`
 
-```bash
-$ sudo apt-get install libprotobuf-dev protobuf-compiler
-```
-
-### Clone OSI, Build and install
-
-```bash
-$ git submodule update --init
-$ mkdir -p build
-$ cd build
-$ cmake ..
-$ make
-$ sudo make install
-```
+    (Please note that sources are not packed into the FMU at the moment.)
 
 ## Licensing
 
-**Please read file _COPYING_, which is located in the project root, carefully.**
-
-The work (located in /src/model) created by Institute of Automotive Engineering of Technical University of Darmstadt is licensed under the EUPL-1.2 and can be used/merged and distributed in other works covered by GPL-2.0, GPL-3.0, LGPL, AGPL, CeCILL, OSL, EPL, MPL and other licences listed as compatible in the EUPL Appendix. This applies to the other (combined) work, while the original project stays covered by the EUPL without re-licensing. Alternatively, the work in folder Model/src/model may be used under the terms of the MPL-2.0.
-
-The larger work, including the OSMP model framework, is subject to the terms of MPL-2.0 (but this does not affect the coverage of the incorporated components by their respective licenses).
+**Please read file [COPYING](COPYING), which is located in the project root, carefully.**
 
 ## Credits
 
@@ -259,6 +268,7 @@ We would like to thank Yifei Jiao for his contribution to the first prototype.
 Thanks also to all contributors of the following libraries:
 
 - [Open Simulation Interface](https://github.com/OpenSimulationInterface/open-simulation-interface), a generic interface based on protocol buffers for the environmental perception of automated driving functions in virtual scenarios
-- [{fmt}](https://github.com/fmtlib/fmt), an open-source formatting library for C++
+- [FMI Version 2.0: FMI for Model Exchange and Co-Simulation](https://fmi-standard.org/downloads/)
+- [Eigen](http://eigen.tuxfamily.org/), a C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
 - [Concaveman](https://github.com/sadaszewski/concaveman-cpp), an algorithm for concave hull generation
 - [Clipper](http://www.angusj.com/delphi/clipper.php), an open-source polygon clipping algorithm (Boost Software License V1.0)
