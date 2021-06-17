@@ -1,6 +1,7 @@
 # Object Based Generic Perception Object Model
 
 <img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" width="100" />
+
 This model is a highly parameterizable generic perception sensor and tracking model.
 It can be parameterized as a Lidar or a Radar.
 The model is based on object lists and all modeling is performed on object level.
@@ -19,11 +20,11 @@ Depending on the sensor technology this can either be an antenna gain pattern fo
 ### Modeling Framework
 
 The outer layer of the model is the  [Modular OSMP Framework](https://gitlab.com/tuda-fzd/perception-sensor-modeling/modular-osmp-framework) by FZD.
-It specifies ways in which models  using the [Open Simulation Interface (OSI)](https://github.com/OpenSimulationInterface/open-simulation-interface) are to be packaged for their use in simulation environments using FMI 2.0.
+It specifies ways in which models using the [Open Simulation Interface (OSI)](https://github.com/OpenSimulationInterface/open-simulation-interface) are to be packaged for their use in simulation environments using [FMI 2.0](https://fmi-standard.org/).
 
 The actual logic of the model is packed in a so called strategy.
 This is where the magic happens.
-The apply function of the strategy is called by the do_calc function of the Framework.
+The `apply()` function of the strategy is called by the `do_calc()` function of the Framework.
 The strategy itself is structured into four modules as shown in the image below.
 
 <img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/5d2135b178a1c22a1ef37b61950df689/model_overview.png" width="300" />
@@ -60,7 +61,7 @@ To calculate the occlusion, a projection and clipping method is used:
 Every vertex of the refined bounding boxes of the objects is sorted by distance.
 Then, for every object all vertices are projected onto a cylinder at unit distance from the sensor and a concave hull is calculated by the concaveman algorithm<sup>[1](#Agafonkin2016)</sup>, based on<sup>[2](#Park2013)</sup>.
 Consequently, the visible vertices of all objects with their respective outer hull are determined.
-To calculate the visible area of the polygon for each object, they are sorted by distance and clipped with the Vatti clipping algorithm<sup>[2](#Vatti1992)</sup>.
+To calculate the visible area of the polygon for each object, they are sorted by distance and clipped with the Vatti clipping algorithm<sup>[3](#Vatti1992)</sup>.
 The resulting new vertex points for the hull are reprojected from the 2D cylinder plane onto their original object bounding box to get the desired vertices in 3D space.
 
 The mentioned refined bounding boxes reflect typical vehicle shapes instead of simple cuboids by considering the shape of the rear and the engine cover.
@@ -112,11 +113,23 @@ If an object is no longer detected over a defined number of cycles, it is delete
 Consideration of the class uncertainties is provided by the model architecture, as well.
 The output of the tracking module is a list of tracked objects.
 
-### Parameterization
+<a name="Agafonkin2016">1</a>: V. Agafonkin. (2016) Conacveman. [Online]. Available: https://github.com/mapbox/concaveman
 
-The **model profiles for parametrization** are stored in different header files in 'src/model/profile'. With the FMI standard, the profile which should be used, can be selected by its name as a String with the ScalarVariable 'profile' (see ModelDescription for reference).
+<a name="Park2013">2</a>: J.-S.  Park  and  S.-J.  Oh,  “A  new  concave  hull  algorithm  and  concaveness measure for n-dimensional datasets,”Journal of Information Science and Engineering, vol. 29, no. 2, p. 19, 2013.
 
-#### Sensor Parameters
+<a name="Vatti1992">3</a>: B. R. Vatti, “A generic solution to polygon clipping,”Communications of the ACM, vol. 35, no. 7, pp. 56–63, 1992.
+
+## Parameterization
+
+The profiles are parameterized in the files `profile_*.hpp.in`.
+The parameters are defined in the files `profile.hpp.in`.
+The profiles can be extended by the strategies with additional parameters and values in their respective folders as in e.g. `src/model/strategies/tracking-strategy/` with `profile_struct.hpp.in` with the parameters and `profile_*.hpp.in` with the values.
+
+The profile to be loaded for simulation is set via a model parameter defined in the `modelDescription.xml` of the FMU.
+The first name in `src/model/profiles/profile_list.conf` is taken as default.
+If you would like to have a different one or if your simulation master does not support the configuration of model parameters, you have to adapt the *start* value of the parameter `profile` in `src/osmp/modelDescription.in.xml`.
+
+### Sensor Parameters
 
 | Parameter                            | Description                                                  |
 | ------------------------------------ | ------------------------------------------------------------ |
@@ -130,7 +143,7 @@ The **model profiles for parametrization** are stored in different header files 
 | vertex_angle_stddev                  | Standard deviation of the normal distribution of the angle (in rad) of detected vertices of bounding boxes |
 | vertex_distance_stddev               | Standard deviation of the normal distribution of the distance (in  m) of detected vertices of bounding boxes |
 
-#### Data Extraction Parameters
+### Data Extraction Parameters
 
 | Parameter              | Description                                                  |
 | ---------------------- | ------------------------------------------------------------ |
@@ -138,9 +151,7 @@ The **model profiles for parametrization** are stored in different header files 
 | irradiation_pattern    | Beam pattern for lidar and antenna characteristics for radar as elevation-azimuth-map with normalized values between 0 and 1 |
 | detection_thes_dB_stdv | standard deviation for the detection threshold combined with the noise floor |
 
-
-
-#### Object Tracking Parameters
+### Object Tracking Parameters
 
 | Parameter                                    | Description                                                  |
 | -------------------------------------------- | ------------------------------------------------------------ |
@@ -156,9 +167,34 @@ The **model profiles for parametrization** are stored in different header files 
 | existence_probability_increment              | Increment for existence probability                          |
 | existence_probability_decrement              | Decrement for existence probability                          |
 
-### Inferface
+## Configuration
 
-#### Required Fields in OSI3 Sensor_View
+### Model name
+
+The model's name (in this case "ObjectBasedLidarObjectModel") used for CMake-projects and the FMU at the end is defined in file `model_name.conf` located at `src/model`.
+
+### Install path
+
+When building and installing, the framework will build an FMU package into `FMU_INSTALL_DIR`, which can be used with a simulation tool that supports OSI and fills the required fields listed below.
+
+### VariableNamingConvention
+
+The parameter variableNamingConvention for the FMU specified within the modelDescription.xml is taken from file `variableNamingConvention.conf` located at `src/osmp`.
+Possible values are "flat" or "structured".
+
+## Inferface
+
+### Required SensorViewConfiguration (parameterized in profile_*.hpp.in) to be Set in the Simulation Tool
+
+- For every simulated physical sensor system:
+  - sensor_view_configuration.mounting_position.position
+  - sensor_view_configuration.mounting_position.orientation
+  - sensor_view_configuration.update_cycle_time
+  - sensor_view_configuration.range
+  - sensor_view_configuration.field_of_view_horizontal
+  - sensor_view_configuration.field_of_view_vertical
+
+### Required Fields in OSI3 Sensor_View Filled at the Input by the Simulation Tool
 
 - sensor_view.mounting_position
 - sensor_view.global_ground_truth.timestamp
@@ -181,9 +217,17 @@ The **model profiles for parametrization** are stored in different header files 
 - sensor_view.global_ground_truth.moving_object.vehicle_attributes.number_wheels
 - sensor_view.global_ground_truth.moving_object.vehicle_attributes.bbcenter_to_rear
 - sensor_view.global_ground_truth.moving_object.vehicle_attributes.bbcenter_to_front
-- sensor_view.global_ground_truth.moving_object.vehicle_attributes.ground_clearance 
+- sensor_view.global_ground_truth.moving_object.vehicle_attributes.ground_clearance
 
-#### Filled Fields in OSI3 Sensor_Data
+### Additionally Filled Fields in OSI3 Sensor_Data by the Sensor Model
+
+---
+
+**NOTE**
+
+Currently, all information on model input is passed to the output.
+
+---
 
 - sensor_data.timestamp
 - sensor_data.moving_object_header.measurement_time
@@ -203,27 +247,30 @@ The **model profiles for parametrization** are stored in different header files 
 - sensor_data.moving_object.candidate.probability
 - sensor_data.moving_object.candidate.type
 
-<a name="Agafonkin2016">1</a>: V. Agafonkin. (2016) Conacveman. [Online]. Available: https://github.com/mapbox/concaveman
+## Build Instructions in Windows 10
 
-<a name="Park2013">2</a>: J.-S.  Park  and  S.-J.  Oh,  “A  new  concave  hull  algorithm  and  con-caveness measure for n-dimensional datasets,”Journal of InformationScience and Engineering, vol. 29, no. 2, p. 19, 2013.
+### Install Dependencies in Windows 10
 
-<a name="Vatti1992">3</a>: B. R. Vatti, “A generic solution to polygon clipping,”Communicationsof the ACM, vol. 35, no. 7, pp. 56–63, 1992.
+1. Install cmake from https://github.com/Kitware/CMake/releases/download/v3.20.3/cmake-3.20.3-windows-x86_64.msi
+2. Install protobuf for [MSYS-2020](install_protobuf_Win64_MSYS-2020.md) or [Visual Studio 2017](install_protobuf_Win64_VS2017.md)
 
-## Build Instructions for Ubuntu 18.04 / 20.04
+### Clone with Submodules, Build, and Install in Windows 10
 
-When building and installing, the framework will build an FMU package, which can be used with a simulation tool like CarMaker, dSpace ASM or others.
-
-### Install Dependencies
-
-1. Install cmake 3.12: e.g. with
+1. Clone this repository <ins>with submodules</ins>:
    ```bash
-   $ git clone https://github.com/Kitware/CMake
-   $ sudo apt install libssl-dev
-   $ cd CMake
-   $ ./bootstrap
-   $ make -j
-   $ sudo make install
+   $ git clone https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model.git --recurse-submodules
    ```
+2. Build the model in [MSYS-2020](install_model_Win64_MSYS-2020.md) or [Visual Studio 2017](install_model_Win64_VS2017.md)
+3. Take FMU from `FMU_INSTALL_DIR`
+
+    (Please note that sources are not packed into the FMU at the moment.)
+
+## Build Instructions in Ubuntu 18.04 / 20.04
+
+### Install Dependencies in Ubuntu 18.04 / 20.04
+
+1. Install cmake 3.12
+   * as told in [these install instructions](install_cmake_ubuntu_3-12.md)
 2. Install protobuf 3.0.0:
    * Check your version via `protoc --version`. It should output: `libprotoc 3.0.0`
    * If needed, you can install it via `sudo apt-get install libprotobuf-dev protobuf-compiler`
@@ -237,18 +284,18 @@ When building and installing, the framework will build an FMU package, which can
      $ sudo ldconfig # refresh shared library cache.
      ```
 
-### Clone with Submodules, Build, and Install
+### Clone with Submodules, Build, and Install in Ubuntu 18.04 / 20.04
 
 1. Clone this repository <ins>with submodules</ins>:
     ```bash
-    $ git clone https://gitlab.com/tuda-fzd/perception-sensor-modeling/reflection-based-lidar-object-model.git --recurse-submodules
+    $ git clone https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model.git --recurse-submodules
     ```
 2. Build the model by executing in the extracted project root directory:
     ```bash
     $ mkdir cmake-build
     $ cd cmake-build
     # If FMU_INSTALL_DIR is not set, CMAKE_BINARY_DIR is used
-    $ cmake -DCMAKE_BUILD_TYPE=Release -DFMU_INSTALL_DIR:PATH=/opt/osifmu ..
+    $ cmake -DCMAKE_BUILD_TYPE=Release -DFMU_INSTALL_DIR:PATH=/tmp ..
     $ make -j N_JOBS
     ```
 3. Take FMU from `FMU_INSTALL_DIR`

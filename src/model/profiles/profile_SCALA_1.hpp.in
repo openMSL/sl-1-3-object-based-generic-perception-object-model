@@ -58,10 +58,10 @@ namespace model::profile::SCALA_1 {
         lidar_sensor_view_configuration->set_emitter_frequency(Speed_of_Light / 0.000000905);
 
         /// sensor_parameters
-        SCALA_1.sensor_parameters.radar_multipath_min_ground_clearance = 0;
+        SCALA_1.sensor_parameters.radar_multipath_min_ground_clearance = 0.0;
         SCALA_1.sensor_parameters.simulate_sensor_failure = false;
         SCALA_1.sensor_parameters.stop_detection_time = 3;
-        SCALA_1.sensor_parameters.fov_azimuth_border_stddev = 0;
-        SCALA_1.sensor_parameters.fov_elevation_border_stddev = 0;
-        SCALA_1.sensor_parameters.vertex_angle_stddev = 0;
+        SCALA_1.sensor_parameters.fov_azimuth_border_stddev = 0.0;
+        SCALA_1.sensor_parameters.fov_elevation_border_stddev = 0.0;
+        SCALA_1.sensor_parameters.vertex_angle_stddev = 0.0;
         SCALA_1.sensor_parameters.vertex_distance_stddev = 0.05;

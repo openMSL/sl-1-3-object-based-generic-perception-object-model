@@ -3,12 +3,12 @@
         fmiVersion="2.0"
         modelName="@MODEL_NAME@"
         guid="@FMUGUID@"
-        description="Object-based generic perception object model for automotive perception sensors, developed by FZD, TU Darmstadt"
+        description="C++ sensor system simulation FMU for reflection based lidar detection and object model"
         author="FZD"
         version="2.0"
-        generationTool="OSMP FMU Framework"
+        generationTool="FZD OSI FMU Framework"
         generationDateAndTime="@FMUTIMESTAMP@"
-        variableNamingConvention="structured">
+        variableNamingConvention="@FMU_VARIABLE_NAMING_CONVENTION@">
     <CoSimulation
             modelIdentifier="@MODEL_NAME@"
             canHandleVariableCommunicationStepSize="true"

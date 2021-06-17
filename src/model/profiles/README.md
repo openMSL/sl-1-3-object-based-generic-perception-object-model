@@ -1,4 +1,4 @@
-# FZD OSMP Framework - *profiles* Folder
+# Modular OSMP Framework - *profiles* Folder
 
 The *profiles* folder contains the parts of the parameter profiles, that are strategy-independent.
 

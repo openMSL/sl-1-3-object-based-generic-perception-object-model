@@ -27,7 +27,7 @@
 #include <model/profiles/profile_LongRange_Radar.hpp>
 #include <model/profiles/profile_MidRange_Radar.hpp>
 
-bool CFZDSensorModel::try_load_profile(const std::string &name) {
+bool CFrameworkPackaging::try_load_profile(const std::string &name) {
     /* TODO add further profile generators here */
     if (name == "SCALA_1") {
         profile = model::profile::SCALA_1::generate();

@@ -61,7 +61,7 @@ namespace model::profile::MidRange_Radar {
         MidRange_Radar.sensor_parameters.simulate_sensor_failure = false;
         MidRange_Radar.sensor_parameters.stop_detection_time = 3;
 
-        MidRange_Radar.sensor_parameters.fov_azimuth_border_stddev = 0;
-        MidRange_Radar.sensor_parameters.fov_elevation_border_stddev = 0;
+        MidRange_Radar.sensor_parameters.fov_azimuth_border_stddev = 0.0;
+        MidRange_Radar.sensor_parameters.fov_elevation_border_stddev = 0.0;
         MidRange_Radar.sensor_parameters.vertex_angle_stddev = 0.0087;
         MidRange_Radar.sensor_parameters.vertex_distance_stddev = 0.1;

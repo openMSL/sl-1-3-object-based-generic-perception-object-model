@@ -1,4 +1,4 @@
-# FZD OSMP Framework - *osmp* Folder
+# Modular OSMP Framework - *osmp* Folder
 
 The osmp folder contains the packaging. It handles the exchange of OSI messages with the simulation tool and/or other FMUs.
 

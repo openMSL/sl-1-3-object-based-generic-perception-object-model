@@ -7,9 +7,9 @@ set(LINK_WITH_SHARED_OSI OFF CACHE BOOL "Link FMU with shared OSI library instea
 set(PUBLIC_LOGGING ON CACHE BOOL "Enable logging via FMI logger")
 set(PRIVATE_LOGGING OFF CACHE BOOL "Enable private logging to file")
 if (WIN32)
-    set(PRIVATE_LOG_PATH "C:/TEMP/FZDSensorModel.log" CACHE FILEPATH "Path to write private log file to")
+    set(PRIVATE_LOG_PATH "C:/tmp/${MODEL_NAME}.log" CACHE FILEPATH "Path to write private log file to")
 else ()
-    set(PRIVATE_LOG_PATH "/tmp/FZDSensorModel.log" CACHE FILEPATH "Path to write private log file to")
+    set(PRIVATE_LOG_PATH "/tmp/${MODEL_NAME}.log" CACHE FILEPATH "Path to write private log file to")
 endif ()
 set(VERBOSE_FMI_LOGGING OFF CACHE BOOL "Enable detailed FMI function logging")
 set(DEBUG_BREAKS OFF CACHE BOOL "Enable debugger traps for debug builds of FMU")
@@ -17,6 +17,9 @@ set(DEBUG_BREAKS OFF CACHE BOOL "Enable debugger traps for debug builds of FMU")
 file(READ ../model/profiles/profile_list.conf FIRST_PROFILE)
 string(REPLACE "\n" ";" FIRST_PROFILE ${FIRST_PROFILE})
 list(GET FIRST_PROFILE 0 FIRST_PROFILE)
+
+file(READ variableNamingConvention.conf FMU_VARIABLE_NAMING_CONVENTION)
+string(REPLACE "\n" "" FMU_VARIABLE_NAMING_CONVENTION ${FMU_VARIABLE_NAMING_CONVENTION})
 
 string(TIMESTAMP FMUTIMESTAMP UTC)
 string(MD5 FMUGUID modelDescription.in.xml)
@@ -28,7 +31,7 @@ set_target_properties(${MODEL_NAME} PROPERTIES PREFIX "")
 target_compile_definitions(${MODEL_NAME} PRIVATE "FMU_SHARED_OBJECT")
 target_compile_definitions(${MODEL_NAME} PRIVATE "FMU_GUID=\"${FMUGUID}\"")
 if (LINK_WITH_SHARED_OSI)
-    target_link_libraries(FZDSensorModel open_simulation_interface model_obj)
+    target_link_libraries(FrameworkPackaging open_simulation_interface model_obj)
 else ()
     target_link_libraries(${MODEL_NAME} open_simulation_interface_pic model_obj)
 endif ()
@@ -64,10 +67,10 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif ()
 
 add_custom_command(TARGET ${MODEL_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_CURRENT_BINARY_DIR}/buildfmu"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/buildfmu/binaries/${FMI_BINARIES_PLATFORM}"
-        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/modelDescription.xml" "${CMAKE_CURRENT_BINARY_DIR}/buildfmu"
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${MODEL_NAME}> $<$<PLATFORM_ID:Windows>:$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:${MODEL_NAME}>>> "${CMAKE_CURRENT_BINARY_DIR}/buildfmu/binaries/${FMI_BINARIES_PLATFORM}"
-        COMMAND ${CMAKE_COMMAND} -E chdir "${CMAKE_CURRENT_BINARY_DIR}/buildfmu" ${CMAKE_COMMAND} -E tar "cfv" "${FMU_INSTALL_DIR}/${MODEL_NAME}.fmu" --format=zip "modelDescription.xml" "${CMAKE_CURRENT_BINARY_DIR}/buildfmu/binaries/${FMI_BINARIES_PLATFORM}")
-
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_CURRENT_BINARY_DIR}/buildfmu"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/buildfmu/binaries/${FMI_BINARIES_PLATFORM}"
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/modelDescription.xml" "${CMAKE_CURRENT_BINARY_DIR}/buildfmu"
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${MODEL_NAME}> $<$<BOOL:${MSVC}>:$<$<CONFIG:Debug>:$<TARGET_PDB_FILE:${MODEL_NAME}>>> "${CMAKE_CURRENT_BINARY_DIR}/buildfmu/binaries/${FMI_BINARIES_PLATFORM}"
+    COMMAND ${CMAKE_COMMAND} -E chdir "${CMAKE_CURRENT_BINARY_DIR}/buildfmu" ${CMAKE_COMMAND} -E tar "cfv" "${FMU_INSTALL_DIR}/${MODEL_NAME}.fmu" --format=zip "modelDescription.xml" "${CMAKE_CURRENT_BINARY_DIR}/buildfmu/binaries/${FMI_BINARIES_PLATFORM}"
+)

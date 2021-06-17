@@ -61,7 +61,7 @@ namespace model::profile::LongRange_Radar {
         LongRange_Radar.sensor_parameters.simulate_sensor_failure = false;
         LongRange_Radar.sensor_parameters.stop_detection_time = 3;
 
-        LongRange_Radar.sensor_parameters.fov_azimuth_border_stddev = 0;
-        LongRange_Radar.sensor_parameters.fov_elevation_border_stddev = 0;
+        LongRange_Radar.sensor_parameters.fov_azimuth_border_stddev = 0.0;
+        LongRange_Radar.sensor_parameters.fov_elevation_border_stddev = 0.0;
         LongRange_Radar.sensor_parameters.vertex_angle_stddev = 0.0087;
         LongRange_Radar.sensor_parameters.vertex_distance_stddev = 0.1;

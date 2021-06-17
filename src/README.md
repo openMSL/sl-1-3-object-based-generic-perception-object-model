@@ -1,4 +1,4 @@
-# FZD OSMP Framework - src Folder
+# Modular OSMP Framework - src Folder
 
 The src folder is subdevided into *model* and *osmp*.
 

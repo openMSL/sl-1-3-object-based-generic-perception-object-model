@@ -58,10 +58,10 @@ namespace model::profile::Ibeo_LUX_2010 {
         lidar_sensor_view_configuration->set_emitter_frequency(Speed_of_Light / 0.000000905);
 
         /// sensor_parameters
-        Ibeo_LUX_2010.sensor_parameters.radar_multipath_min_ground_clearance = 0;
+        Ibeo_LUX_2010.sensor_parameters.radar_multipath_min_ground_clearance = 0.0;
         Ibeo_LUX_2010.sensor_parameters.simulate_sensor_failure = false;
         Ibeo_LUX_2010.sensor_parameters.stop_detection_time = 3;
         Ibeo_LUX_2010.sensor_parameters.fov_azimuth_border_stddev = 0.003;
-        Ibeo_LUX_2010.sensor_parameters.fov_elevation_border_stddev = 0;
-        Ibeo_LUX_2010.sensor_parameters.vertex_angle_stddev = 0;
+        Ibeo_LUX_2010.sensor_parameters.fov_elevation_border_stddev = 0.0;
+        Ibeo_LUX_2010.sensor_parameters.vertex_angle_stddev = 0.0;
         Ibeo_LUX_2010.sensor_parameters.vertex_distance_stddev = 0.05;

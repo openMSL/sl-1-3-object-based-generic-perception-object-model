@@ -1,4 +1,4 @@
-# FZD OSMP Framework - *model* Folder
+# Modular OSMP Framework - *model* Folder
 
 The *model* folder contains the actual model logic and is subdevided into *include*, *profiles* and *strategies*. It also contains the *model_name.conf*. In this file the name of the model can be set. This will define the name of the overall fmu package as well as the name inside the model description.
 

@@ -1,6 +1,7 @@
-# Data Extraction Strategy
+# Front-end Strategy
 
-This strategy calculates vertices from objects via refined bounding boxes.
+This strategy calculates visible vertices from ground truth objects via refined bounding boxes.
 
 NOTE:
-This strategy needs transformation-functions from git@git.rwth-aachen.de:fzd/sensormodeling/fmi-and-osi/framework/transformation-functions.git cloned into ../transformation-functions!
+This strategy needs transformation-functions from ../transformation-functions!
+

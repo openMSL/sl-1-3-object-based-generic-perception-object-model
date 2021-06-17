@@ -14,7 +14,7 @@
  */
 
 #ifndef FMU_SHARED_OBJECT
-#define FMI2_FUNCTION_PREFIX FZDSensorModel_
+#define FMI2_FUNCTION_PREFIX FrameworkPackaging_
 #endif
 
 #include "fmi2Functions.h"
@@ -91,14 +91,14 @@
 #include <set>
 
 /* FMU Class */
-class CFZDSensorModel {
+class CFrameworkPackaging {
 public:
     /* FMI2 Interface mapped to C++ */
-    CFZDSensorModel(fmi2String theinstanceName, fmi2Type thefmuType, fmi2String thefmuGUID,
+    CFrameworkPackaging(fmi2String theinstanceName, fmi2Type thefmuType, fmi2String thefmuGUID,
                     fmi2String thefmuResourceLocation, const fmi2CallbackFunctions *thefunctions,
                     fmi2Boolean thevisible, fmi2Boolean theloggingOn);
 
-    ~CFZDSensorModel();
+    ~CFrameworkPackaging();
 
     fmi2Status SetDebugLogging(fmi2Boolean theloggingOn, size_t nCategories, const fmi2String categories[]);
 
@@ -178,7 +178,7 @@ protected:
 #else
             vsnprintf(buffer, 1024, format, ap);
 #endif
-            private_log_file << "FZDSensorModel" << "::Global:FMI: " << buffer << std::endl;
+            private_log_file << "FrameworkPackaging" << "::Global:FMI: " << buffer << std::endl;
             private_log_file.flush();
         }
 #endif
@@ -197,7 +197,7 @@ protected:
         if (!private_log_file.is_open())
             private_log_file.open(PRIVATE_LOG_PATH, std::ios::out | std::ios::app);
         if (private_log_file.is_open()) {
-            private_log_file << "FZDSensorModel" << "::" << instanceName << "<" << ((void*)this) << ">:" << category << ": " << buffer << std::endl;
+            private_log_file << "FrameworkPackaging" << "::" << instanceName << "<" << ((void*)this) << ">:" << category << ": " << buffer << std::endl;
             private_log_file.flush();
         }
 #endif

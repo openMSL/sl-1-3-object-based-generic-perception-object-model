@@ -53,7 +53,7 @@
 #include <cstdint>
 
 #ifdef PRIVATE_LOG_PATH
-ofstream CFZDSensorModel::private_log_file;
+ofstream CFrameworkPackaging::private_log_file;
 #endif
 
 /*
@@ -99,7 +99,7 @@ void encode_pointer_to_integer(const void *ptr, fmi2Integer &hi, fmi2Integer &lo
 #endif
 }
 
-bool CFZDSensorModel::get_fmi_sensor_view_config(osi3::SensorViewConfiguration &data) {
+bool CFrameworkPackaging::get_fmi_sensor_view_config(osi3::SensorViewConfiguration &data) {
     if (integer_vars[FMI_INTEGER_SENSORVIEW_CONFIG_SIZE_IDX] > 0) {
         void *buffer = decode_integer_to_pointer(integer_vars[FMI_INTEGER_SENSORVIEW_CONFIG_BASEHI_IDX],
                                                  integer_vars[FMI_INTEGER_SENSORVIEW_CONFIG_BASELO_IDX]);
@@ -112,7 +112,7 @@ bool CFZDSensorModel::get_fmi_sensor_view_config(osi3::SensorViewConfiguration &
     }
 }
 
-void CFZDSensorModel::set_fmi_sensor_view_config_request(const osi3::SensorViewConfiguration &data) {
+void CFrameworkPackaging::set_fmi_sensor_view_config_request(const osi3::SensorViewConfiguration &data) {
     data.SerializeToString(&currentConfigRequestBuffer);
     encode_pointer_to_integer(currentConfigRequestBuffer.data(),
                               integer_vars[FMI_INTEGER_SENSORVIEW_CONFIG_REQUEST_BASEHI_IDX],
@@ -124,13 +124,13 @@ void CFZDSensorModel::set_fmi_sensor_view_config_request(const osi3::SensorViewC
     swap(currentConfigRequestBuffer, lastConfigRequestBuffer);
 }
 
-void CFZDSensorModel::reset_fmi_sensor_view_config_request() {
+void CFrameworkPackaging::reset_fmi_sensor_view_config_request() {
     integer_vars[FMI_INTEGER_SENSORVIEW_CONFIG_REQUEST_SIZE_IDX] = 0;
     integer_vars[FMI_INTEGER_SENSORVIEW_CONFIG_REQUEST_BASEHI_IDX] = 0;
     integer_vars[FMI_INTEGER_SENSORVIEW_CONFIG_REQUEST_BASELO_IDX] = 0;
 }
 
-bool CFZDSensorModel::get_fmi_sensor_view_in(osi3::SensorView &data) {
+bool CFrameworkPackaging::get_fmi_sensor_view_in(osi3::SensorView &data) {
     if (integer_vars[FMI_INTEGER_SENSORVIEW_IN_SIZE_IDX] > 0) {
         void *buffer = decode_integer_to_pointer(integer_vars[FMI_INTEGER_SENSORVIEW_IN_BASEHI_IDX],
                                                  integer_vars[FMI_INTEGER_SENSORVIEW_IN_BASELO_IDX]);
@@ -142,7 +142,7 @@ bool CFZDSensorModel::get_fmi_sensor_view_in(osi3::SensorView &data) {
     }
 }
 
-void CFZDSensorModel::set_fmi_sensor_data_out(const osi3::SensorData &data) {
+void CFrameworkPackaging::set_fmi_sensor_data_out(const osi3::SensorData &data) {
     data.SerializeToString(&currentOutputBuffer);
     encode_pointer_to_integer(currentOutputBuffer.data(), integer_vars[FMI_INTEGER_SENSORDATA_OUT_BASEHI_IDX],
                               integer_vars[FMI_INTEGER_SENSORDATA_OUT_BASELO_IDX]);
@@ -151,13 +151,13 @@ void CFZDSensorModel::set_fmi_sensor_data_out(const osi3::SensorData &data) {
     swap(currentOutputBuffer, lastOutputBuffer);
 }
 
-void CFZDSensorModel::reset_fmi_sensor_data_out() {
+void CFrameworkPackaging::reset_fmi_sensor_data_out() {
     integer_vars[FMI_INTEGER_SENSORDATA_OUT_SIZE_IDX] = 0;
     integer_vars[FMI_INTEGER_SENSORDATA_OUT_BASEHI_IDX] = 0;
     integer_vars[FMI_INTEGER_SENSORDATA_OUT_BASELO_IDX] = 0;
 }
 
-void CFZDSensorModel::refresh_fmi_sensor_view_config_request() {
+void CFrameworkPackaging::refresh_fmi_sensor_view_config_request() {
     osi3::SensorViewConfiguration config;
     if (get_fmi_sensor_view_config(config))
         set_fmi_sensor_view_config_request(config);
@@ -174,7 +174,7 @@ void CFZDSensorModel::refresh_fmi_sensor_view_config_request() {
  * Actual Core Content
  */
 
-fmi2Status CFZDSensorModel::doInit() {
+fmi2Status CFrameworkPackaging::doInit() {
     DEBUGBREAK()
 
     /* Booleans */
@@ -196,20 +196,20 @@ fmi2Status CFZDSensorModel::doInit() {
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::doStart(fmi2Boolean toleranceDefined, fmi2Real tolerance, fmi2Real startTime,
+fmi2Status CFrameworkPackaging::doStart(fmi2Boolean toleranceDefined, fmi2Real tolerance, fmi2Real startTime,
                                     fmi2Boolean stopTimeDefined, fmi2Real stopTime) {
     DEBUGBREAK()
 
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::doEnterInitializationMode() {
+fmi2Status CFrameworkPackaging::doEnterInitializationMode() {
     DEBUGBREAK()
 
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::doExitInitializationMode() {
+fmi2Status CFrameworkPackaging::doExitInitializationMode() {
     DEBUGBREAK()
 
     if (fmi_profile().empty()) {
@@ -241,7 +241,7 @@ fmi2Status CFZDSensorModel::doExitInitializationMode() {
 
 #include <model/profiles/profile_list.hpp>
 
-fmi2Status CFZDSensorModel::doCalc(fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize,
+fmi2Status CFrameworkPackaging::doCalc(fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize,
                                    fmi2Boolean noSetFMUStatePriorToCurrentPointfmi2Component) {
     DEBUGBREAK()
 
@@ -270,13 +270,13 @@ fmi2Status CFZDSensorModel::doCalc(fmi2Real currentCommunicationPoint, fmi2Real 
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::doTerm() {
+fmi2Status CFrameworkPackaging::doTerm() {
     DEBUGBREAK()
 
     return fmi2OK;
 }
 
-void CFZDSensorModel::doFree() {
+void CFrameworkPackaging::doFree() {
     DEBUGBREAK()
 }
 
@@ -284,7 +284,7 @@ void CFZDSensorModel::doFree() {
  * Generic C++ Wrapper Code
  */
 
-CFZDSensorModel::CFZDSensorModel(fmi2String theinstanceName, fmi2Type thefmuType, fmi2String thefmuGUID,
+CFrameworkPackaging::CFrameworkPackaging(fmi2String theinstanceName, fmi2Type thefmuType, fmi2String thefmuGUID,
                                  fmi2String thefmuResourceLocation, const fmi2CallbackFunctions *thefunctions,
                                  fmi2Boolean thevisible, fmi2Boolean theloggingOn)
         : instanceName(theinstanceName),
@@ -304,11 +304,11 @@ CFZDSensorModel::CFZDSensorModel(fmi2String theinstanceName, fmi2Type thefmuType
     loggingCategories.insert("OSI");
 }
 
-CFZDSensorModel::~CFZDSensorModel() = default;
+CFrameworkPackaging::~CFrameworkPackaging() = default;
 
 
 fmi2Status
-CFZDSensorModel::SetDebugLogging(fmi2Boolean theloggingOn, size_t nCategories, const fmi2String categories[]) {
+CFrameworkPackaging::SetDebugLogging(fmi2Boolean theloggingOn, size_t nCategories, const fmi2String categories[]) {
     fmi_verbose_log("fmi2SetDebugLogging(%s)", theloggingOn ? "true" : "false");
     loggingOn = theloggingOn != 0;
     if (categories && (nCategories > 0)) {
@@ -330,10 +330,10 @@ CFZDSensorModel::SetDebugLogging(fmi2Boolean theloggingOn, size_t nCategories, c
     return fmi2OK;
 }
 
-fmi2Component CFZDSensorModel::Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2String fmuGUID,
+fmi2Component CFrameworkPackaging::Instantiate(fmi2String instanceName, fmi2Type fmuType, fmi2String fmuGUID,
                                            fmi2String fmuResourceLocation, const fmi2CallbackFunctions *functions,
                                            fmi2Boolean visible, fmi2Boolean loggingOn) {
-    auto *myc = new CFZDSensorModel(instanceName, fmuType, fmuGUID, fmuResourceLocation, functions,
+    auto *myc = new CFrameworkPackaging(instanceName, fmuType, fmuGUID, fmuResourceLocation, functions,
                                                visible, loggingOn);
 
     if (myc->doInit() != fmi2OK) {
@@ -352,37 +352,37 @@ fmi2Component CFZDSensorModel::Instantiate(fmi2String instanceName, fmi2Type fmu
     }
 }
 
-fmi2Status CFZDSensorModel::SetupExperiment(fmi2Boolean toleranceDefined, fmi2Real tolerance, fmi2Real startTime,
+fmi2Status CFrameworkPackaging::SetupExperiment(fmi2Boolean toleranceDefined, fmi2Real tolerance, fmi2Real startTime,
                                             fmi2Boolean stopTimeDefined, fmi2Real stopTime) {
     fmi_verbose_log("fmi2SetupExperiment(%d,%g,%g,%d,%g)", toleranceDefined, tolerance, startTime, stopTimeDefined,
                     stopTime);
     return doStart(toleranceDefined, tolerance, startTime, stopTimeDefined, stopTime);
 }
 
-fmi2Status CFZDSensorModel::EnterInitializationMode() {
+fmi2Status CFrameworkPackaging::EnterInitializationMode() {
     fmi_verbose_log("fmi2EnterInitializationMode()");
     return doEnterInitializationMode();
 }
 
-fmi2Status CFZDSensorModel::ExitInitializationMode() {
+fmi2Status CFrameworkPackaging::ExitInitializationMode() {
     fmi_verbose_log("fmi2ExitInitializationMode()");
     simulation_started = true;
     return doExitInitializationMode();
 }
 
-fmi2Status CFZDSensorModel::DoStep(fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize,
+fmi2Status CFrameworkPackaging::DoStep(fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize,
                                    fmi2Boolean noSetFMUStatePriorToCurrentPointfmi2Component) {
     fmi_verbose_log("fmi2DoStep(%g,%g,%d)", currentCommunicationPoint, communicationStepSize,
                     noSetFMUStatePriorToCurrentPointfmi2Component);
     return doCalc(currentCommunicationPoint, communicationStepSize, noSetFMUStatePriorToCurrentPointfmi2Component);
 }
 
-fmi2Status CFZDSensorModel::Terminate() {
+fmi2Status CFrameworkPackaging::Terminate() {
     fmi_verbose_log("fmi2Terminate()");
     return doTerm();
 }
 
-fmi2Status CFZDSensorModel::Reset() {
+fmi2Status CFrameworkPackaging::Reset() {
     fmi_verbose_log("fmi2Reset()");
 
     doFree();
@@ -390,12 +390,12 @@ fmi2Status CFZDSensorModel::Reset() {
     return doInit();
 }
 
-void CFZDSensorModel::FreeInstance() {
+void CFrameworkPackaging::FreeInstance() {
     fmi_verbose_log("fmi2FreeInstance()");
     doFree();
 }
 
-fmi2Status CFZDSensorModel::GetReal(const fmi2ValueReference vr[], size_t nvr, fmi2Real value[]) {
+fmi2Status CFrameworkPackaging::GetReal(const fmi2ValueReference vr[], size_t nvr, fmi2Real value[]) {
     fmi_verbose_log("fmi2GetReal(...)");
     for (size_t i = 0; i < nvr; i++) {
         if (vr[i] < FMI_REAL_VARS)
@@ -406,7 +406,7 @@ fmi2Status CFZDSensorModel::GetReal(const fmi2ValueReference vr[], size_t nvr, f
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::GetInteger(const fmi2ValueReference vr[], size_t nvr, fmi2Integer value[]) {
+fmi2Status CFrameworkPackaging::GetInteger(const fmi2ValueReference vr[], size_t nvr, fmi2Integer value[]) {
     fmi_verbose_log("fmi2GetInteger(...)");
     bool need_refresh = !simulation_started;
     for (size_t i = 0; i < nvr; i++) {
@@ -424,7 +424,7 @@ fmi2Status CFZDSensorModel::GetInteger(const fmi2ValueReference vr[], size_t nvr
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::GetBoolean(const fmi2ValueReference vr[], size_t nvr, fmi2Boolean value[]) {
+fmi2Status CFrameworkPackaging::GetBoolean(const fmi2ValueReference vr[], size_t nvr, fmi2Boolean value[]) {
     fmi_verbose_log("fmi2GetBoolean(...)");
     for (size_t i = 0; i < nvr; i++) {
         if (vr[i] < FMI_BOOLEAN_VARS)
@@ -435,7 +435,7 @@ fmi2Status CFZDSensorModel::GetBoolean(const fmi2ValueReference vr[], size_t nvr
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::GetString(const fmi2ValueReference vr[], size_t nvr, fmi2String value[]) {
+fmi2Status CFrameworkPackaging::GetString(const fmi2ValueReference vr[], size_t nvr, fmi2String value[]) {
     fmi_verbose_log("fmi2GetString(...)");
     for (size_t i = 0; i < nvr; i++) {
         if (vr[i] < FMI_STRING_VARS)
@@ -446,7 +446,7 @@ fmi2Status CFZDSensorModel::GetString(const fmi2ValueReference vr[], size_t nvr,
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::SetReal(const fmi2ValueReference vr[], size_t nvr, const fmi2Real value[]) {
+fmi2Status CFrameworkPackaging::SetReal(const fmi2ValueReference vr[], size_t nvr, const fmi2Real value[]) {
     fmi_verbose_log("fmi2SetReal(...)");
     for (size_t i = 0; i < nvr; i++) {
         if (vr[i] < FMI_REAL_VARS)
@@ -457,7 +457,7 @@ fmi2Status CFZDSensorModel::SetReal(const fmi2ValueReference vr[], size_t nvr, c
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::SetInteger(const fmi2ValueReference vr[], size_t nvr, const fmi2Integer value[]) {
+fmi2Status CFrameworkPackaging::SetInteger(const fmi2ValueReference vr[], size_t nvr, const fmi2Integer value[]) {
     fmi_verbose_log("fmi2SetInteger(...)");
     for (size_t i = 0; i < nvr; i++) {
         if (vr[i] < FMI_INTEGER_VARS)
@@ -468,7 +468,7 @@ fmi2Status CFZDSensorModel::SetInteger(const fmi2ValueReference vr[], size_t nvr
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::SetBoolean(const fmi2ValueReference vr[], size_t nvr, const fmi2Boolean value[]) {
+fmi2Status CFrameworkPackaging::SetBoolean(const fmi2ValueReference vr[], size_t nvr, const fmi2Boolean value[]) {
     fmi_verbose_log("fmi2SetBoolean(...)");
     for (size_t i = 0; i < nvr; i++) {
         if (vr[i] < FMI_BOOLEAN_VARS)
@@ -479,7 +479,7 @@ fmi2Status CFZDSensorModel::SetBoolean(const fmi2ValueReference vr[], size_t nvr
     return fmi2OK;
 }
 
-fmi2Status CFZDSensorModel::SetString(const fmi2ValueReference vr[], size_t nvr, const fmi2String value[]) {
+fmi2Status CFrameworkPackaging::SetString(const fmi2ValueReference vr[], size_t nvr, const fmi2String value[]) {
     fmi_verbose_log("fmi2SetString(...)");
     for (size_t i = 0; i < nvr; i++) {
         if (vr[i] < FMI_STRING_VARS)
@@ -506,7 +506,7 @@ FMI2_Export const char *fmi2GetVersion() {
 
 FMI2_Export fmi2Status
 fmi2SetDebugLogging(fmi2Component c, fmi2Boolean loggingOn, size_t nCategories, const fmi2String categories[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->SetDebugLogging(loggingOn, nCategories, categories);
 }
 
@@ -520,7 +520,7 @@ FMI2_Export fmi2Component fmi2Instantiate(fmi2String instanceName,
                                           const fmi2CallbackFunctions *functions,
                                           fmi2Boolean visible,
                                           fmi2Boolean loggingOn) {
-    return CFZDSensorModel::Instantiate(instanceName, fmuType, fmuGUID, fmuResourceLocation, functions, visible,
+    return CFrameworkPackaging::Instantiate(instanceName, fmuType, fmuGUID, fmuResourceLocation, functions, visible,
                                         loggingOn);
 }
 
@@ -530,17 +530,17 @@ FMI2_Export fmi2Status fmi2SetupExperiment(fmi2Component c,
                                            fmi2Real startTime,
                                            fmi2Boolean stopTimeDefined,
                                            fmi2Real stopTime) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->SetupExperiment(toleranceDefined, tolerance, startTime, stopTimeDefined, stopTime);
 }
 
 FMI2_Export fmi2Status fmi2EnterInitializationMode(fmi2Component c) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->EnterInitializationMode();
 }
 
 FMI2_Export fmi2Status fmi2ExitInitializationMode(fmi2Component c) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->ExitInitializationMode();
 }
 
@@ -548,22 +548,22 @@ FMI2_Export fmi2Status fmi2DoStep(fmi2Component c,
                                   fmi2Real currentCommunicationPoint,
                                   fmi2Real communicationStepSize,
                                   fmi2Boolean noSetFMUStatePriorToCurrentPointfmi2Component) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->DoStep(currentCommunicationPoint, communicationStepSize, noSetFMUStatePriorToCurrentPointfmi2Component);
 }
 
 FMI2_Export fmi2Status fmi2Terminate(fmi2Component c) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->Terminate();
 }
 
 FMI2_Export fmi2Status fmi2Reset(fmi2Component c) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->Reset();
 }
 
 FMI2_Export void fmi2FreeInstance(fmi2Component c) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     myc->FreeInstance();
     delete myc;
 }
@@ -572,45 +572,45 @@ FMI2_Export void fmi2FreeInstance(fmi2Component c) {
  * Data Exchange Functions
  */
 FMI2_Export fmi2Status fmi2GetReal(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Real value[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->GetReal(vr, nvr, value);
 }
 
 FMI2_Export fmi2Status fmi2GetInteger(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Integer value[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->GetInteger(vr, nvr, value);
 }
 
 FMI2_Export fmi2Status fmi2GetBoolean(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Boolean value[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->GetBoolean(vr, nvr, value);
 }
 
 FMI2_Export fmi2Status fmi2GetString(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2String value[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->GetString(vr, nvr, value);
 }
 
 FMI2_Export fmi2Status fmi2SetReal(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, const fmi2Real value[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->SetReal(vr, nvr, value);
 }
 
 FMI2_Export fmi2Status
 fmi2SetInteger(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, const fmi2Integer value[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->SetInteger(vr, nvr, value);
 }
 
 FMI2_Export fmi2Status
 fmi2SetBoolean(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, const fmi2Boolean value[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->SetBoolean(vr, nvr, value);
 }
 
 FMI2_Export fmi2Status
 fmi2SetString(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, const fmi2String value[]) {
-    auto *myc = (CFZDSensorModel *) c;
+    auto *myc = (CFrameworkPackaging *) c;
     return myc->SetString(vr, nvr, value);
 }
 

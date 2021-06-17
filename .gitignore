@@ -1,4 +1,7 @@
-cmake-build*
-build
-
-.idea
+cmake*
+build*
+.vscode/
+.editorconfig
+out/
+.idea/
+.vs/

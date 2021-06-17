@@ -1,7 +1,7 @@
 
         /// data_extraction_parameters
-        LongRange_Radar.data_extraction_parameters.max_range_in_m = 300;
-        LongRange_Radar.data_extraction_parameters.irradiation_pattern.elevation = {-10, 10};
-        LongRange_Radar.data_extraction_parameters.irradiation_pattern.azimuth = {-30, -20, -10, 0, 10, 20, 30};
-        LongRange_Radar.data_extraction_parameters.irradiation_pattern.elevation_azimuth_power_values = {{0, 0.75, 1.00, 1.00, 1.00, 0.75, 0}, {0, 0.75, 1.00, 1.00, 1.00, 0.75, 0}};
-        LongRange_Radar.data_extraction_parameters.detection_threshold_dB_stdv = 3;
+        LongRange_Radar.data_extraction_parameters.max_range_in_m = 300.0;
+        LongRange_Radar.data_extraction_parameters.irradiation_pattern.elevation = {-10.0, 10.0};
+        LongRange_Radar.data_extraction_parameters.irradiation_pattern.azimuth = {-30.0, -20.0, -10.0, 0.0, 10.0, 20.0, 30.0};
+        LongRange_Radar.data_extraction_parameters.irradiation_pattern.elevation_azimuth_power_values = {{0, 0.75, 1.00, 1.00, 1.00, 0.75, 0}, {0, 0.75, 1.00, 1.00, 1.00, 0.75, 0.0}};
+        LongRange_Radar.data_extraction_parameters.detection_threshold_dB_stdv = 3.0;
