@@ -118,11 +118,13 @@ void DataExtractionStrategy::process_vertices_from_one_object(const std::vector<
     double irradiation_gain = calculate_irradiation_gain(mean_vertex_position_of_current_object.azimuth(), mean_vertex_position_of_current_object.elevation());
 
     double distance = mean_vertex_position_of_current_object.distance();
-    double power_equivalent_value_db = float(10 * log10(std::pow(wave_length, 2) * irradiation_gain * power_equivalent_area / std::pow(distance, 4)));
-    std::normal_distribution<double> distribution(0, profile.data_extraction_parameters.detection_threshold_dB_stdv);     //normal distribution with set dB standard deviation
-    std::knuth_b generator(std::rand());     //rand used for Windows compatibility
-    double noisy_threshold_db = detection_threshold_dB + distribution(generator);
-    bool is_detected = power_equivalent_value_db > noisy_threshold_db;
+    double power_equivalent_value_db = double(10.0 * log10(std::pow(wave_length, 2) * irradiation_gain * power_equivalent_area / std::pow(distance, 4)));
+	if (profile.data_extraction_parameters.detection_threshold_dB_stdv > 0.0) {
+		std::normal_distribution<double> distribution(0.0, profile.data_extraction_parameters.detection_threshold_dB_stdv); // dist(mean, stddev), normal distribution with stddev in dB
+		std::knuth_b generator(std::rand()); // rand used for Windows compatibility
+		detection_threshold_dB += distribution(generator);
+	}
+    bool is_detected = power_equivalent_value_db > detection_threshold_dB;
 
     if(is_detected) {
         transform_detections_to_logical_detections(sensor_data, detection_data_of_current_object, ego_data);

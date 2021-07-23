@@ -38,7 +38,7 @@ void FrontEndStrategy::apply(osi3::SensorData &sensor_data) {
     TransformationFunctions::EgoData ego_data;
     TransformationFunctions::get_ego_info(ego_data, input_sensor_view);
     set_sensor_data_timestamp(sensor_data, input_sensor_view, alert);
-
+	
     if (!simulate_sensor_failure(sensor_data, profile, log)) {
         std::vector<GroundTruthObject> ground_truth_object_list = FrontEndStrategy::bring_ground_truth_objects_to_unified_format(input_sensor_view, ego_data, profile, alert);
 
@@ -155,16 +155,18 @@ GroundTruthObject FrontEndStrategy::get_moving_object_from_ground_truth(const os
 void FrontEndStrategy::apply_noise_to_visible_vertices(std::vector<GroundTruthObject>& ground_truth_object_list, const Profile& profile) {
     for(auto& current_object : ground_truth_object_list) {
         for(auto& current_vertex : current_object.visible_bounding_box_vertices_sensor_coord) {
-            double angle_noise = 0;
-            double distance_noise = 0;
+            double angle_noise = 0.0;
+            double distance_noise = 0.0;
 
-            if (profile.sensor_parameters.vertex_angle_stddev > 0 || profile.sensor_parameters.vertex_distance_stddev > 0) {
-                std::normal_distribution<double> distribution_angle(0, profile.sensor_parameters.vertex_angle_stddev);
-                std::knuth_b generator(std::rand());     //rand used for Windows compatibility
-                angle_noise = distribution_angle(generator);
-
-                std::normal_distribution<double> distribution_distance(0, profile.sensor_parameters.vertex_distance_stddev);
-                distance_noise = distribution_distance(generator);
+			if (profile.sensor_parameters.vertex_angle_stddev > 0.0) {
+				std::normal_distribution<double> distribution_angle(0.0, profile.sensor_parameters.vertex_angle_stddev); // dist(mean, stddev)
+				std::knuth_b generator_angle(std::rand()); //rand used for Windows compatibility
+				angle_noise = distribution_angle(generator_angle);
+			}
+			if (profile.sensor_parameters.vertex_distance_stddev > 0.0) {
+                std::normal_distribution<double> distribution_distance(0.0, profile.sensor_parameters.vertex_distance_stddev); // dist(mean, stddev)
+				std::knuth_b generator_dist(std::rand()); //rand used for Windows compatibility
+                distance_noise = distribution_distance(generator_dist);
             }
             osi3::Spherical3d current_vertex_with_noise;
             current_vertex.set_azimuth(current_vertex.azimuth() + angle_noise);
