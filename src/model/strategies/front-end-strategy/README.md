@@ -4,4 +4,3 @@ This strategy calculates visible vertices from ground truth objects via refined 
 
 NOTE:
 This strategy needs transformation-functions from ../transformation-functions!
-

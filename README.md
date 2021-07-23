@@ -254,11 +254,11 @@ Currently, all information on model input is passed to the output.
 1. Install cmake from https://github.com/Kitware/CMake/releases/download/v3.20.3/cmake-3.20.3-windows-x86_64.msi
 2. Install protobuf for [MSYS-2020](install_protobuf_Win64_MSYS-2020.md) or [Visual Studio 2017](install_protobuf_Win64_VS2017.md)
 
-### Clone with Submodules, Build, and Install in Windows 10
+### Clone with SSH incl. Submodules, Build, and Install in Windows 10
 
-1. Clone this repository <ins>with submodules</ins>:
+1. Clone this repository [with SSH](https://docs.gitlab.com/ee/ssh/README.html) <ins>incl. submodules</ins>:
    ```bash
-   $ git clone https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model.git --recurse-submodules
+   $ git clone git@gitlab.com:tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model.git --recurse-submodules
    ```
 2. Build the model in [MSYS-2020](install_model_Win64_MSYS-2020.md) or [Visual Studio 2017](install_model_Win64_VS2017.md)
 3. Take FMU from `FMU_INSTALL_DIR`
@@ -284,11 +284,11 @@ Currently, all information on model input is passed to the output.
      $ sudo ldconfig # refresh shared library cache.
      ```
 
-### Clone with Submodules, Build, and Install in Ubuntu 18.04 / 20.04
+### Clone with SSH incl. Submodules, Build, and Install in Ubuntu 18.04 / 20.04
 
-1. Clone this repository <ins>with submodules</ins>:
+1. Clone this repository [with SSH](https://docs.gitlab.com/ee/ssh/README.html) <ins>incl. submodules</ins>:
     ```bash
-    $ git clone https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model.git --recurse-submodules
+    $ git clone git@gitlab.com:tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model.git --recurse-submodules
     ```
 2. Build the model by executing in the extracted project root directory:
     ```bash
