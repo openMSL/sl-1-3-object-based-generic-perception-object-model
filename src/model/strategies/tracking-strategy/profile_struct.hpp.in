@@ -1,6 +1,5 @@
 
     struct tracking_parameters {
-        bool is_radar;                          // true = radar tracking; false = lidar tracking
         uint64_t classification_flag;           // 0 = from ground truth; 1 = all "UNKNOWN"
         uint64_t orientation_flag;              // 0 = from ground truth; 1 = from current point cloud segment;
         uint64_t dimension_and_position_flag;   // 0 = from ground truth;

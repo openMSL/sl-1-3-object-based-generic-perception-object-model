@@ -147,7 +147,8 @@ If you would like to have a different one or if your simulation master does not 
 
 | Parameter              | Description                                                  |
 | ---------------------- | ------------------------------------------------------------ |
-| max_range_in_m         | Detection range for midsize vehicle at boreside with a detection probability of 50 %. |
+| reference_range_in_m   | Detection range for mid-size vehicle (RCS = 10 dBsm) at boreside with a detection probability of 50 % |
+| max_range_in_m         | Maximum detection range due to physical limits or ambiguity regions |
 | irradiation_pattern    | Beam pattern for lidar and antenna characteristics for radar as elevation-azimuth-map with normalized values between 0 and 1 |
 | detection_thes_dB_stdv | standard deviation for the detection threshold combined with the noise floor |
 
@@ -276,7 +277,7 @@ Currently, all information on model input is passed to the output.
    * If needed, you can install it via `sudo apt-get install libprotobuf-dev protobuf-compiler`
    * or from source:
      * Download it from https://github.com/protocolbuffers/protobuf/releases/tag/v3.0.0 and extract the archive.
-     * Try to run `./autogen.sh`, if it failes, download the gmock-1.7.0.zip from https://pkgs.fedoraproject.org/repo/pkgs/gmock/gmock-1.7.0.zip/073b984d8798ea1594f5e44d85b20d66/gmock-1.7.0.zip, extract it into the protobuf folder and rename the gmock-1.7.0 folter to gmock.
+     * Try to run `./autogen.sh`, if it fails, download the gmock-1.7.0.zip from https://pkgs.fedoraproject.org/repo/pkgs/gmock/gmock-1.7.0.zip/073b984d8798ea1594f5e44d85b20d66/gmock-1.7.0.zip, extract it into the protobuf folder and rename the gmock-1.7.0 folder to gmock.
      * Proceed with the install with
      ```bash
      $ make
