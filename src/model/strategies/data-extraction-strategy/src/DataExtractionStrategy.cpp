@@ -105,26 +105,28 @@ void DataExtractionStrategy::process_vertices_from_one_object(const std::vector<
         wave_length = Speed_of_Light / profile.sensor_view_configuration.radar_sensor_view_configuration(0).emitter_frequency();
         float rcs_dbsm_threshold = 10;
         equivalent_reflecting_area_threshold = (float)pow(10.0, rcs_dbsm_threshold / 10);
-        detection_threshold_dB = float(10.0 * log10(pow(wave_length, 2) * equivalent_reflecting_area_threshold / pow(profile.data_extraction_parameters.max_range_in_m, 4)));
+        detection_threshold_dB = float(10.0 * log10(pow(wave_length, 2) * equivalent_reflecting_area_threshold / pow(profile.data_extraction_parameters.reference_range_in_m, 4)));
         power_equivalent_area = get_rcs_in_sm(sensor_data, detection_data_of_current_object.detection(0).object_id().value());
 
     } else { // lidar
         wave_length = Speed_of_Light / profile.sensor_view_configuration.lidar_sensor_view_configuration(0).emitter_frequency();
         equivalent_reflecting_area_threshold = 2.5;
-        detection_threshold_dB = float(10.0 * log10(pow(wave_length, 2) * equivalent_reflecting_area_threshold / pow(profile.data_extraction_parameters.max_range_in_m, 4)));
+        detection_threshold_dB = float(10.0 * log10(pow(wave_length, 2) * equivalent_reflecting_area_threshold / pow(profile.data_extraction_parameters.reference_range_in_m, 4)));
         power_equivalent_area = calc_visible_area(proj_vertices_current_obj, mean_vertex_position_of_current_object.distance());
     }
 
     double irradiation_gain = calculate_irradiation_gain(mean_vertex_position_of_current_object.azimuth(), mean_vertex_position_of_current_object.elevation());
 
     double distance = mean_vertex_position_of_current_object.distance();
-    double power_equivalent_value_db = double(10.0 * log10(std::pow(wave_length, 2) * irradiation_gain * power_equivalent_area / std::pow(distance, 4)));
-	if (profile.data_extraction_parameters.detection_threshold_dB_stdv > 0.0) {
+
+    auto power_equivalent_value_db = double(10.0 * log10(std::pow(wave_length, 2) * irradiation_gain * power_equivalent_area / std::pow(distance, 4)));
+    if (profile.data_extraction_parameters.detection_threshold_dB_stdv > 0.0) {
 		std::normal_distribution<double> distribution(0.0, profile.data_extraction_parameters.detection_threshold_dB_stdv); // dist(mean, stddev), normal distribution with stddev in dB
 		std::knuth_b generator(std::rand()); // rand used for Windows compatibility
-		detection_threshold_dB += distribution(generator);
+        detection_threshold_dB += distribution(generator);
 	}
-    bool is_detected = power_equivalent_value_db > detection_threshold_dB;
+    bool is_detected = mean_vertex_position_of_current_object.distance() < profile.data_extraction_parameters.max_range_in_m &&
+                       power_equivalent_value_db > detection_threshold_dB;
 
     if(is_detected) {
         transform_detections_to_logical_detections(sensor_data, detection_data_of_current_object, ego_data);

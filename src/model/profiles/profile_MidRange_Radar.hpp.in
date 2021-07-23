@@ -36,7 +36,7 @@ namespace model::profile::MidRange_Radar {
 
         MidRange_Radar.sensor_view_configuration.mutable_update_cycle_time()->set_seconds(0);
         MidRange_Radar.sensor_view_configuration.mutable_update_cycle_time()->set_nanos(40000000);
-        MidRange_Radar.sensor_view_configuration.set_range(150.0);
+        MidRange_Radar.sensor_view_configuration.set_range(200.0);
         MidRange_Radar.sensor_view_configuration.set_field_of_view_horizontal(180.0 / 180 * M_PI);
         MidRange_Radar.sensor_view_configuration.set_field_of_view_vertical(170.0 / 180 * M_PI);
         MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_x(3.82);
@@ -54,7 +54,7 @@ namespace model::profile::MidRange_Radar {
         radar_sensor_view_configuration->mutable_mounting_position()->mutable_position()->set_z(0.24);
         radar_sensor_view_configuration->mutable_mounting_position()->mutable_orientation()->set_roll(0.0);
         radar_sensor_view_configuration->mutable_mounting_position()->mutable_orientation()->set_pitch(0.0);
-        radar_sensor_view_configuration->mutable_mounting_position()->mutable_orientation()->set_yaw(0.0);
+        radar_sensor_view_configuration->mutable_mounting_position()->mutable_orientation()->set_yaw(0.0 / 180.0 * M_PI);
         radar_sensor_view_configuration->set_emitter_frequency(77000000);
 
         MidRange_Radar.sensor_parameters.radar_multipath_min_ground_clearance = 0.2;
