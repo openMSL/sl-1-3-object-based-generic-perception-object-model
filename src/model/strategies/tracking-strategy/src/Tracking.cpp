@@ -208,20 +208,36 @@ void Tracking::transform_gt_object_to_ego_coordinate_system(const MovingObject &
             TransformationFunctions::calc_relative_orientation_to_local(current_GT_object.base().orientation(), ego_data.ego_base.orientation()));
 
     /// Relative velocity of object in ego coordinate system
-    current_moving_object->mutable_base()->mutable_velocity()->CopyFrom(
+    if(current_GT_object.base().has_velocity()) {
+        current_moving_object->mutable_base()->mutable_velocity()->CopyFrom(
             TransformationFunctions::transform_to_local_coordinates(current_GT_object.base().velocity(), ego_data.ego_base.orientation(), ego_data.ego_base.velocity()));
+    } else {
+        log("!! Field 'velocity' missing. Object velocity potentially falsely simulated. !!");
+    }
 
     /// Relative orientation rate of object (delta_rate)
-    current_moving_object->mutable_base()->mutable_orientation_rate()->CopyFrom(
-            TransformationFunctions::calc_relative_orientation_to_local(current_GT_object.base().orientation_rate(), ego_data.ego_base.orientation_rate()));
+    if(current_GT_object.base().has_orientation_rate()) {
+        current_moving_object->mutable_base()->mutable_orientation_rate()->CopyFrom(
+                TransformationFunctions::calc_relative_orientation_to_local(current_GT_object.base().orientation_rate(), ego_data.ego_base.orientation_rate()));
+    } else {
+        log("!!Field 'orientation_rate' missing. Object orientation potentially falsely simulated. !!");
+    }
 
     /// Relative acceleration of object in ego coordinate system
+    /*if(current_GT_object.base().has_acceleration()) {
     current_moving_object->mutable_base()->mutable_acceleration()->CopyFrom(
             TransformationFunctions::transform_to_local_coordinates(current_GT_object.base().acceleration(), ego_data.ego_base.orientation(), ego_data.ego_base.acceleration()));
+    } else {
+        log("!!Field 'acceleration' missing. !!");
+    }*/
 
     /// Relative orientation_acceleration of object (delta_delta_rate)
+    /*if(current_GT_object.base().has_orientation_acceleration()) {
     current_moving_object->mutable_base()->mutable_orientation_acceleration()->CopyFrom(
             TransformationFunctions::calc_relative_orientation_to_local(current_GT_object.base().orientation_acceleration(), ego_data.ego_base.orientation_acceleration()));
+    } else {
+        log("!!Field 'orientation_acceleration' missing. !!");
+    }*/
 }
 
  void Tracking::get_pcl_segment_of_current_object(const LogicalDetectionData& logical_detection_data, Tracking::Data &data_of_current_time_step, uint64_t gt_object_id, const TransformationFunctions::EgoData &ego_data) {

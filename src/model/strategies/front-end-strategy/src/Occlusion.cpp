@@ -60,6 +60,7 @@ void get_visible_vertices(std::vector<GroundTruthObject> &ground_truth_object_li
             ground_clearance = current_gt_object.osi_gt_object.vehicle_attributes().ground_clearance();
         } else {
             ground_clearance = 0;
+            log("!! Field 'ground_clearance' missing. Occlusion potentially falsely simulated. !!");
         }
         calculate_occlusion(polygons_in_occlusion_process, visible_vertices, vertices_on_hull, ground_clearance, profile, log);
 

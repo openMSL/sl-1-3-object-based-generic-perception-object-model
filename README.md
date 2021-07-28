@@ -210,14 +210,10 @@ Possible values are "flat" or "structured".
 - sensor_view.global_ground_truth.moving_object.base.orientation
 - sensor_view.global_ground_truth.moving_object.base.orientation_rate
 - sensor_view.global_ground_truth.moving_object.base.velocity
-- sensor_view.global_ground_truth.moving_object.base.acceleration
 - sensor_view.global_ground_truth.moving_object.base.dimension
 - sensor_view.global_ground_truth.moving_object.type
 - sensor_view.global_ground_truth.moving_object.vehicle_classification.type
-- sensor_view.global_ground_truth.moving_object.vehicle_attributes.radius_wheel
-- sensor_view.global_ground_truth.moving_object.vehicle_attributes.number_wheels
 - sensor_view.global_ground_truth.moving_object.vehicle_attributes.bbcenter_to_rear
-- sensor_view.global_ground_truth.moving_object.vehicle_attributes.bbcenter_to_front
 - sensor_view.global_ground_truth.moving_object.vehicle_attributes.ground_clearance
 
 ### Additionally Filled Fields in OSI3 Sensor_Data by the Sensor Model
