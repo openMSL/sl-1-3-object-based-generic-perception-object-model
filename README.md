@@ -305,8 +305,22 @@ Currently, all information on model input is passed to the output.
 
 ## Credits
 
-This model is further described in the following [publication](https://ieeexplore.ieee.org/document/9548071) which is to be cited if referring to the model:<br>
-C. Linnhoff, P. Rosenberger, and H. Winner, *“Refining Object-Based Lidar Sensor Modeling — Challenging Ray Tracing as the Magic Bullet,”*  IEEE Sensors Journal, Volume 21, Issue 21, Nov. 1, 2021
+C. Linnhoff, P. Rosenberger, and H. Winner, [*“Refining Object-Based Lidar Sensor Modeling — Challenging Ray Tracing as the Magic Bullet,”*](https://ieeexplore.ieee.org/document/9548071)  IEEE Sensors Journal, Volume 21, Issue 21, Nov. 1, 2021
+
+If you find our work useful in your research, please consider citing: 
+
+```
+@ARTICLE{linnhoff2021,
+  author={Linnhoff, Clemens and Rosenberger, Philipp and Winner, Hermann},
+  journal={IEEE Sensors Journal}, 
+  title={Refining Object-Based Lidar Sensor Modeling — Challenging Ray Tracing as the Magic Bullet}, 
+  year={2021},
+  volume={21},
+  number={21},
+  pages={24238-24245},
+  doi={10.1109/JSEN.2021.3115589}
+}
+```
 
 This work received funding from the research project 
 "[SET Level](https://setlevel.de/)" of the [PEGASUS ](https://pegasus-family.de) project family, promoted by the German Federal Ministry for Economic Affairs and Energy based on a decision of the German Bundestag.
