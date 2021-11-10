@@ -305,6 +305,9 @@ Currently, all information on model input is passed to the output.
 
 ## Credits
 
+This model is further described in the following [publication](https://ieeexplore.ieee.org/document/9548071) which is to be cited if referring to the model:<br>
+C. Linnhoff, P. Rosenberger, and H. Winner, *“Refining Object-Based Lidar Sensor Modeling — Challenging Ray Tracing as the Magic Bullet,”*  IEEE Sensors Journal, Volume 21, Issue 21, Nov. 1, 2021
+
 This work received funding from the research project 
 "[SET Level](https://setlevel.de/)" of the [PEGASUS ](https://pegasus-family.de) project family, promoted by the German Federal Ministry for Economic Affairs and Energy based on a decision of the German Bundestag.
 | SET Level                                                                                                | PEGASUS Family                                                                                                       | BMWi                                                                                                                                                                                 |
