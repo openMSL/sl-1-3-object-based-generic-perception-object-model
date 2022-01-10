@@ -10,7 +10,7 @@ The model is based on object lists and all modeling is performed on object level
 It includes typical sensor artifacts like soft FoV transitions, different detection ranges for different targets, occlusion effects depending on the sensor technology as well as simulation of tracking behavior.
 The model output are object lists for OSI SenorData moving objects.
 
-<img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/c3e63855d2573b540eada2e60a2bc0f3/Object-based_Model.png" width="800" />
+<img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/59c2b75aff91c3a57cfa7439cd53ea11/Objectbased_Model.gif" width="800" />
 
 The architecture of the model as well as the parameterization structure are designed to be as generic as possible to fit both radar and lidar sensors to utilize similarities in signal propagation and signal processing in both technologies.
 This way, the model can be parameterized to model different kinds of lidar and radar sensors.
