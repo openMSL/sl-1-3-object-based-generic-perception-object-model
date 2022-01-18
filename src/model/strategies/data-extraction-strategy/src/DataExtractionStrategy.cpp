@@ -47,15 +47,15 @@ void DataExtractionStrategy::apply(osi3::SensorData &sensor_data) {
 
     //iterate over detections (vertices)
     auto& sensor = sensor_data.feature_data().lidar_sensor(0);
-    int current_object_id = sensor.detection(0).object_id().value();
+    uint64_t current_object_id = sensor.detection(0).object_id().value();
     std::vector<Vector2d> proj_vertices_current_obj;
     LidarDetectionData detection_data_of_current_object;
     Spherical3d mean_vertex_position;
     for(int detection_idx = 0; detection_idx < sensor.detection().size(); detection_idx++) {
         if(sensor.detection(detection_idx).object_id().value() != current_object_id) {
-            mean_vertex_position.set_distance(mean_vertex_position.distance()/proj_vertices_current_obj.size());
-            mean_vertex_position.set_azimuth(mean_vertex_position.azimuth()/proj_vertices_current_obj.size());
-            mean_vertex_position.set_elevation(mean_vertex_position.elevation()/proj_vertices_current_obj.size());
+            mean_vertex_position.set_distance(mean_vertex_position.distance()/((double)proj_vertices_current_obj.size()));
+            mean_vertex_position.set_azimuth(mean_vertex_position.azimuth()/((double)proj_vertices_current_obj.size()));
+            mean_vertex_position.set_elevation(mean_vertex_position.elevation()/((double)proj_vertices_current_obj.size()));
             process_vertices_from_one_object(proj_vertices_current_obj, mean_vertex_position, detection_data_of_current_object, sensor_data, ego_data);
 
             current_object_id = sensor.detection(detection_idx).object_id().value();
@@ -74,9 +74,9 @@ void DataExtractionStrategy::apply(osi3::SensorData &sensor_data) {
         mean_vertex_position.set_azimuth(mean_vertex_position.azimuth()+sensor.detection(detection_idx).position().azimuth());
         mean_vertex_position.set_elevation(mean_vertex_position.elevation()+sensor.detection(detection_idx).position().elevation());
     }
-    mean_vertex_position.set_distance(mean_vertex_position.distance()/proj_vertices_current_obj.size());
-    mean_vertex_position.set_azimuth(mean_vertex_position.azimuth()/proj_vertices_current_obj.size());
-    mean_vertex_position.set_elevation(mean_vertex_position.elevation()/proj_vertices_current_obj.size());
+    mean_vertex_position.set_distance(mean_vertex_position.distance()/((double)proj_vertices_current_obj.size()));
+    mean_vertex_position.set_azimuth(mean_vertex_position.azimuth()/((double)proj_vertices_current_obj.size()));
+    mean_vertex_position.set_elevation(mean_vertex_position.elevation()/((double)proj_vertices_current_obj.size()));
     process_vertices_from_one_object(proj_vertices_current_obj, mean_vertex_position, detection_data_of_current_object, sensor_data, ego_data);
 
 } // void apply()
@@ -133,7 +133,7 @@ void DataExtractionStrategy::process_vertices_from_one_object(const std::vector<
     }
 }
 
-double DataExtractionStrategy::get_rcs_in_sm(osi3::SensorData &sensor_data, int current_object_id) {
+double DataExtractionStrategy::get_rcs_in_sm(osi3::SensorData &sensor_data, uint64_t current_object_id) {
     double rcs_dbsm = 0;
 
     for(auto& current_object : sensor_data.sensor_view(0).global_ground_truth().moving_object()) {
