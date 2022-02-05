@@ -45,7 +45,7 @@ void get_visible_vertices(std::vector<GroundTruthObject> &ground_truth_object_li
     for(auto& current_gt_object : ground_truth_object_list) {
         std::vector<osi3::Spherical3d> all_vertices_current_object_spherical;
         for(auto& current_vertex : current_gt_object.bounding_box_vertices_sensor_coord) {
-            Spherical3d all_vertices = TransformationFunctions::transform_cartesian_to_spherical(current_vertex);
+            Spherical3d all_vertices = TF::transform_cartesian_to_spherical(current_vertex);
             all_vertices.set_elevation(round(all_vertices.elevation() * 1000000) / 1000000);
             all_vertices.set_azimuth(round(all_vertices.azimuth() * 1000000) / 1000000);
             all_vertices.set_distance(round(all_vertices.distance() * 1000000) / 1000000);
@@ -170,7 +170,7 @@ std::vector<Vertex> project_object_vertices_to_cylinder(const std::vector<osi3::
     for (auto &current_vertex_3d : all_vertices_spherical) {
         Vertex vertex_struct;
         vertex_struct.vertex3d.CopyFrom(current_vertex_3d);
-        TransformationFunctions::projection_onto_unit_distance_cylinder(current_vertex_3d, vertex_struct.vertex_on_plane);
+        TF::projection_onto_unit_distance_cylinder(current_vertex_3d, vertex_struct.vertex_on_plane);
         all_vertices_on_cylinder.push_back(vertex_struct);
     }
     return all_vertices_on_cylinder;
@@ -250,7 +250,7 @@ clip_fov(std::vector<Vertex> &visible_vertices_in_fov, const std::vector<Vertex>
     Paths clipper(1), solutions;
     for(auto& current_fov_vertex : fov_vertices) {
         Vertex current_vertex_plane;
-        TransformationFunctions::projection_onto_unit_distance_cylinder(current_fov_vertex, current_vertex_plane.vertex_on_plane);
+        TF::projection_onto_unit_distance_cylinder(current_fov_vertex, current_vertex_plane.vertex_on_plane);
         IntPoint current_point(current_vertex_plane.vertex_on_plane.x()*float_to_int_factor,current_vertex_plane.vertex_on_plane.y()*float_to_int_factor);
         clipper[0] << current_point;
     }
@@ -360,7 +360,7 @@ void reconstruct_3d_distance_from_2d_points(Vertex &current_vertex, std::vector<
         origin.set_z(0);
         osi3::Vector3d direction_cartesian;     //l
         current_vertex.vertex3d.set_distance(1);
-        TransformationFunctions::transform_spherical_to_cartesian(current_vertex.vertex3d, direction_cartesian);
+        TF::transform_spherical_to_cartesian(current_vertex.vertex3d, direction_cartesian);
         current_vertex.vertex3d.set_distance(2000000);
 
         ///iterate over all surfaces of current object
@@ -373,22 +373,22 @@ void reconstruct_3d_distance_from_2d_points(Vertex &current_vertex, std::vector<
 
             ///define plane from surface -> normal N = AB x AC
             Vector3d surface_point_A = surface_vertices_sensor_coord.at(0);     //p_0
-            Vector3d vector_AB = TransformationFunctions::vector_translation(surface_vertices_sensor_coord.at(1), surface_point_A, -1);
-            Vector3d vector_AC = TransformationFunctions::vector_translation(surface_vertices_sensor_coord.at(2), surface_point_A, -1);
-            Vector3d plane_normal = TransformationFunctions::cross_product(vector_AB, vector_AC);   //N
+            Vector3d vector_AB = TF::vector_translation(surface_vertices_sensor_coord.at(1), surface_point_A, -1);
+            Vector3d vector_AC = TF::vector_translation(surface_vertices_sensor_coord.at(2), surface_point_A, -1);
+            Vector3d plane_normal = TF::cross_product(vector_AB, vector_AC);   //N
 
             ///calculate intersection point of ray and surface -> distance d = ((p0 - l0) dot N)/(l dot N)
             Vector3d intersection_point;
-            double l_dot_N = TransformationFunctions::dot_product(direction_cartesian, plane_normal);
+            double l_dot_N = TF::dot_product(direction_cartesian, plane_normal);
             if(l_dot_N != 0) {
-                double distance = TransformationFunctions::dot_product(surface_point_A, plane_normal) / l_dot_N;
+                double distance = TF::dot_product(surface_point_A, plane_normal) / l_dot_N;
                 intersection_point.set_x(direction_cartesian.x()*distance);
                 intersection_point.set_y(direction_cartesian.y()*distance);
                 intersection_point.set_z(direction_cartesian.z()*distance);
 
                 ///check if intersection is inside BB (work around)
                 //TODO: check if intersection point is inside surface boundaries
-                Vector3d intersection_point_object_coord =  TransformationFunctions::transform_to_local_coordinates(intersection_point, current_gt_object.base_sensor_coord.orientation(), current_gt_object.base_sensor_coord.position());
+                Vector3d intersection_point_object_coord =  TF::transform_to_local_coordinates(intersection_point, current_gt_object.base_sensor_coord.orientation(), current_gt_object.base_sensor_coord.position());
                 double bounding_box_margin = 0.01;
                 double object_half_width = current_gt_object.osi_gt_object.base().dimension().width()/2+bounding_box_margin;
                 double object_half_length = current_gt_object.osi_gt_object.base().dimension().length()/2+bounding_box_margin;
@@ -422,7 +422,7 @@ void calc_new_vertex_on_edge(Vertex& current_vertex, const std::vector<Vertex> &
     origin.set_z(0);
     osi3::Vector3d direction_cartesian;
     current_vertex.vertex3d.set_distance(1);
-    TransformationFunctions::transform_spherical_to_cartesian(current_vertex.vertex3d, direction_cartesian);
+    TF::transform_spherical_to_cartesian(current_vertex.vertex3d, direction_cartesian);
     current_vertex.vertex3d.set_distance(0);
 
     //calculate distance between lines
@@ -430,9 +430,9 @@ void calc_new_vertex_on_edge(Vertex& current_vertex, const std::vector<Vertex> &
     for(auto& current_vertex_of_hull_1 : vertices_on_hull) {
         for(auto& current_vertex_of_hull_2 : vertices_on_hull) {
             osi3::Vector3d vertex_1_cartesian;
-            TransformationFunctions::transform_spherical_to_cartesian(current_vertex_of_hull_1.vertex3d, vertex_1_cartesian);
+            TF::transform_spherical_to_cartesian(current_vertex_of_hull_1.vertex3d, vertex_1_cartesian);
             osi3::Vector3d vertex_2_cartesian;
-            TransformationFunctions::transform_spherical_to_cartesian(current_vertex_of_hull_2.vertex3d, vertex_2_cartesian);
+            TF::transform_spherical_to_cartesian(current_vertex_of_hull_2.vertex3d, vertex_2_cartesian);
 
             //calculate vector product of distance_between_lines vectors
             double d_1343 = calc_d_mnop(origin, vertex_1_cartesian, vertex_2_cartesian, vertex_1_cartesian);
@@ -446,14 +446,14 @@ void calc_new_vertex_on_edge(Vertex& current_vertex, const std::vector<Vertex> &
             double mu_b = (d_1343 + mu_a * d_4321) / d_4343;
 
             //intersection points
-            osi3::Vector3d vertex_direction = TransformationFunctions::vector_translation(vertex_2_cartesian, vertex_1_cartesian, -1);
-            osi3::Vector3d intersection_point_1 = TransformationFunctions::vector_translation(origin, direction_cartesian, mu_a);
-            osi3::Vector3d intersection_point_2 = TransformationFunctions::vector_translation(vertex_1_cartesian, vertex_direction, mu_b);
+            osi3::Vector3d vertex_direction = TF::vector_translation(vertex_2_cartesian, vertex_1_cartesian, -1);
+            osi3::Vector3d intersection_point_1 = TF::vector_translation(origin, direction_cartesian, mu_a);
+            osi3::Vector3d intersection_point_2 = TF::vector_translation(vertex_1_cartesian, vertex_direction, mu_b);
 
-            osi3::Vector3d distance_vector = TransformationFunctions::vector_translation(intersection_point_2, intersection_point_1, -1);
+            osi3::Vector3d distance_vector = TF::vector_translation(intersection_point_2, intersection_point_1, -1);
             double distance_between_lines = std::sqrt(std::pow(distance_vector.x(), 2) + std::pow(distance_vector.x(), 2) + std::pow(distance_vector.x(), 2));
 
-            osi3::Spherical3d intersection_point_2_spherical = TransformationFunctions::transform_cartesian_to_spherical(intersection_point_2);
+            osi3::Spherical3d intersection_point_2_spherical = TF::transform_cartesian_to_spherical(intersection_point_2);
             if(mu_b <= 1 && mu_b >= 0 && distance_between_lines < min_distance && intersection_point_2_spherical.distance() < current_vertex.vertex3d.distance()) {
                 min_distance = distance_between_lines;
                 current_vertex.vertex3d.set_distance(intersection_point_2_spherical.distance());

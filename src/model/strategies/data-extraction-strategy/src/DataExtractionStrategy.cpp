@@ -42,8 +42,8 @@ void DataExtractionStrategy::apply(osi3::SensorData &sensor_data) {
     if(sensor_data.feature_data().lidar_sensor(0).detection_size() == 0){
         return;
     }
-    TransformationFunctions::EgoData ego_data;
-    TransformationFunctions::get_ego_info(ego_data, input_sensor_view);
+    TF::EgoData ego_data;
+    TF::get_ego_info(ego_data, input_sensor_view);
 
     //iterate over detections (vertices)
     auto& sensor = sensor_data.feature_data().lidar_sensor(0);
@@ -66,7 +66,7 @@ void DataExtractionStrategy::apply(osi3::SensorData &sensor_data) {
             detection_data_of_current_object.clear_detection();
         }
         Vector2d current_detection_position_on_plane;
-        TransformationFunctions::projection_onto_unit_distance_cylinder(sensor.detection(detection_idx).position(), current_detection_position_on_plane);
+        TF::projection_onto_unit_distance_cylinder(sensor.detection(detection_idx).position(), current_detection_position_on_plane);
         proj_vertices_current_obj.emplace_back(current_detection_position_on_plane);
         auto current_detection = detection_data_of_current_object.add_detection();
         current_detection->CopyFrom(sensor.detection(detection_idx));
@@ -96,7 +96,7 @@ bool DataExtractionStrategy::check_sensor_data_input(const osi3::SensorData &sen
 
 void DataExtractionStrategy::process_vertices_from_one_object(const std::vector<Vector2d> &proj_vertices_current_obj, const Spherical3d& mean_vertex_position_of_current_object,
                                                               const LidarDetectionData &detection_data_of_current_object, osi3::SensorData &sensor_data,
-                                                              const TransformationFunctions::EgoData &ego_data) const {
+                                                              const TF::EgoData &ego_data) const {
     double wave_length;
     double power_equivalent_area;
     float equivalent_reflecting_area_threshold;
@@ -221,7 +221,7 @@ double DataExtractionStrategy::calculate_irradiation_gain(double azimuth_angle_r
 }
 
 
-void DataExtractionStrategy::transform_detections_to_logical_detections(osi3::SensorData &sensor_data, const osi3::LidarDetectionData &detection_data, const TransformationFunctions::EgoData &ego_data) const {
+void DataExtractionStrategy::transform_detections_to_logical_detections(osi3::SensorData &sensor_data, const osi3::LidarDetectionData &detection_data, const TF::EgoData &ego_data) const {
     osi3::Vector3d mounting_position;
     osi3::Orientation3d mounting_orientation;
     if(!profile.sensor_view_configuration.radar_sensor_view_configuration().empty()) { // radar
@@ -241,7 +241,7 @@ void DataExtractionStrategy::transform_detections_to_logical_detections(osi3::Se
         point_cartesian_sensor.set_x(distance * cos(elevation) * cos(azimuth));
         point_cartesian_sensor.set_y(distance * cos(elevation) * sin(azimuth));
         point_cartesian_sensor.set_z(distance * sin(elevation));
-        osi3::Vector3d point_cartesian_vehicle = TransformationFunctions::transform_from_local_coordinates(point_cartesian_sensor, mounting_orientation, mounting_position);
+        osi3::Vector3d point_cartesian_vehicle = TF::transform_from_local_coordinates(point_cartesian_sensor, mounting_orientation, mounting_position);
 
         auto current_logical_detection = sensor_data.mutable_logical_detection_data()->add_logical_detection();
         current_logical_detection->mutable_position()->set_x(point_cartesian_vehicle.x());

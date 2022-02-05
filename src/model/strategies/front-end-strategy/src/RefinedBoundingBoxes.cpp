@@ -18,7 +18,7 @@
 
 #include "frontendstrategy/RefinedBoundingBoxes.hpp"
 
-void set_refined_bounding_boxes(std::vector<GroundTruthObject> &ground_truth_object_list, TransformationFunctions::EgoData &ego_data, const Profile &profile, const Log &log, const Alert &alert) {
+void set_refined_bounding_boxes(std::vector<GroundTruthObject> &ground_truth_object_list, TF::EgoData &ego_data, const Profile &profile, const Log &log, const Alert &alert) {
     for(auto &current_object : ground_truth_object_list) {
         std::vector<std::vector<float>> bounding_box_definition;
         std::vector<std::vector<int>> surfaces_definition;
@@ -70,7 +70,7 @@ void get_refined_bounding_box_definition(std::vector<std::vector<float>> &boundi
     }
 }
 
-void create_refined_bounding_box(std::vector<std::vector<float>> &bounding_box_definition, GroundTruthObject &current_object, TransformationFunctions::EgoData &ego_data, const Profile &profile, const Alert &alert) {
+void create_refined_bounding_box(std::vector<std::vector<float>> &bounding_box_definition, GroundTruthObject &current_object, TF::EgoData &ego_data, const Profile &profile, const Alert &alert) {
     for(auto &current_vertex_definition : bounding_box_definition) {
         osi3::Vector3d current_vertex;
         current_vertex.set_x(current_vertex_definition.at(0) * current_object.osi_gt_object.base().dimension().length());
@@ -78,8 +78,8 @@ void create_refined_bounding_box(std::vector<std::vector<float>> &bounding_box_d
         current_vertex.set_z(current_vertex_definition.at(2) * current_object.osi_gt_object.base().dimension().height());
         current_object.bounding_box_vertices.emplace_back(current_vertex);
 
-        osi3::Vector3d current_vertex_world_coord = TransformationFunctions::transform_from_local_coordinates(current_vertex, current_object.osi_gt_object.base().orientation(), current_object.osi_gt_object.base().position());
-        osi3::Vector3d current_vertex_ego_coord = TransformationFunctions::transform_position_from_world_to_ego_coordinates(current_vertex_world_coord, ego_data);
+        osi3::Vector3d current_vertex_world_coord = TF::transform_from_local_coordinates(current_vertex, current_object.osi_gt_object.base().orientation(), current_object.osi_gt_object.base().position());
+        osi3::Vector3d current_vertex_ego_coord = TF::transform_position_from_world_to_ego_coordinates(current_vertex_world_coord, ego_data);
         osi3::MountingPosition mounting_pose;
         if(!profile.sensor_view_configuration.radar_sensor_view_configuration().empty()) { // radar
             mounting_pose.CopyFrom(profile.sensor_view_configuration.radar_sensor_view_configuration(0).mounting_position());
@@ -88,7 +88,7 @@ void create_refined_bounding_box(std::vector<std::vector<float>> &bounding_box_d
         } else {
             alert("No lidar or radar sensor view in profile!");
         }
-        osi3::Vector3d current_vertex_sensor_coord = TransformationFunctions::transform_position_from_world_to_sensor_coordinates(current_vertex_world_coord, ego_data, mounting_pose);
+        osi3::Vector3d current_vertex_sensor_coord = TF::transform_position_from_world_to_sensor_coordinates(current_vertex_world_coord, ego_data, mounting_pose);
         current_object.bounding_box_vertices_sensor_coord.emplace_back(current_vertex_sensor_coord);
     }
 }

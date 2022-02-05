@@ -53,11 +53,11 @@ private:
     static void check_sensor_data_input(const osi3::SensorData &sensor_data, const Alert &alert);
     static void set_sensor_data_timestamp(osi3::SensorData &sensor_data, const osi3::SensorView &input_sensor_view, const Alert &alert);
     static bool simulate_sensor_failure(osi3::SensorData &sensor_data, const Profile &profile, const Log &log);
-    static std::vector<GroundTruthObject> bring_ground_truth_objects_to_unified_format(const osi3::SensorView &input_sensor_view, const TransformationFunctions::EgoData& ego_data, const Profile &profile, const Alert &alert);
-    static GroundTruthObject get_stationary_object_from_ground_truth(const osi3::StationaryObject &input_object, const TransformationFunctions::EgoData &ego_data, const Profile &profile, const Alert &alert);
-    static GroundTruthObject get_moving_object_from_ground_truth(const osi3::MovingObject &input_object, const TransformationFunctions::EgoData &ego_data, const Profile &profile, const Alert &alert);
+    static std::vector<GroundTruthObject> bring_ground_truth_objects_to_unified_format(const osi3::SensorView &input_sensor_view, const TF::EgoData& ego_data, const Profile &profile, const Alert &alert);
+    static GroundTruthObject get_stationary_object_from_ground_truth(const osi3::StationaryObject &input_object, const TF::EgoData &ego_data, const MountingPosition &mounting_pose);
+    static GroundTruthObject get_moving_object_from_ground_truth(const osi3::MovingObject &input_object, const TF::EgoData &ego_data, const osi3::MountingPosition &mounting_pose);
     static void apply_noise_to_visible_vertices(std::vector<GroundTruthObject>& ground_truth_object_list, const Profile& profile);
-    static void write_vertices_to_logical_detections(osi3::SensorData &sensor_data, std::vector<GroundTruthObject> &ground_truth_object_list, const TransformationFunctions::EgoData& ego_data);
-    static void write_visible_vertices_to_detections(osi3::SensorData &sensor_data, std::vector<GroundTruthObject> &ground_truth_object_list, const TransformationFunctions::EgoData& ego_data);
+    static void write_vertices_to_logical_detections(osi3::SensorData &sensor_data, std::vector<GroundTruthObject> &ground_truth_object_list, const TF::EgoData& ego_data);
+    static void write_visible_vertices_to_detections(osi3::SensorData &sensor_data, std::vector<GroundTruthObject> &ground_truth_object_list, const TF::EgoData& ego_data);
 };
 #endif //FRONT_END_STRATEGY_HPP
