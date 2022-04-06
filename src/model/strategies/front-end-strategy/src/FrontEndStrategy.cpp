@@ -124,6 +124,7 @@ GroundTruthObject FrontEndStrategy::get_stationary_object_from_ground_truth(cons
     gt_object.osi_gt_object.mutable_base()->mutable_dimension()->CopyFrom(input_object.base().dimension());
     gt_object.osi_gt_object.set_type(osi3::MovingObject_Type_TYPE_OTHER);
     gt_object.osi_gt_object.mutable_id()->set_value(input_object.id().value());
+    gt_object.osi_gt_object.mutable_vehicle_attributes()->set_ground_clearance(0.0);
 
     //ego coordinates
     gt_object.base_ego_coord.mutable_position()->CopyFrom(TF::transform_to_local_coordinates(input_object.base().position(), ego_data.ego_base.orientation(), ego_data.ego_base.position()));
