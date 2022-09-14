@@ -5,3 +5,5 @@ build*
 out/
 .idea/
 .vs/
+*.bat
+*.sh
