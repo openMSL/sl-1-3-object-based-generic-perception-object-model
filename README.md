@@ -1,8 +1,6 @@
-[![pipeline status](https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/badges/master/pipeline.svg)](https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/-/commits/master) 
-
 # Object Based Generic Perception Object Model
 
-<img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" width="100" />
+<img align="right" src="doc/img/fzd_logo.jpg" width="100" />
 
 This model is a highly parameterizable generic perception sensor and tracking model.
 It can be parameterized as a Lidar or a Radar.
@@ -10,7 +8,7 @@ The model is based on object lists and all modeling is performed on object level
 It includes typical sensor artifacts like soft FoV transitions, different detection ranges for different targets, occlusion effects depending on the sensor technology as well as simulation of tracking behavior.
 The model output are object lists for OSI SenorData moving objects.
 
-<img src="https://user-images.githubusercontent.com/27010086/148824525-3e8e2ff6-9075-4814-a889-caa9ec2d37bf.gif" width="800" />
+<img src="doc/img/model_video.gif" width="800" />
 
 The architecture of the model as well as the parameterization structure are designed to be as generic as possible to fit both radar and lidar sensors to utilize similarities in signal propagation and signal processing in both technologies.
 This way, the model can be parameterized to model different kinds of lidar and radar sensors.
@@ -29,7 +27,7 @@ This is where the magic happens.
 The `apply()` function of the strategy is called by the `do_calc()` function of the Framework.
 The strategy itself is structured into four modules as shown in the image below.
 
-<img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/5d2135b178a1c22a1ef37b61950df689/model_overview.png" width="300" />
+<img src="doc/img/model_overview.png" width="300" />
 
 ### Sensor Technology Independent Modeling
 
@@ -69,7 +67,7 @@ The resulting new vertex points for the hull are reprojected from the 2D cylinde
 The mentioned refined bounding boxes reflect typical vehicle shapes instead of simple cuboids by considering the shape of the rear and the engine cover.
 The figure below shows different examples of refined bounding boxes as a side-view. They can be further adapted by adding more vertices to enhance their fidelity, e.g. for the pillar positions, wheels, etc.
 
-<img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/66db4e3ec90fc7bcdebb040fb2a722e2/refined_bounding_boxes.png" width="300" />
+<img src="doc/img/refined_bounding_boxes.png" width="300" />
 
 The bounding box shapes are selected depending on the ground truth object class and adjusted to the object's dimensions.
 Consequently, this approach reveals a gap in the OSI definition of vehicle classes.
@@ -251,15 +249,15 @@ Currently, all information on model input is passed to the output.
 ### Install Dependencies in Windows 10
 
 1. Install cmake from https://github.com/Kitware/CMake/releases/download/v3.20.3/cmake-3.20.3-windows-x86_64.msi
-2. Install protobuf for [MSYS-2020](install_protobuf_Win64_MSYS-2020.md) or [Visual Studio 2017](install_protobuf_Win64_VS2017.md)
+2. Install protobuf for [MSYS-2020](doc/build-instructions/install_protobuf_Win64_MSYS-2020.md) or [Visual Studio 2017](doc/build-instructions/install_protobuf_Win64_VS2017.md)
 
 ### Clone with SSH incl. Submodules, Build, and Install in Windows 10
 
 1. Clone this repository [with SSH](https://docs.gitlab.com/ee/ssh/README.html) <ins>incl. submodules</ins>:
    ```bash
-   $ git clone git@gitlab.com:tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model.git --recurse-submodules
+   $ git clone git@github.com:openMSL/object_based_generic_perception_object_model.git --recurse-submodules
    ```
-2. Build the model in [MSYS-2020](install_model_Win64_MSYS-2020.md) or [Visual Studio 2017](install_model_Win64_VS2017.md)
+2. Build the model in [MSYS-2020](doc/build-instructions/install_model_Win64_MSYS-2020.md) or [Visual Studio 2017](doc/build-instructions/install_model_Win64_VS2017.md)
 3. Take FMU from `FMU_INSTALL_DIR`
 
     (Please note that sources are not packed into the FMU at the moment.)
@@ -269,7 +267,7 @@ Currently, all information on model input is passed to the output.
 ### Install Dependencies in Ubuntu 18.04 / 20.04
 
 1. Install cmake 3.12
-   * as told in [these install instructions](install_cmake_ubuntu_3-12.md)
+   * as told in [these install instructions](doc/build-instructions/install_cmake_ubuntu_3-12.md)
 2. Install protobuf 3.0.0:
    * Check your version via `protoc --version`. It should output: `libprotoc 3.0.0`
    * If needed, you can install it via `sudo apt-get install libprotobuf-dev protobuf-compiler`
@@ -287,7 +285,7 @@ Currently, all information on model input is passed to the output.
 
 1. Clone this repository [with SSH](https://docs.gitlab.com/ee/ssh/README.html) <ins>incl. submodules</ins>:
     ```bash
-    $ git clone git@gitlab.com:tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model.git --recurse-submodules
+    $ git clone git@github.com:openMSL/object_based_generic_perception_object_model.git --recurse-submodules
     ```
 2. Build the model by executing in the extracted project root directory:
     ```bash
