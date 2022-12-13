@@ -1,5 +1,6 @@
 //
-// Copyright 2021 Technical University Darmstadt - Automotive Engineering
+// Copyright 2022 Technical University of Darmstadt - FZD
+// SPDX-License-Identifier: MPL-2.0
 //
 
 #ifndef REFINED_BOUNDING_BOXES_HPP

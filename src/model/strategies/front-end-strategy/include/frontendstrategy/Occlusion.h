@@ -1,5 +1,6 @@
 //
-// Created by yifei on 2020/5/27.
+// Copyright 2022 Technical University of Darmstadt - FZD
+// SPDX-License-Identifier: MPL-2.0
 //
 
 #ifndef OCCLUSION_H

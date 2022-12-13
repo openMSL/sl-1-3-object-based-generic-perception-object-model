@@ -1,8 +1,6 @@
 //
-// Author: Stanislaw Adaszewski, 2019
-// C++ port from https://github.com/mapbox/concaveman (js)
-//
-// Comments from js repo added by wheeled
+// Copyright 2019 Stanislaw Adaszewski
+// SPDX-License-Identifier: BSD-2-Clause
 //
 
 #pragma once
