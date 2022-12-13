@@ -40,7 +40,7 @@ In the **last module**, the tracked objects are transformed to the virtual senso
 ### Modeling of Specific Sensor Effects
 
 Requirement analysis revealed mainly three characteristic sensor effects of automotive lidars and radars:
-(Partial) occlusion, restricted angular fov, and limited detection range due to the ![r^4](https://latex.codecogs.com/svg.latex?&space;r^4) law for signal attenuation and different object sizes.
+(Partial) occlusion, restricted angular fov, and limited detection range due to the $r^4$ law for signal attenuation and different object sizes.
 All effects are additionally subject to noise behavior of the sensor data affecting the detected object states as well as the object detection.
 Via functional decomposition, the object-based model is structured to cover these effects with respect to the data processing chain.
 As shown in the image above, the first block of the model is the front-end for the simulation of the transmission, propagation and reception.
@@ -50,7 +50,7 @@ Then, refined bounding box shapes are generated from the ground truth bounding b
 With these vertices, an occlusion calculation is performed, resulting in the visible 3D vertices of the ground truth objects.
 In the detection sensing module, a power equivalent value for every object is calculated.
 From the functional decomposition, this would usually be located in the front-end as well, but as thresholding is directly part of the power calculation, it is situated within the data extraction block.
-This calculation is based on externally defined parameters and contains angular fov and range limits by considering irradiation characteristics, visible surfaces, and the ![r^4](https://latex.codecogs.com/svg.latex?&space;r^4) law.
+This calculation is based on externally defined parameters and contains angular fov and range limits by considering irradiation characteristics, visible surfaces, and the $r^4$ law.
 
 If the power is above a threshold, visible vertices are transformed into the vehicle frame and along with the power calculations passed to the tracking block.
 There, poses and dimensions from calculated vertices and ground truth are estimated and a tracking logic produces the overall model output.
@@ -76,29 +76,29 @@ This should be improved in upcoming releases of the interface standard.
 Therefore, a separation between sedan and station wagon cannot be accomplished due to the same classification as medium car for vehicles with a length between 4.5 m and 5 m.
 
 To introduce the effect of range - and in case of radar range - measurement noise, the positions of the vertices are altered in range and/or angle by applying parameterizable Gaussian noise.
-For lidar simulation, the size of the range-rectified projected area ![A_\text{p}](https://latex.codecogs.com/svg.latex?&space;A_\text{p}) of the object calculated with the noisy bounding box vertices is used to calculate a reflection power equivalent value
+For lidar simulation, the size of the range-rectified projected area $A_\text{p}$ of the object calculated with the noisy bounding box vertices is used to calculate a reflection power equivalent value
 
-![\Large P_\text{eq}=\dfrac{\lambda^2G(\phi,\vartheta)A_\text{p}}{r^4}](https://latex.codecogs.com/svg.latex?\Large&space;P_\text{eq}=\dfrac{\lambda^2G(\phi,\vartheta)A_\text{p}}{r^4}) 
+$P_\text{eq}=\dfrac{\lambda^2G(\phi,\vartheta)A_\text{p}}{r^4}$
 
-For radar, instead of the projected area, a typical radar cross-section ![\sigma}](https://latex.codecogs.com/svg.latex?&space;\sigma) is set, depending on the classification of the object.
-The calculation also includes the irradiation gain at the angle to the bounding box center ![G(\phi,\vartheta)}](https://latex.codecogs.com/svg.latex?&space;G(\phi,\vartheta)) as an approximation, the sensor wave length ![\lambda}](https://latex.codecogs.com/svg.latex?&space;\lambda) and the distance to the object r.
+For radar, instead of the projected area, a typical radar cross-section $\sigma$ is set, depending on the classification of the object.
+The calculation also includes the irradiation gain at the angle to the bounding box center $G(\phi,\vartheta)$ as an approximation, the sensor wave length $\lambda$ and the distance to the object $r$.
 The irradiation characteristics in terms of lidar sensors describe the beam pattern and in terms of radar the antenna diagram.
 They are defined in the model profile as a two-dimensional matrix of azimuth and elevation angles.
 In this matrix, a value between 0 and 1 is specified for each pair of angles, which specifies the irradiated power of the sensor standardized to the maximum in the angle combination.
 For lidars, this especially comes into play when they have a flat optical cover, where the irradiated power is typically less on the edges of the fov.
-The detection power threshold is determined by the maximum detection range ![r_{\text{max}}](https://latex.codecogs.com/svg.latex?&space;r_{\text{max}}) of a mid-sized vehicle at boresight with an RCS of 10 sqm., specified in the model profile.
-With the typical projection area of the mid-sized reference vehicle ![A_\text{p,ref}](https://latex.codecogs.com/svg.latex?&space;A_\text{p,ref}), or typical RCS of the mid-sized reference vehicle ![\sigma_\text{p,ref}](https://latex.codecogs.com/svg.latex?&space;\sigma_\text{p,ref}), the threshold computes to
+The detection power threshold is determined by the maximum detection range $r_{\text{max}}$ of a mid-sized vehicle at bore-sight with an RCS of 10 sqm., specified in the model profile.
+With the typical projection area of the mid-sized reference vehicle $A_\text{p,ref}$, or typical RCS of the mid-sized reference vehicle $\sigma_\text{p,ref}$, the threshold computes to
 
-![\Large \bar{P}_{\text{thres}}=\dfrac{\lambda^2A_\text{p,ref}}{r_{\text{max}}^4}](https://latex.codecogs.com/svg.latex?\Large&space;\bar{P}_{\text{thres}}=\dfrac{\lambda^2A_\text{p,ref}}{r_{\text{max}}^4})
+$\bar{P}_{\text{thres}}=\dfrac{\lambda^2A_\text{p,ref}}{r_{\text{max}}^4}$
 
 Detection ranges to standard targets can typically be found in data sheets of commercial radar or lidar sensors.
 In most cases, a detection probability for the maximum range is given.
 Therefore, Gaussian noise is applied to the threshold with a specified standard deviation ![\xi}](https://latex.codecogs.com/svg.latex?&space;\xi), set in the model profile, to 
 
-![\Large P_{\text{thres}}\propto\mathcal{N}(\bar{P}_{\text{thres}},\xi^2)](https://latex.codecogs.com/svg.latex?\Large&space;P_{\text{thres}}\propto\mathcal{N}(\bar{P}_{\text{thres}},\xi^2))
+$P_{\text{thres}}\propto\mathcal{N}(\bar{P}_{\text{thres}},\xi^2)$
 
 This noisy power equivalent threshold simulates the thresholding typically performed in the signal processing of radar and lidar sensors.
-If ![P_\text{eq}}](https://latex.codecogs.com/svg.latex?&space;P_\text{eq}) is greater or equal ![P_{\text{thres}}](https://latex.codecogs.com/svg.latex?&space;P_{\text{thres}}), the object is considered to be detected and the beforehand calculated visible 3D bounding box vertices are passed to the tracking block.
+If $P_\text{eq}$ is greater or equal $P_{\text{thres}}$, the object is considered to be detected and the beforehand calculated visible 3D bounding box vertices are passed to the tracking block.
 
 The vertices are passed to the tracking module as LogicalDetections, so a regular tracking algorithm can be applied on them.
 Additionally, at a closer look, the vertices reflect the extrema of a lidar point cloud while leaving out the points in between and regular tracking algorithms only select those anyways for object dimension computation.
