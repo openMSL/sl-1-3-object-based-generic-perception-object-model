@@ -2,6 +2,7 @@ name: SPDX License Check
 
 on:
   push:
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
