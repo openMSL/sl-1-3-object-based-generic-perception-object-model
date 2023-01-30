@@ -1,5 +1,6 @@
 //
-// Copyright 2019 Technische Universität Darmstadt - Fahrzeugtechnik
+// Copyright 2022 Technical University of Darmstadt - FZD
+// SPDX-License-Identifier: MPL-2.0
 //
 
 #ifndef DATA_EXTRACTION_STRATEGY_HPP

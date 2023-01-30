@@ -1,5 +1,6 @@
 # Object Based Generic Perception Object Model
 
+![SPDX workflow](https://github.com/openMSL/object_based_generic_perception_object_model/actions/workflows/spdx.yml/badge.svg)
 ![Build workflow](https://github.com/openMSL/object_based_generic_perception_object_model/actions/workflows/build.yml/badge.svg)
 
 <img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" width="100" />
