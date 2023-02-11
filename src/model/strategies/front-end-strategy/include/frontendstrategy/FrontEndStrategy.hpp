@@ -28,9 +28,8 @@
 #include <cmath>
 #endif
 
-#include "osi_sensordata.pb.h"
 #include "../../transformation-functions/TransformationFunctions.hpp"
-
+#include "osi_sensordata.pb.h"
 
 using namespace model;
 

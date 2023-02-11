@@ -8,7 +8,11 @@
 
 #include "string"
 
+#include <model/include/strategy.hpp>
+
+#include "FrontEndStrategy.hpp"
 #include "frontendstrategy/clipper.hpp"
+#include "osi_sensordata.pb.h"
 
 struct Vertex
 {
@@ -18,6 +22,9 @@ struct Vertex
 
 typedef double T;
 typedef std::array<T, 2> point_type;
+
+using namespace osi3;
+using namespace model;
 
 void get_visible_vertices(std::vector<GroundTruthObject>& ground_truth_object_list, const Profile& profile, const Log& log, const Alert& alert);
 

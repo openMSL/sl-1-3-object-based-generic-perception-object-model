@@ -8,10 +8,11 @@
 #endif
 
 //#include <fstream> // DEBUG
+#include "frontendstrategy/Occlusion.h"
+
 #include <numeric>
 
 #include "frontendstrategy/FrontEndStrategy.hpp"
-#include "frontendstrategy/Occlusion.h"
 #include "frontendstrategy/clipper.hpp"
 #include "frontendstrategy/concaveman.h"
 

@@ -8,11 +8,9 @@
 
 #include <model/include/strategy.hpp>
 
-#include "osi_sensordata.pb.h"
-#include "frontendstrategy/FrontEndStrategy.hpp"
 #include "../../transformation-functions/TransformationFunctions.hpp"
-
-
+#include "frontendstrategy/FrontEndStrategy.hpp"
+#include "osi_sensordata.pb.h"
 
 using namespace model;
 using namespace osi3;
