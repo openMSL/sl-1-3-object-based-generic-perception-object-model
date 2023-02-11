@@ -7,10 +7,9 @@
 #define _USE_MATH_DEFINES
 #endif
 
-#include "frontendstrategy/FrontEndStrategy.hpp"
-
 #include <random>
 
+#include "frontendstrategy/FrontEndStrategy.hpp"
 #include "frontendstrategy/Occlusion.h"
 #include "frontendstrategy/RefinedBoundingBoxes.hpp"
 
