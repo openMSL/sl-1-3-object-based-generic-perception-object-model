@@ -58,7 +58,7 @@ jobs:
         files-changed-only: false
         thread-comments: true
         database: 'build/'
-        ignore: 'build | protobuf-21.12 | .github | src/osmp'
+        ignore: 'build | protobuf-21.12 | .github | src/osmp | src/model/strategies/front-end-strategy/include/frontendstrategy/concaveman.h | src/model/strategies/front-end-strategy/include/frontendstrategy/concaveman.cpp | src/model/strategies/front-end-strategy/include/frontendstrategy/clipper.hpp | src/model/strategies/front-end-strategy/include/frontendstrategy/clipper.cpp'
         extra-args: '-I ./build/lib/open-simulation-interface'
         
     - name: Fail fast?!
