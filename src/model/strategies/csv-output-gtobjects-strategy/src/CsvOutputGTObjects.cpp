@@ -73,7 +73,9 @@ void model::CsvOutputGTObjects::apply(SensorData &sensor_data) {
     /// Collect moving objects
     for (const auto &gt_moving_object : sensor_data.sensor_view(0).global_ground_truth().moving_object()) {
         if (gt_moving_object.id().value() == sensor_data.sensor_view(0).global_ground_truth().host_vehicle_id().value())
+        {
             continue;
+        }
 
         Vector3d relative_position_ego_coordinate_system = TF::transform_position_from_world_to_ego_coordinates(gt_moving_object.base().position(), ego_data);
         Orientation3d relative_orientation = TF::calc_relative_orientation_to_local(gt_moving_object.base().orientation(), ego_data.ego_base.orientation());
@@ -116,10 +118,6 @@ void model::CsvOutputGTObjects::apply(SensorData &sensor_data) {
 
     for (const auto &gt_object : gt_objects) {
         auto gt_id = gt_object.id;
-
-        auto roll = std::round(gt_object.roll* 180 / M_PI * 1000) / 1000;
-        auto pitch = std::round(gt_object.pitch * 180 / M_PI * 1000) / 1000;
-        auto yaw = std::round(gt_object.yaw * 180 / M_PI * 1000) / 1000;
 
         write_data_to_CSV(file_path_gtobjects, timestamp, gt_id, gt_object.x, gt_object.y, gt_object.z, gt_object.roll, gt_object.pitch, gt_object.yaw,
                             gt_object.width, gt_object.length, gt_object.height, gt_object.is_moving);

@@ -5,17 +5,19 @@
 
 #include "frontendstrategy/RefinedBoundingBoxes.hpp"
 
-void set_refined_bounding_boxes(std::vector<GroundTruthObject> &ground_truth_object_list, TF::EgoData &ego_data, const Profile &profile, const Log &log, const Alert &alert) {
+void set_refined_bounding_boxes(std::vector<GroundTruthObject>& ground_truth_object_list, TF::EgoData& ego_data, const Profile& profile, const Alert& alert)
+{
     for(auto &current_object : ground_truth_object_list) {
         std::vector<std::vector<float>> bounding_box_definition;
         std::vector<std::vector<int>> surfaces_definition;
-        get_refined_bounding_box_definition(bounding_box_definition, surfaces_definition, current_object.osi_gt_object.type(), current_object.osi_gt_object.vehicle_classification());
+        get_refined_bounding_box_definition(bounding_box_definition, surfaces_definition, current_object.osi_gt_object.type());
         create_refined_bounding_box(bounding_box_definition, current_object, ego_data, profile, alert);
         current_object.bounding_box_surfaces = surfaces_definition;
     }
 }
 
-void get_refined_bounding_box_definition(std::vector<std::vector<float>> &bounding_box_definition, std::vector<std::vector<int>> &surfaces_definition, MovingObject::Type type, const MovingObject::VehicleClassification &classification) {
+void get_refined_bounding_box_definition(std::vector<std::vector<float>>& bounding_box_definition, std::vector<std::vector<int>>& surfaces_definition, MovingObject::Type type)
+{
     //TODO: consider ground clearance
     if(type == osi3::MovingObject_Type_TYPE_VEHICLE) {
         bounding_box_definition = {{0.5, 0.5, -0.5},    //0

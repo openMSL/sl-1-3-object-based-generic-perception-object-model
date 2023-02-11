@@ -10,7 +10,6 @@
 #include "frontendstrategy/FrontEndStrategy.hpp"
 #include "frontendstrategy/RefinedBoundingBoxes.hpp"
 #include "frontendstrategy/Occlusion.h"
-#include <unordered_map>
 #include <random>
 
 using namespace model;
@@ -29,10 +28,10 @@ void FrontEndStrategy::apply(osi3::SensorData &sensor_data) {
     if (!simulate_sensor_failure(sensor_data, profile, log)) {
         std::vector<GroundTruthObject> ground_truth_object_list = FrontEndStrategy::bring_ground_truth_objects_to_unified_format(input_sensor_view, ego_data, profile, alert);
 
-        set_refined_bounding_boxes(ground_truth_object_list, ego_data, profile, log, alert);
+        set_refined_bounding_boxes(ground_truth_object_list, ego_data, profile, alert);
         get_visible_vertices(ground_truth_object_list, profile, log, alert);
         apply_noise_to_visible_vertices(ground_truth_object_list, profile);
-        write_visible_vertices_to_detections(sensor_data, ground_truth_object_list, ego_data);
+        write_visible_vertices_to_detections(sensor_data, ground_truth_object_list);
 
         //write_vertices_to_logical_detections(sensor_data, ground_truth_object_list, ego_data); //DEBUG
     }
@@ -176,17 +175,18 @@ void FrontEndStrategy::write_vertices_to_logical_detections(osi3::SensorData &se
         for(auto& current_vertex : current_object.bounding_box_vertices) {
             osi3::Vector3d current_vertex_word_coord = TF::transform_from_local_coordinates(current_vertex, current_object.osi_gt_object.base().orientation(), current_object.osi_gt_object.base().position());
             osi3::Vector3d current_vertex_ego_coord = TF::transform_position_from_world_to_ego_coordinates(current_vertex_word_coord, ego_data);
-            auto current_logical_detection = sensor_data.mutable_logical_detection_data()->add_logical_detection();
+            auto *current_logical_detection = sensor_data.mutable_logical_detection_data()->add_logical_detection();
             current_logical_detection->mutable_position()->CopyFrom(current_vertex_ego_coord);
         }
     }
 }
 
-void FrontEndStrategy::write_visible_vertices_to_detections(osi3::SensorData &sensor_data, std::vector<GroundTruthObject> &ground_truth_object_list, const TF::EgoData& ego_data) {
-    auto current_lidar = sensor_data.mutable_feature_data()->add_lidar_sensor();
+void FrontEndStrategy::write_visible_vertices_to_detections(osi3::SensorData& sensor_data, std::vector<GroundTruthObject>& ground_truth_object_list)
+{
+    auto *current_lidar = sensor_data.mutable_feature_data()->add_lidar_sensor();
     for(auto& current_object : ground_truth_object_list) {
         for(auto& current_vertex : current_object.visible_bounding_box_vertices_sensor_coord) {
-            auto current_detection = current_lidar->add_detection();
+            auto *current_detection = current_lidar->add_detection();
             current_detection->mutable_position()->CopyFrom(current_vertex);
             current_detection->mutable_object_id()->set_value(current_object.osi_gt_object.id().value());
         }

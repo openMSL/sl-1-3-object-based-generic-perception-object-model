@@ -3,13 +3,11 @@
 // SPDX-License-Identifier: MPL-2.0
 //
 
-#ifndef Speed_of_Light
-#define Speed_of_Light 299792458
-#endif
-
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
+
+const float speed_of_light = 299792458.0;
 
 #include "dataextractionstrategy/DataExtractionStrategy.hpp"
 #include <random>
@@ -33,7 +31,7 @@ void DataExtractionStrategy::apply(osi3::SensorData &sensor_data) {
     TF::get_ego_info(ego_data, input_sensor_view);
 
     //iterate over detections (vertices)
-    auto& sensor = sensor_data.feature_data().lidar_sensor(0);
+    const auto& sensor = sensor_data.feature_data().lidar_sensor(0);
     uint64_t current_object_id = sensor.detection(0).object_id().value();
     std::vector<Vector2d> proj_vertices_current_obj;
     LidarDetectionData detection_data_of_current_object;
@@ -43,7 +41,7 @@ void DataExtractionStrategy::apply(osi3::SensorData &sensor_data) {
             mean_vertex_position.set_distance(mean_vertex_position.distance()/((double)proj_vertices_current_obj.size()));
             mean_vertex_position.set_azimuth(mean_vertex_position.azimuth()/((double)proj_vertices_current_obj.size()));
             mean_vertex_position.set_elevation(mean_vertex_position.elevation()/((double)proj_vertices_current_obj.size()));
-            process_vertices_from_one_object(proj_vertices_current_obj, mean_vertex_position, detection_data_of_current_object, sensor_data, ego_data);
+            process_vertices_from_one_object(proj_vertices_current_obj, mean_vertex_position, detection_data_of_current_object, sensor_data);
 
             current_object_id = sensor.detection(detection_idx).object_id().value();
             mean_vertex_position.clear_azimuth();
@@ -55,7 +53,7 @@ void DataExtractionStrategy::apply(osi3::SensorData &sensor_data) {
         Vector2d current_detection_position_on_plane;
         TF::projection_onto_unit_distance_cylinder(sensor.detection(detection_idx).position(), current_detection_position_on_plane);
         proj_vertices_current_obj.emplace_back(current_detection_position_on_plane);
-        auto current_detection = detection_data_of_current_object.add_detection();
+        auto* current_detection = detection_data_of_current_object.add_detection();
         current_detection->CopyFrom(sensor.detection(detection_idx));
         mean_vertex_position.set_distance(mean_vertex_position.distance()+sensor.detection(detection_idx).position().distance());
         mean_vertex_position.set_azimuth(mean_vertex_position.azimuth()+sensor.detection(detection_idx).position().azimuth());
@@ -64,7 +62,7 @@ void DataExtractionStrategy::apply(osi3::SensorData &sensor_data) {
     mean_vertex_position.set_distance(mean_vertex_position.distance()/((double)proj_vertices_current_obj.size()));
     mean_vertex_position.set_azimuth(mean_vertex_position.azimuth()/((double)proj_vertices_current_obj.size()));
     mean_vertex_position.set_elevation(mean_vertex_position.elevation()/((double)proj_vertices_current_obj.size()));
-    process_vertices_from_one_object(proj_vertices_current_obj, mean_vertex_position, detection_data_of_current_object, sensor_data, ego_data);
+    process_vertices_from_one_object(proj_vertices_current_obj, mean_vertex_position, detection_data_of_current_object, sensor_data);
 
 } // void apply()
 
@@ -81,22 +79,23 @@ bool DataExtractionStrategy::check_sensor_data_input(const osi3::SensorData &sen
     return check_passed;
 }
 
-void DataExtractionStrategy::process_vertices_from_one_object(const std::vector<Vector2d> &proj_vertices_current_obj, const Spherical3d& mean_vertex_position_of_current_object,
-                                                              const LidarDetectionData &detection_data_of_current_object, osi3::SensorData &sensor_data,
-                                                              const TF::EgoData &ego_data) const {
+void DataExtractionStrategy::process_vertices_from_one_object(const std::vector<Vector2d>& proj_vertices_current_obj,
+                                                              const Spherical3d& mean_vertex_position_of_current_object,
+                                                              const LidarDetectionData& detection_data_of_current_object,
+                                                              osi3::SensorData& sensor_data) const {
     double wave_length;
     double power_equivalent_area;
     float equivalent_reflecting_area_threshold;
     double detection_threshold_dB;
     if(!profile.sensor_view_configuration.radar_sensor_view_configuration().empty()) { // radar
-        wave_length = Speed_of_Light / profile.sensor_view_configuration.radar_sensor_view_configuration(0).emitter_frequency();
+        wave_length = speed_of_light / profile.sensor_view_configuration.radar_sensor_view_configuration(0).emitter_frequency();
         float rcs_dbsm_threshold = 10;
         equivalent_reflecting_area_threshold = (float)pow(10.0, rcs_dbsm_threshold / 10);
         detection_threshold_dB = float(10.0 * log10(pow(wave_length, 2) * equivalent_reflecting_area_threshold / pow(profile.data_extraction_parameters.reference_range_in_m, 4)));
         power_equivalent_area = get_rcs_in_sm(sensor_data, detection_data_of_current_object.detection(0).object_id().value());
 
     } else { // lidar
-        wave_length = Speed_of_Light / profile.sensor_view_configuration.lidar_sensor_view_configuration(0).emitter_frequency();
+        wave_length = speed_of_light / profile.sensor_view_configuration.lidar_sensor_view_configuration(0).emitter_frequency();
         equivalent_reflecting_area_threshold = 2.5;
         detection_threshold_dB = float(10.0 * log10(pow(wave_length, 2) * equivalent_reflecting_area_threshold / pow(profile.data_extraction_parameters.reference_range_in_m, 4)));
         power_equivalent_area = calc_visible_area(proj_vertices_current_obj, mean_vertex_position_of_current_object.distance());
@@ -116,14 +115,14 @@ void DataExtractionStrategy::process_vertices_from_one_object(const std::vector<
                        power_equivalent_value_db > detection_threshold_dB;
 
     if(is_detected) {
-        transform_detections_to_logical_detections(sensor_data, detection_data_of_current_object, ego_data);
+        transform_detections_to_logical_detections(sensor_data, detection_data_of_current_object);
     }
 }
 
 double DataExtractionStrategy::get_rcs_in_sm(osi3::SensorData &sensor_data, uint64_t current_object_id) {
     double rcs_dbsm = 0;
 
-    for(auto& current_object : sensor_data.sensor_view(0).global_ground_truth().moving_object()) {
+    for(const auto& current_object : sensor_data.sensor_view(0).global_ground_truth().moving_object()) {
         if(current_object.id().value() == current_object_id) {
             if (current_object.type() == osi3::MovingObject_Type_TYPE_VEHICLE) {
                 if (current_object.vehicle_classification().type() <= osi3::MovingObject_VehicleClassification::TYPE_LUXURY_CAR) {
@@ -163,11 +162,11 @@ double DataExtractionStrategy::calc_visible_area(const std::vector<Vector2d> &pr
 }
 
 int closest_high(const std::vector<float> &vec, double value) {
-    auto const it = std::upper_bound(vec.begin(), vec.end(), value);
-    if(it == vec.end()) {
-        return (int)std::distance(vec.begin(), it)-1;
+    auto const itr = std::upper_bound(vec.begin(), vec.end(), value);
+    if(itr == vec.end()) {
+        return (int)std::distance(vec.begin(), itr)-1;
     }
-    return std::distance(vec.begin(), it);
+    return static_cast<int>(std::distance(vec.begin(), itr));
 }
 
 float get_interpolation_factor(double input_angle, float lower_bound, float upper_bound) {
@@ -207,8 +206,7 @@ double DataExtractionStrategy::calculate_irradiation_gain(double azimuth_angle_r
     return irradiation_gain;
 }
 
-
-void DataExtractionStrategy::transform_detections_to_logical_detections(osi3::SensorData &sensor_data, const osi3::LidarDetectionData &detection_data, const TF::EgoData &ego_data) const {
+void DataExtractionStrategy::transform_detections_to_logical_detections(osi3::SensorData& sensor_data, const osi3::LidarDetectionData& detection_data) const {
     osi3::Vector3d mounting_position;
     osi3::Orientation3d mounting_orientation;
     if(!profile.sensor_view_configuration.radar_sensor_view_configuration().empty()) { // radar
@@ -219,7 +217,7 @@ void DataExtractionStrategy::transform_detections_to_logical_detections(osi3::Se
         mounting_orientation.CopyFrom(profile.sensor_view_configuration.lidar_sensor_view_configuration(0).mounting_position().orientation());
     }
 
-    for(auto& current_detection : detection_data.detection()) {
+    for(const auto& current_detection : detection_data.detection()) {
         double elevation = current_detection.position().elevation();
         double azimuth   = current_detection.position().azimuth();
         double distance  = current_detection.position().distance();
@@ -230,7 +228,7 @@ void DataExtractionStrategy::transform_detections_to_logical_detections(osi3::Se
         point_cartesian_sensor.set_z(distance * sin(elevation));
         osi3::Vector3d point_cartesian_vehicle = TF::transform_from_local_coordinates(point_cartesian_sensor, mounting_orientation, mounting_position);
 
-        auto current_logical_detection = sensor_data.mutable_logical_detection_data()->add_logical_detection();
+        auto *current_logical_detection = sensor_data.mutable_logical_detection_data()->add_logical_detection();
         current_logical_detection->mutable_position()->set_x(point_cartesian_vehicle.x());
         current_logical_detection->mutable_position()->set_y(point_cartesian_vehicle.y());
         current_logical_detection->mutable_position()->set_z(point_cartesian_vehicle.z());

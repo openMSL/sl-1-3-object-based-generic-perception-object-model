@@ -49,14 +49,17 @@ void get_visible_vertices(std::vector<GroundTruthObject> &ground_truth_object_li
             ground_clearance = 0;
             log("!! Field 'ground_clearance' missing. Occlusion potentially falsely simulated. !!");
         }
-        calculate_occlusion(polygons_in_occlusion_process, visible_vertices, vertices_on_hull, ground_clearance, profile, log);
+        calculate_occlusion(polygons_in_occlusion_process, visible_vertices, vertices_on_hull, ground_clearance, profile);
 
         std::vector<Vertex> visible_vertices_in_fov;
-        clip_fov(visible_vertices_in_fov, visible_vertices, vertices_on_hull, profile, current_gt_object, log, alert);
+        clip_fov(visible_vertices_in_fov, visible_vertices, vertices_on_hull, profile, current_gt_object, alert);
 
-        for (auto &vertex : visible_vertices_in_fov) {
-            if(profile.sensor_view_configuration.radar_sensor_view_configuration().empty() || vertex.vertex3d.distance() < profile.data_extraction_parameters.max_range_in_m)   //hard range cut for radar
-            current_gt_object.visible_bounding_box_vertices_sensor_coord.push_back(vertex.vertex3d);
+        for (auto &vertex : visible_vertices_in_fov)
+        {
+            if(profile.sensor_view_configuration.radar_sensor_view_configuration().empty() || vertex.vertex3d.distance() < profile.data_extraction_parameters.max_range_in_m)
+            {   //hard range cut for radar
+                current_gt_object.visible_bounding_box_vertices_sensor_coord.push_back(vertex.vertex3d);
+            }
         }
         //csv_output.emplace_back(visible_vertices_in_fov); //DEBUG
     }
@@ -96,8 +99,8 @@ void concave_hull_of_vertices_projection(std::vector<Vertex> &vertices_on_hull, 
         center_of_shape[0] = center_of_shape[0]+current_point[0];
         center_of_shape[1] = center_of_shape[1]+current_point[1];
     }
-    point_type point_min_left{center_of_shape[0]/concave.size(),center_of_shape[1]/concave.size()};
-    point_type point_min_right{center_of_shape[0]/concave.size(),center_of_shape[1]/concave.size()};
+    point_type point_min_left{center_of_shape[0]/(double)concave.size(),center_of_shape[1]/(double)concave.size()};
+    point_type point_min_right{center_of_shape[0]/(double)concave.size(),center_of_shape[1]/(double)concave.size()};
     for (auto& current_point : concave) {
         if(current_point[0] < point_min_left[0] && current_point[1] < point_min_left[1]) {
             point_min_left = current_point;
@@ -120,15 +123,15 @@ void concave_hull_of_vertices_projection(std::vector<Vertex> &vertices_on_hull, 
         angles.emplace_back(angle);
     }
     //sort by angle
-    std::vector<int> V;
+    std::vector<int> vertex_index;
     for(int idx = 0; idx < concave.size(); idx++) {
-        V.emplace_back(idx);
+        vertex_index.emplace_back(idx);
     }
     int x=0;
-    std::iota(V.begin(),V.end(),x++); //Initializing
-    sort( V.begin(),V.end(), [&](int i,int j){return angles[i]<angles[j];} );
+    std::iota(vertex_index.begin(), vertex_index.end(),x++); //Initializing
+    sort(vertex_index.begin(), vertex_index.end(), [&](int first,int second){return angles[first]<angles[second];} );
     std::vector<point_type> sorted_concave_hull;
-    for(auto& index : V) {
+    for(auto& index : vertex_index) {
         sorted_concave_hull.emplace_back(concave.at(index));
     }
    //write sorted concave hull to output
@@ -154,7 +157,7 @@ point_type get_normalized_vector(point_type origin, point_type point) {
 
 std::vector<Vertex> project_object_vertices_to_cylinder(const std::vector<osi3::Spherical3d> &all_vertices_spherical) {
     std::vector<Vertex> all_vertices_on_cylinder;
-    for (auto &current_vertex_3d : all_vertices_spherical) {
+    for (const auto &current_vertex_3d : all_vertices_spherical) {
         Vertex vertex_struct;
         vertex_struct.vertex3d.CopyFrom(current_vertex_3d);
         TF::projection_onto_unit_distance_cylinder(current_vertex_3d, vertex_struct.vertex_on_plane);
@@ -163,8 +166,12 @@ std::vector<Vertex> project_object_vertices_to_cylinder(const std::vector<osi3::
     return all_vertices_on_cylinder;
 }
 
-void calculate_occlusion(std::vector<std::vector<Vertex>> &polygons_in_occlusion_process, std::vector<Vertex> &visible_vertices, std::vector<Vertex> &vertices_on_hull, const double &ground_clearance,
-                         const Profile &profile, const Log &log) {
+void calculate_occlusion(std::vector<std::vector<Vertex>>& polygons_in_occlusion_process,
+                         std::vector<Vertex>& visible_vertices,
+                         std::vector<Vertex>& vertices_on_hull,
+                         const double& ground_clearance,
+                         const Profile& profile)
+{
     using namespace ClipperLib;
     float float_to_int_factor = 1000000000000.0;
     bool consider_in_occlusion_process = false;
@@ -180,7 +187,7 @@ void calculate_occlusion(std::vector<std::vector<Vertex>> &polygons_in_occlusion
         visible_vertices = vertices_on_hull;
     } else {
         ClipperLib::Paths clipped_polygons = calculate_clipped_polygons(vertices_on_hull, polygons_in_occlusion_process, float_to_int_factor);
-        append_polygons_in_occlusion_process(visible_vertices, polygons_in_occlusion_process, clipped_polygons, vertices_on_hull, float_to_int_factor, consider_in_occlusion_process);
+        append_polygons_in_occlusion_process(visible_vertices, polygons_in_occlusion_process, clipped_polygons, float_to_int_factor, consider_in_occlusion_process);
     }
 }
 
@@ -189,13 +196,14 @@ ClipperLib::Paths calculate_clipped_polygons(std::vector<Vertex> &vertices_on_hu
     using namespace ClipperLib;
     Paths previous_solutions(1);
     for(auto& current_vertex : vertices_on_hull) {
-        IntPoint current_point(current_vertex.vertex_on_plane.x()*float_to_int_factor,current_vertex.vertex_on_plane.y()*float_to_int_factor);
+        IntPoint current_point(static_cast<int>(current_vertex.vertex_on_plane.x()*float_to_int_factor),static_cast<int>(current_vertex.vertex_on_plane.y()*float_to_int_factor));
         previous_solutions[0] << current_point;
     }
     for(auto& current_polygon : polygons_in_occlusion_process) {
-        Paths clipper(1), current_solutions;
+        Paths clipper(1);
+        Paths current_solutions;
         for(auto& current_vertex : current_polygon) {
-            IntPoint current_point(current_vertex.vertex_on_plane.x()*float_to_int_factor,current_vertex.vertex_on_plane.y()*float_to_int_factor);
+            IntPoint current_point(static_cast<int>(current_vertex.vertex_on_plane.x()*float_to_int_factor),static_cast<int>(current_vertex.vertex_on_plane.y()*float_to_int_factor));
             clipper[0] << current_point;
         }
         for(auto& current_path : previous_solutions) {
@@ -212,7 +220,8 @@ ClipperLib::Paths calculate_clipped_polygons(std::vector<Vertex> &vertices_on_hu
 
 ClipperLib::Paths clip_polygons(std::vector<ClipperLib::IntPoint> &subject, const ClipperLib::Paths &clipper, const ClipperLib::ClipType clip_type) {
     using namespace ClipperLib;
-    Paths subj(1), solution;
+    Paths subj(1);
+    Paths solution;
     subj[0] = subject;
     Clipper c;
     c.AddPaths(subj, ptSubject, true);
@@ -221,24 +230,29 @@ ClipperLib::Paths clip_polygons(std::vector<ClipperLib::IntPoint> &subject, cons
     return solution;
 }
 
-void
-clip_fov(std::vector<Vertex> &visible_vertices_in_fov, const std::vector<Vertex> &visible_vertices, std::vector<Vertex> &vertices_on_hull, const Profile &profile, const GroundTruthObject &gt_object,
-         const Log &log, const Alert &alert) {
+void clip_fov(std::vector<Vertex>& visible_vertices_in_fov,
+              const std::vector<Vertex>& visible_vertices,
+              std::vector<Vertex>& vertices_on_hull,
+              const Profile& profile,
+              const GroundTruthObject& gt_object,
+              const Alert& alert)
+{
     using namespace ClipperLib;
     float float_to_int_factor = 1000000.0;
     Paths subject(1);
-    for(auto& current_vertex : visible_vertices) {
-        IntPoint current_point(current_vertex.vertex_on_plane.x()*float_to_int_factor,current_vertex.vertex_on_plane.y()*float_to_int_factor);
+    for(const auto& current_vertex : visible_vertices) {
+        IntPoint current_point(static_cast<int>(current_vertex.vertex_on_plane.x()*float_to_int_factor),static_cast<int>(current_vertex.vertex_on_plane.y()*float_to_int_factor));
         subject[0] << current_point;
     }
 
     std::vector<Spherical3d> fov_vertices = create_fov_vertices(profile, alert);
 
-    Paths clipper(1), solutions;
+    Paths clipper(1);
+    Paths solutions;
     for(auto& current_fov_vertex : fov_vertices) {
         Vertex current_vertex_plane;
         TF::projection_onto_unit_distance_cylinder(current_fov_vertex, current_vertex_plane.vertex_on_plane);
-        IntPoint current_point(current_vertex_plane.vertex_on_plane.x()*float_to_int_factor,current_vertex_plane.vertex_on_plane.y()*float_to_int_factor);
+        IntPoint current_point(static_cast<int>(current_vertex_plane.vertex_on_plane.x()*float_to_int_factor),static_cast<int>(current_vertex_plane.vertex_on_plane.y()*float_to_int_factor));
         clipper[0] << current_point;
     }
     for(auto& current_path : subject) {
@@ -250,8 +264,8 @@ clip_fov(std::vector<Vertex> &visible_vertices_in_fov, const std::vector<Vertex>
     if(!solutions.empty()) {
         for(auto& current_point : solutions.at(0)) {
             Vertex current_vertex;
-            current_vertex.vertex_on_plane.set_x(current_point.X / float_to_int_factor);
-            current_vertex.vertex_on_plane.set_y(current_point.Y / float_to_int_factor);
+            current_vertex.vertex_on_plane.set_x((float)current_point.X / float_to_int_factor);
+            current_vertex.vertex_on_plane.set_y((float)current_point.Y / float_to_int_factor);
             current_vertex.vertex3d.set_azimuth(current_vertex.vertex_on_plane.x());
             current_vertex.vertex3d.set_elevation(atan(current_vertex.vertex_on_plane.y()));
             reconstruct_3d_distance_from_2d_points(current_vertex, vertices_on_hull, gt_object);
@@ -301,15 +315,18 @@ std::vector<Spherical3d> create_fov_vertices(const Profile &profile, const Alert
     return fov_vertices;
 }
 
-
-void append_polygons_in_occlusion_process(std::vector<Vertex> &visible_vertices, std::vector<std::vector<Vertex>> &polygons_in_occlusion_process, const ClipperLib::Paths &clipped_polygons,
-                                          std::vector<Vertex> &vertices_on_hull, float float_to_int_factor, const bool &consider_in_occlusion_process) {
-    for(auto& current_polygon : clipped_polygons) {
+void append_polygons_in_occlusion_process(std::vector<Vertex>& visible_vertices,
+                                          std::vector<std::vector<Vertex>>& polygons_in_occlusion_process,
+                                          const ClipperLib::Paths& clipped_polygons,
+                                          float float_to_int_factor,
+                                          const bool& consider_in_occlusion_process)
+{
+    for(const auto& current_polygon : clipped_polygons) {
         std::vector<Vertex> output_polygon;
-        for(auto& current_point : current_polygon) {
+        for(const auto& current_point : current_polygon) {
             Vertex current_vertex;
-            current_vertex.vertex_on_plane.set_x(current_point.X/float_to_int_factor);
-            current_vertex.vertex_on_plane.set_y(current_point.Y/float_to_int_factor);
+            current_vertex.vertex_on_plane.set_x((float)current_point.X/float_to_int_factor);
+            current_vertex.vertex_on_plane.set_y((float)current_point.Y/float_to_int_factor);
 
             current_vertex.vertex3d.set_elevation(atan(current_vertex.vertex_on_plane.y()));
             current_vertex.vertex3d.set_azimuth(current_vertex.vertex_on_plane.x());
@@ -351,24 +368,24 @@ void reconstruct_3d_distance_from_2d_points(Vertex &current_vertex, std::vector<
         current_vertex.vertex3d.set_distance(2000000);
 
         ///iterate over all surfaces of current object
-        for(auto& current_surface : current_gt_object.bounding_box_surfaces) {
+        for(const auto& current_surface : current_gt_object.bounding_box_surfaces) {
             ///get surface vertices
             std::vector<Vector3d> surface_vertices_sensor_coord;
-            for(auto& vertex_idx : current_surface) {
+            for(const auto& vertex_idx : current_surface) {
                 surface_vertices_sensor_coord.emplace_back(current_gt_object.bounding_box_vertices_sensor_coord.at(vertex_idx));
             }
 
             ///define plane from surface -> normal N = AB x AC
-            Vector3d surface_point_A = surface_vertices_sensor_coord.at(0);     //p_0
-            Vector3d vector_AB = TF::vector_translation(surface_vertices_sensor_coord.at(1), surface_point_A, -1);
-            Vector3d vector_AC = TF::vector_translation(surface_vertices_sensor_coord.at(2), surface_point_A, -1);
-            Vector3d plane_normal = TF::cross_product(vector_AB, vector_AC);   //N
+            Vector3d surface_point_a = surface_vertices_sensor_coord.at(0);     //p_0
+            Vector3d vector_ab = TF::vector_translation(surface_vertices_sensor_coord.at(1), surface_point_a, -1);
+            Vector3d vector_ac = TF::vector_translation(surface_vertices_sensor_coord.at(2), surface_point_a, -1);
+            Vector3d plane_normal = TF::cross_product(vector_ab, vector_ac);   //N
 
             ///calculate intersection point of ray and surface -> distance d = ((p0 - l0) dot N)/(l dot N)
             Vector3d intersection_point;
             double l_dot_N = TF::dot_product(direction_cartesian, plane_normal);
             if(l_dot_N != 0) {
-                double distance = TF::dot_product(surface_point_A, plane_normal) / l_dot_N;
+                double distance = TF::dot_product(surface_point_a, plane_normal) / l_dot_N;
                 intersection_point.set_x(direction_cartesian.x()*distance);
                 intersection_point.set_y(direction_cartesian.y()*distance);
                 intersection_point.set_z(direction_cartesian.z()*distance);
@@ -414,8 +431,8 @@ void calc_new_vertex_on_edge(Vertex& current_vertex, const std::vector<Vertex> &
 
     //calculate distance between lines
     double min_distance = 0.01;
-    for(auto& current_vertex_of_hull_1 : vertices_on_hull) {
-        for(auto& current_vertex_of_hull_2 : vertices_on_hull) {
+    for(const auto& current_vertex_of_hull_1 : vertices_on_hull) {
+        for(const auto& current_vertex_of_hull_2 : vertices_on_hull) {
             osi3::Vector3d vertex_1_cartesian;
             TF::transform_spherical_to_cartesian(current_vertex_of_hull_1.vertex3d, vertex_1_cartesian);
             osi3::Vector3d vertex_2_cartesian;
@@ -468,7 +485,10 @@ inline double distance_comparison(const Vertex &edge_begin, const Vertex &edge_e
 
 void graham_scan(std::vector<Vertex> &vertices_on_hull, const std::vector<Vertex> &all_vertices) {
     std::vector<osi3::Vector3d>::size_type size_all_vertices = all_vertices.size();
-    if (size_all_vertices < 3) return;
+    if (size_all_vertices < 3)
+    {
+        return;
+    }
     double z_min = all_vertices.at(0).vertex_on_plane.y();
     auto start_itr = all_vertices.begin();
     for (auto vertex_itr = all_vertices.begin(); vertex_itr != all_vertices.end(); ++vertex_itr) { // element at 0 is copied into ptr_subject_head at initialization
@@ -476,7 +496,9 @@ void graham_scan(std::vector<Vertex> &vertices_on_hull, const std::vector<Vertex
             z_min = vertex_itr->vertex_on_plane.y();
             start_itr = vertex_itr;
         } else if ((vertex_itr->vertex_on_plane.y() == z_min) && (vertex_itr->vertex_on_plane.x() < vertex_itr->vertex_on_plane.x()))
+        {
             start_itr = vertex_itr;
+        }
     }
     std::vector<Vertex> temp_container;
     temp_container.push_back(*start_itr);
@@ -494,12 +516,11 @@ void graham_scan(std::vector<Vertex> &vertices_on_hull, const std::vector<Vertex
                 if (position_flag < 0 || (position_flag == 0 && distance_flag > 0)) {
                     temp_container.insert(itr_processing, vertex_processing);
                     break;
-                } else {
-                    ++itr_processing;
-                    if (itr_processing == temp_container.end()) {
-                        temp_container.push_back(vertex_processing);
-                        break;
-                    }
+                }
+                ++itr_processing;
+                if (itr_processing == temp_container.end()) {
+                    temp_container.push_back(vertex_processing);
+                    break;
                 }
             } while (true);
         }
@@ -515,7 +536,8 @@ void graham_scan(std::vector<Vertex> &vertices_on_hull, const std::vector<Vertex
             if (position_flag < 0) {
                 vertices_on_hull.pop_back();
                 continue;
-            } else if (position_flag == 0) {
+            }
+            if (position_flag == 0) {
                 double distance_flag = distance_comparison(vertices_on_hull.end()[-2], vertices_on_hull.end()[-1],
                                                            vertex_push_back);
                 if (distance_flag > 0) {
@@ -524,10 +546,9 @@ void graham_scan(std::vector<Vertex> &vertices_on_hull, const std::vector<Vertex
                 }
                 vertices_on_hull.push_back(vertex_push_back);
                 break;
-            } else {
-                vertices_on_hull.push_back(vertex_push_back);
-                break;
             }
+            vertices_on_hull.push_back(vertex_push_back);
+            break;
         } while (true);
     }
 }
