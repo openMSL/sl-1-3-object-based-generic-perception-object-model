@@ -275,17 +275,17 @@ void Tracking::transform_gt_object_to_ego_coordinate_system(const MovingObject& 
     }
 
     /// Relative acceleration of object in ego coordinate system
-    /*if(current_GT_object.base().has_acceleration()) {
+    /*if(current_gt_object.base().has_acceleration()) {
     current_moving_object->mutable_base()->mutable_acceleration()->CopyFrom(
-            TF::transform_to_local_coordinates(current_GT_object.base().acceleration(), ego_data.ego_base.orientation(), ego_data.ego_base.acceleration()));
+            TF::transform_to_local_coordinates(current_gt_object.base().acceleration(), ego_data.ego_base.orientation(), ego_data.ego_base.acceleration()));
     } else {
         log("!!Field 'acceleration' missing. !!");
     }*/
 
     /// Relative orientation_acceleration of object (delta_delta_rate)
-    /*if(current_GT_object.base().has_orientation_acceleration()) {
+    /*if(current_gt_object.base().has_orientation_acceleration()) {
     current_moving_object->mutable_base()->mutable_orientation_acceleration()->CopyFrom(
-            TF::calc_relative_orientation_to_local(current_GT_object.base().orientation_acceleration(), ego_data.ego_base.orientation_acceleration()));
+            TF::calc_relative_orientation_to_local(current_gt_object.base().orientation_acceleration(), ego_data.ego_base.orientation_acceleration()));
     } else {
         log("!!Field 'orientation_acceleration' missing. !!");
     }*/

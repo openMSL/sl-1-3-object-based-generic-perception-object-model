@@ -27,8 +27,8 @@ class CsvOutputDetectedObjects : public Strategy
 
   public:
   private:
-    static void write_first_line_to_CSV(const std::string& path);
-    static void write_data_to_CSV(const std::string& path,
+    static void write_first_line_to_csv(const std::string& path);
+    static void write_data_to_csv(const std::string& path,
                                   double timestamp,
                                   size_t tracking_id,
                                   double x,

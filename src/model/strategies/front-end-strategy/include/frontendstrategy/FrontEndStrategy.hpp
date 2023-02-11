@@ -44,9 +44,9 @@ struct GroundTruthObject
     std::vector<osi3::Vector3d> bounding_box_vertices_sensor_coord;
     std::vector<osi3::Spherical3d> visible_bounding_box_vertices_sensor_coord;
 
-    bool operator()(const GroundTruthObject& i, const GroundTruthObject& j)
+    bool operator()(const GroundTruthObject& first, const GroundTruthObject& second)
     {
-        return (i.position_spherical_sensor_coord.distance() < j.position_spherical_sensor_coord.distance());
+        return (first.position_spherical_sensor_coord.distance() < second.position_spherical_sensor_coord.distance());
     }
 };
 

@@ -29,7 +29,7 @@ using namespace model;
 void get_visible_vertices(std::vector<GroundTruthObject>& ground_truth_object_list, const Profile& profile, const Log& log, const Alert& alert);
 
 void graham_scan(std::vector<Vertex>& vertices_on_hull, const std::vector<Vertex>& all_vertices);
-void concave_hull_of_vertices_projection(std::vector<Vertex>& first, GroundTruthObject& second, const std::vector<osi3::Spherical3d>& all_vertices_spherical);
+void concave_hull_of_vertices_projection(std::vector<Vertex>& vertices_on_hull, GroundTruthObject& gt_object, const std::vector<osi3::Spherical3d>& all_vertices_spherical);
 void calculate_occlusion(std::vector<std::vector<Vertex>>& polygons_in_occlusion_process,
                          std::vector<Vertex>& visible_vertices,
                          std::vector<Vertex>& vertices_on_hull,
