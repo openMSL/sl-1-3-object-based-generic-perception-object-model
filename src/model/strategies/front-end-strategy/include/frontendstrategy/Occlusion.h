@@ -21,7 +21,7 @@ struct Vertex
 };
 
 typedef double T;
-typedef std::array<T, 2> point_type;
+typedef std::array<T, 2> PointType;
 
 using namespace osi3;
 using namespace model;
@@ -54,6 +54,6 @@ void append_polygons_in_occlusion_process(std::vector<Vertex>& visible_vertices,
 void reconstruct_3d_distance_from_2d_points(Vertex& current_vertex, std::vector<Vertex>& vertices_on_hull, const GroundTruthObject& current_gt_object);
 void calc_new_vertex_on_edge(Vertex& current_vertex, const std::vector<Vertex>& vertices_on_hull);
 
-point_type get_normalized_vector(point_type origin, point_type point);
+PointType get_normalized_vector(PointType origin, PointType point);
 
 #endif  // OCCLUSION_H

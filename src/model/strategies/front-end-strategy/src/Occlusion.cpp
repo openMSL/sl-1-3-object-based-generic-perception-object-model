@@ -85,12 +85,12 @@ void concave_hull_of_vertices_projection(std::vector<Vertex>& vertices_on_hull, 
 
     double test_distance_factor = gt_object.position_spherical_sensor_coord.distance();
 
-    std::vector<point_type> points;
+    std::vector<PointType> points;
     std::vector<int> convex_hull;
     for (int vertex_idx = 0; vertex_idx < all_vertices_on_cylinder.size(); vertex_idx++)
     {
         Vertex current_vertex = all_vertices_on_cylinder.at(vertex_idx);
-        point_type point{current_vertex.vertex_on_plane.x() * test_distance_factor, current_vertex.vertex_on_plane.y() * test_distance_factor};
+        PointType point{current_vertex.vertex_on_plane.x() * test_distance_factor, current_vertex.vertex_on_plane.y() * test_distance_factor};
         points.emplace_back(point);
         for (auto& current_vertex_on_convex_hull : vertices_on_hull)
         {
@@ -105,14 +105,14 @@ void concave_hull_of_vertices_projection(std::vector<Vertex>& vertices_on_hull, 
     auto concave = concaveman<T, 16>(points, convex_hull, 1, 1);  // 0.5/gt_object.position_spherical_sensor_coord.distance());
 
     ////sort concave by angle
-    point_type center_of_shape{0, 0};
+    PointType center_of_shape{0, 0};
     for (auto& current_point : concave)
     {
         center_of_shape[0] = center_of_shape[0] + current_point[0];
         center_of_shape[1] = center_of_shape[1] + current_point[1];
     }
-    point_type point_min_left{center_of_shape[0] / (double)concave.size(), center_of_shape[1] / (double)concave.size()};
-    point_type point_min_right{center_of_shape[0] / (double)concave.size(), center_of_shape[1] / (double)concave.size()};
+    PointType point_min_left{center_of_shape[0] / (double)concave.size(), center_of_shape[1] / (double)concave.size()};
+    PointType point_min_right{center_of_shape[0] / (double)concave.size(), center_of_shape[1] / (double)concave.size()};
     for (auto& current_point : concave)
     {
         if (current_point[0] < point_min_left[0] && current_point[1] < point_min_left[1])
@@ -124,18 +124,18 @@ void concave_hull_of_vertices_projection(std::vector<Vertex>& vertices_on_hull, 
             point_min_right = current_point;
         }
     }
-    point_type point_min_center;
+    PointType point_min_center;
     for (int axis_idx = 0; axis_idx < 2; axis_idx++)
     {
         point_min_center[axis_idx] = point_min_left[axis_idx] + (point_min_right[axis_idx] - point_min_left[axis_idx]) / 2;
     }
-    point_type base_axis = get_normalized_vector(point_min_center, point_min_right);
+    PointType base_axis = get_normalized_vector(point_min_center, point_min_right);
 
     // calc angle
     std::vector<double> angles;
     for (auto& point : concave)
     {
-        point_type vector_direction = get_normalized_vector(point_min_center, point);
+        PointType vector_direction = get_normalized_vector(point_min_center, point);
         double vector_product = round((base_axis[0] * vector_direction[0] + base_axis[1] * vector_direction[1]) * 1000000) / 1000000;
         double angle = acos(vector_product);
         angles.emplace_back(angle);
@@ -149,7 +149,7 @@ void concave_hull_of_vertices_projection(std::vector<Vertex>& vertices_on_hull, 
     int x = 0;
     std::iota(vertex_index.begin(), vertex_index.end(), x++);  // Initializing
     sort(vertex_index.begin(), vertex_index.end(), [&](int first, int second) { return angles[first] < angles[second]; });
-    std::vector<point_type> sorted_concave_hull;
+    std::vector<PointType> sorted_concave_hull;
     for (auto& index : vertex_index)
     {
         sorted_concave_hull.emplace_back(concave.at(index));
@@ -170,9 +170,9 @@ void concave_hull_of_vertices_projection(std::vector<Vertex>& vertices_on_hull, 
     }
 }
 
-point_type get_normalized_vector(point_type origin, point_type point)
+PointType get_normalized_vector(PointType origin, PointType point)
 {
-    point_type vector_direction{point[0] - origin[0], point[1] - origin[1]};
+    PointType vector_direction{point[0] - origin[0], point[1] - origin[1]};
     double vector_length = std::sqrt(std::pow(vector_direction[0], 2) + std::pow(vector_direction[1], 2));
     vector_direction[0] = vector_direction[0] / vector_length;
     vector_direction[1] = vector_direction[1] / vector_length;
