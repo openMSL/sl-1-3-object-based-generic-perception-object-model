@@ -1,4 +1,4 @@
-# Object Based Generic Perception Object Model
+# SL 1-3 Object Based Generic Perception Object Model
 
 ![SPDX workflow](https://github.com/openMSL/object_based_generic_perception_object_model/actions/workflows/spdx.yml/badge.svg)
 ![Build workflow](https://github.com/openMSL/object_based_generic_perception_object_model/actions/workflows/build.yml/badge.svg)
