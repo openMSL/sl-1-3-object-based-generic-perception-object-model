@@ -149,3 +149,14 @@ jobs:
         for i in /tmp/model_fmu/*; do
         echo $i
         done
+        
+    - name: Install dependencies
+      run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
+        
+    - name: Get OpenMCx
+      run: git clone https://github.com/eclipse/openmcx.git
+      
+    - name: Build OpenMCx
+      working-directory: openmcx
+      run: ./build.sh
+      
