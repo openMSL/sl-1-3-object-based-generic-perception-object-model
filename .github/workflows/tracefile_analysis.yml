@@ -95,22 +95,18 @@ jobs:
       run: cd osi-trace-file-player
 
     - name: Prepare C++ Build
-      run: mkdir build
+      run: mkdir build && cd build
 
     - name: Configure CMake
-      working-directory: build
       run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
 
     - name: Build C++
-      working-directory: build
       run: cmake --build .
       
     - name: Create FMU Directory
-      working-directory: build
       run: mkdir /tmp/tracefile_fmu
       
     - name: Copy Tracefile FMU
-      working-directory: build
       run: cp src/OSMPTraceFilePlayer.fmu /tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu
 
     - name: Cache Tracefile FMU
