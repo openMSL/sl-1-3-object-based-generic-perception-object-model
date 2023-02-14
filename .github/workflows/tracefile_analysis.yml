@@ -139,7 +139,7 @@ jobs:
         key: ${{ runner.os }}-tracefile-fmu
 
     - name: Check Model FMU
-      working-directory: /tmp/fmus
+      working-directory: /tmp
       run: |
         echo "Tracefile FMU:"
         for i in /tmp/tracefile_fmu; do
