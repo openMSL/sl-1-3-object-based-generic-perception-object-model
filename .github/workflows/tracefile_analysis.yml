@@ -139,7 +139,6 @@ jobs:
         key: ${{ runner.os }}-tracefile-fmu
 
     - name: Check Model FMU
-      if: steps.cache-model-fmu.outputs.cache-hit != 'true'
       working-directory: /tmp/fmus
       run: |
         echo "Tracefile FMU:"
