@@ -117,6 +117,20 @@ jobs:
       with:
         path: /tmp/tracefile_fmu
         key: ${{ runner.os }}-tracefile-fmu
+    
+    - name: Create FMU Directory
+      run: mkdir /tmp/osi
+      
+    - name: Create FMU Directory
+      working-directory: osi-trace-file-player/trace_file_examples
+      run: mv 20220328T235835Z_sv_340_300_0076_protoBin.osi /tmp/osi/20220328T235835Z_sv_340_300_0076_protoBin.osi
+    
+    - name: Cache Tracefile
+      id: cache-tracefile
+      uses: actions/cache@v3
+      with:
+        path: /tmp/osi
+        key: ${{ runner.os }}-tracefile
 
   test:
     needs: [build_model, build_tracefile_player]
@@ -137,6 +151,13 @@ jobs:
       with:
         path: /tmp/tracefile_fmu
         key: ${{ runner.os }}-tracefile-fmu
+
+    - name: Cache Tracefile
+      id: cache-tracefile
+      uses: actions/cache@v3
+      with:
+        path: /tmp/osi
+        key: ${{ runner.os }}-tracefile
 
     - name: Check Model FMU
       working-directory: /tmp
@@ -159,4 +180,8 @@ jobs:
     - name: Build OpenMCx
       working-directory: openmcx
       run: ./build.sh
+      
+    - name: Run OpenMCx
+      working-directory: openmcx
+      run: ./install/openmcx ../.github/workflows/Tracefile_ObjectBased.ssd
       
