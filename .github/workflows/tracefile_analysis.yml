@@ -143,10 +143,10 @@ jobs:
       working-directory: /tmp/fmus
       run: |
         echo "Tracefile FMU:"
-        for i in ${{ /tmp/tracefile_fmu }}; do
+        for i in /tmp/tracefile_fmu; do
         echo $i
         done
         echo "Model FMU:"
-        for i in ${{ /tmp/model_fmu }}; do
+        for i in /tmp/model_fmu; do
         echo $i
         done
