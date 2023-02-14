@@ -50,17 +50,17 @@ jobs:
       
     - name: Create FMU Directory
       working-directory: build
-      run: mkdir /tmp/fmus
+      run: mkdir /tmp/model_fmu
       
     - name: Copy Model FMU
       working-directory: build
-      run: cp ObjectBasedGenericPerceptionObjectModel.fmu /tmp/fmus/ObjectBasedGenericPerceptionObjectModel.fmu
+      run: cp ObjectBasedGenericPerceptionObjectModel.fmu /tmp/model_fmu/ObjectBasedGenericPerceptionObjectModel.fmu
 
     - name: Cache Model FMU
       id: cache-model-fmu
       uses: actions/cache@v2
       with:
-        path: /tmp/fmus
+        path: /tmp/model_fmu
         key: ${{ runner.os }}-model-fmu
 
   build_tracefile_player:
@@ -104,7 +104,7 @@ jobs:
       run: cmake --build .
       
     - name: Create FMU Directory
-      working-directory: build
+      working-directory: osi-trace-file-player/build
       run: mkdir /tmp/tracefile_fmu
       
     - name: Copy Tracefile FMU
