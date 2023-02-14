@@ -150,5 +150,3 @@ jobs:
         for i in ${{ /tmp/model_fmu }}; do
         echo $i
         done
-
-
