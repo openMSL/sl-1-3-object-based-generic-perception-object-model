@@ -63,8 +63,7 @@ jobs:
         path: /tmp/fmus
         key: ${{ runner.os }}-model-fmu
 
-jobs:
-  build:
+  test:
     name: Run Model FMU
     runs-on: ubuntu-latest
 
