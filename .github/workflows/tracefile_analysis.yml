@@ -64,6 +64,7 @@ jobs:
         key: ${{ runner.os }}-model-fmu
 
   test:
+    needs: build
     name: Run Model FMU
     runs-on: ubuntu-latest
 
