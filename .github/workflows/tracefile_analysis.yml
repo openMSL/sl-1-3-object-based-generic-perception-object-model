@@ -48,11 +48,13 @@ jobs:
       working-directory: build
       run: cmake --build .
       
+    - name: Create FMU Directory
+      working-directory: build
+      run: mkdir /tmp/fmus
+
     - name: Copy Model FMU
       working-directory: build
-      run: |
-        mkdir /tmp/fmus
-        mv ObjectBasedGenericPerceptionObjectModel.fmu /tmp/fmus/ObjectBasedGenericPerceptionObjectModel.fmu
+      run: mv ObjectBasedGenericPerceptionObjectModel.fmu /tmp/fmus/ObjectBasedGenericPerceptionObjectModel.fmu
       	
     - name: Cache Model FMU
       id: cache-model-fmu
