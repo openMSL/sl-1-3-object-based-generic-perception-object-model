@@ -91,22 +91,24 @@ jobs:
     - name: Get Tracefile Player
       run: git clone https://gitlab.com/persival-open-source/open-simulation-interface/osi-trace-file-player.git
 
-    - name: Change directory
-      run: cd osi-trace-file-player
-
     - name: Prepare C++ Build
-      run: mkdir build && cd build
+      working-directory: osi-trace-file-player
+      run: mkdir build
 
     - name: Configure CMake
+      working-directory: osi-trace-file-player/build
       run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
 
     - name: Build C++
+      working-directory: osi-trace-file-player/build
       run: cmake --build .
       
     - name: Create FMU Directory
+      working-directory: build
       run: mkdir /tmp/tracefile_fmu
       
     - name: Copy Tracefile FMU
+      working-directory: osi-trace-file-player/build
       run: cp src/OSMPTraceFilePlayer.fmu /tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu
 
     - name: Cache Tracefile FMU
