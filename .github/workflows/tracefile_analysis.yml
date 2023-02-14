@@ -93,7 +93,7 @@ jobs:
 
     - name: Prepare C++ Build
       working-directory: osi-trace-file-player
-      run: mkdir build
+      run: git submodule update --init && mkdir build
 
     - name: Configure CMake
       working-directory: osi-trace-file-player/build
