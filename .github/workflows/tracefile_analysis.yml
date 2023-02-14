@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build_model:
     name: Build FMU
     runs-on: ubuntu-latest
 
@@ -63,12 +63,78 @@ jobs:
         path: /tmp/fmus
         key: ${{ runner.os }}-model-fmu
 
+  build_tracefile_player:
+    name: Build FMU
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Cache Dependencies
+      id: cache-depends
+      uses: actions/cache@v2
+      with:
+        path: protobuf-21.12
+        key: ${{ runner.os }}-v1-depends
+
+    - name: Download ProtoBuf
+      if: steps.cache-depends.outputs.cache-hit != 'true'
+      run: curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-all-21.12.tar.gz && tar xzvf protobuf-all-21.12.tar.gz
+
+    - name: Build ProtoBuf
+      if: steps.cache-depends.outputs.cache-hit != 'true'
+      working-directory: protobuf-21.12
+      run: ./configure DIST_LANG=cpp --prefix=/usr --disable-shared CXXFLAGS="-fPIC" && make
+
+    - name: Install ProtoBuf
+      working-directory: protobuf-21.12
+      run: sudo make install && sudo ldconfig
+
+    - name: Change directory
+      run: cd osi-trace-file-player
+
+    - name: Prepare C++ Build
+      run: mkdir build
+
+    - name: Configure CMake
+      working-directory: build
+      run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
+
+    - name: Build C++
+      working-directory: build
+      run: cmake --build .
+      
+    - name: Create FMU Directory
+      working-directory: build
+      run: mkdir /tmp/tracefile_fmu
+      
+    - name: Copy Tracefile FMU
+      working-directory: build
+      run: cp src/OSMPTraceFilePlayer.fmu /tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu
+
+    - name: Cache Tracefile FMU
+      id: cache-tracefile-fmu
+      uses: actions/cache@v2
+      with:
+        path: /tmp/tracefile_fmu
+        key: ${{ runner.os }}-tracefile-fmu
+
   test:
-    needs: build
+    needs: [build_model, build_tracefile_player]
     name: Run Model FMU
     runs-on: ubuntu-latest
 
     steps:
+    - name: Cache Model FMU
+      id: cache-model-fmu
+      uses: actions/cache@v2
+      with:
+        path: /tmp/fmus
+        key: ${{ runner.os }}-model-fmu
+    - name: Cache Tracefile FMU
+      id: cache-tracefile-fmu
+      uses: actions/cache@v2
+      with:
+        path: /tmp/tracefile_fmu
+        key: ${{ runner.os }}-tracefile-fmu
     - name: Check Model FMU
       if: steps.cache-model-fmu.outputs.cache-hit != 'true'
       working-directory: /tmp/fmus
