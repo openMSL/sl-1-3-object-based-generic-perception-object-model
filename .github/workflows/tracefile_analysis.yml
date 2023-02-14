@@ -51,8 +51,8 @@ jobs:
     - name: Copy Model FMU
       working-directory: build
       run: |
-      	mkdir /tmp/fmus
-      	mv ObjectBasedGenericPerceptionObjectModel.fmu /tmp/fmus/ObjectBasedGenericPerceptionObjectModel.fmu
+        mkdir /tmp/fmus
+        mv ObjectBasedGenericPerceptionObjectModel.fmu /tmp/fmus/ObjectBasedGenericPerceptionObjectModel.fmu
       	
     - name: Cache Model FMU
       id: cache-model-fmu
