@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_model:
-    name: Build FMU
+    name: Build Model FMU
     runs-on: ubuntu-latest
 
     steps:
@@ -64,7 +64,7 @@ jobs:
         key: ${{ runner.os }}-model-fmu
 
   build_tracefile_player:
-    name: Build FMU
+    name: Build Tracefile Player FMU
     runs-on: ubuntu-latest
 
     steps:
@@ -87,6 +87,9 @@ jobs:
     - name: Install ProtoBuf
       working-directory: protobuf-21.12
       run: sudo make install && sudo ldconfig
+
+    - name: Get Tracefile Player
+      run: git clone https://gitlab.com/persival-open-source/open-simulation-interface/osi-trace-file-player.git
 
     - name: Change directory
       run: cd osi-trace-file-player
