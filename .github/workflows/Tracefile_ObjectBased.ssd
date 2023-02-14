@@ -11,7 +11,7 @@
             </ssd:ParameterBinding>
         </ssd:ParameterBindings>
         <ssd:Elements>
-            <ssd:Component type="application/x-fmu-sharedlibrary" source="resources/OSMPTraceFilePlayer.fmu" implementation="any" name="OSMPTraceFilePlayer" description="">
+            <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu" implementation="any" name="OSMPTraceFilePlayer" description="">
                 <ssd:Connectors>
                     <ssd:Connector name="OSMPSensorViewOut.size" kind="output" description="">
                         <ssc:Integer/>
@@ -52,7 +52,7 @@
                     </ssd:ParameterBinding>
                 </ssd:ParameterBindings>
             </ssd:Component>
-            <ssd:Component type="application/x-fmu-sharedlibrary" source="resources/ObjectBasedGenericPerceptionObjectModel.fmu" implementation="any" name="ObjectBasedGenericPerceptionObjectModel" description="">
+            <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/model_fmu/ObjectBasedGenericPerceptionObjectModel.fmu" implementation="any" name="ObjectBasedGenericPerceptionObjectModel" description="">
                 <ssd:Connectors>
                     <ssd:Connector name="OSMPSensorViewIn.size" kind="input" description="">
                         <ssc:Integer/>
