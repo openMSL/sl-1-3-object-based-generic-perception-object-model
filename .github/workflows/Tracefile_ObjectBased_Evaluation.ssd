@@ -11,7 +11,7 @@
             </ssd:ParameterBinding>
         </ssd:ParameterBindings>
         <ssd:Elements>
-            <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu" implementation="CoSimulation" name="OSMP BinarySVPlayer FMU" description="Demonstration C++ SensorView Source FMU for OSI Sensor Model Packaging">
+            <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu" implementation="CoSimulation" name="OSMPTraceFilePlayer" description="Demonstration C++ SensorView Source FMU for OSI Sensor Model Packaging">
                 <ssd:Connectors>
                     <ssd:Connector name="OSMPSensorViewOut.base.hi" kind="output">
                         <ssc:Integer/>
@@ -115,12 +115,12 @@
             </ssd:Component>
         </ssd:Elements>
         <ssd:Connections>
-            <ssd:Connection startElement="OSMP BinarySVPlayer FMU" startConnector="OSMPSensorViewOut.base.hi" endElement="OSMP Dummy Sensor FMU" endConnector="OSMPSensorViewIn.base.hi" suppressUnitConversion="false"/>
-            <ssd:Connection startElement="OSMP BinarySVPlayer FMU" startConnector="OSMPSensorViewOut.size" endElement="OSMP Dummy Sensor FMU" endConnector="OSMPSensorViewIn.size" suppressUnitConversion="false"/>
-            <ssd:Connection startElement="OSMP BinarySVPlayer FMU" startConnector="OSMPSensorViewOut.base.lo" endElement="OSMP Dummy Sensor FMU" endConnector="OSMPSensorViewIn.base.lo" suppressUnitConversion="false"/>
-            <ssd:Connection startElement="OSMP Dummy Sensor FMU" startConnector="OSMPSensorDataOut.base.hi" endElement="OSICheck" endConnector="OSMPSensorDataIn.base.hi" suppressUnitConversion="false"/>
-            <ssd:Connection startElement="OSMP Dummy Sensor FMU" startConnector="OSMPSensorDataOut.size" endElement="OSICheck" endConnector="OSMPSensorDataIn.size" suppressUnitConversion="false"/>
-            <ssd:Connection startElement="OSMP Dummy Sensor FMU" startConnector="OSMPSensorDataOut.base.lo" endElement="OSICheck" endConnector="OSMPSensorDataIn.base.lo" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.base.hi" endElement="ObjectBasedGenericPerceptionObjectModel" endConnector="OSMPSensorViewIn.base.hi" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.size" endElement="ObjectBasedGenericPerceptionObjectModel" endConnector="OSMPSensorViewIn.size" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.base.lo" endElement="ObjectBasedGenericPerceptionObjectModel" endConnector="OSMPSensorViewIn.base.lo" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="ObjectBasedGenericPerceptionObjectModel" startConnector="OSMPSensorDataOut.base.hi" endElement="OSICheck" endConnector="OSMPSensorDataIn.base.hi" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="ObjectBasedGenericPerceptionObjectModel" startConnector="OSMPSensorDataOut.size" endElement="OSICheck" endConnector="OSMPSensorDataIn.size" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="ObjectBasedGenericPerceptionObjectModel" startConnector="OSMPSensorDataOut.base.lo" endElement="OSICheck" endConnector="OSMPSensorDataIn.base.lo" suppressUnitConversion="false"/>
         </ssd:Connections>
         <ssd:SystemGeometry x1="-619.0" y1="-666.5" x2="1849.5" y2="126.5"/>
     </ssd:System>
