@@ -242,4 +242,9 @@ jobs:
     - name: Run OpenMCx
       working-directory: openmcx
       run: ./install/openmcx ../.github/workflows/Tracefile_ObjectBased_Evaluation.ssd
-      
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: Missing-OSI-Fields
+        path: /tmp/missing_osi_fields.txt
