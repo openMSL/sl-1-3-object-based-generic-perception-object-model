@@ -178,7 +178,7 @@ jobs:
 
       - name: Copy Evaluation FMU
         working-directory: osi-check-fmu/build
-        run: cp src/OSICheck.fmu /tmp/evaluation_fmu/OSICheck.fmu
+        run: cp OSICheck.fmu /tmp/evaluation_fmu/OSICheck.fmu
 
       - name: Cache Evaluation FMU
         id: cache-evaluation-fmu
