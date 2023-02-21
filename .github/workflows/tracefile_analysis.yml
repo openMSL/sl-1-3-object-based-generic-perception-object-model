@@ -242,6 +242,9 @@ jobs:
     - name: Run OpenMCx
       working-directory: openmcx
       run: ./install/openmcx ../.github/workflows/Tracefile_ObjectBased_Evaluation.ssd
+      
+    - name: Annotation Test
+      run: echo "::error file=app.js,title=MissingField::This is a test"
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
