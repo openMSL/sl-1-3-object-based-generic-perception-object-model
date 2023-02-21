@@ -117,20 +117,6 @@ jobs:
       with:
         path: /tmp/tracefile_fmu
         key: ${{ runner.os }}-tracefile-fmu
-    
-    - name: Create Tracefile Directory
-      run: mkdir /tmp/osi
-      
-    - name: Copy Tracefile
-      working-directory: osi-trace-file-player/trace_file_examples
-      run: cp .github/workflows/tracefile_analysis/20230221T153730Z_sv_340_300_0000_protoBin.osi /tmp/osi/20230221T153730Z_sv_340_300_0000_protoBin.osi
-    
-    - name: Cache Tracefile
-      id: cache-tracefile
-      uses: actions/cache@v3
-      with:
-        path: /tmp/osi
-        key: ${{ runner.os }}-tracefile
 
   build_evaluation_fmu:
     name: Build Evaluation FMU
@@ -218,6 +204,13 @@ jobs:
       with:
         path: /tmp/osi
         key: ${{ runner.os }}-tracefile
+    
+    - name: Create Tracefile Directory
+      run: mkdir /tmp/osi
+      
+    - name: Copy Tracefile
+      working-directory: osi-trace-file-player/trace_file_examples
+      run: cp .github/workflows/tracefile_analysis/20230221T153730Z_sv_340_300_0000_protoBin.osi /tmp/osi/20230221T153730Z_sv_340_300_0000_protoBin.osi
 
     - name: Cache Evaluation FMU
       id: cache-evaluation-fmu
