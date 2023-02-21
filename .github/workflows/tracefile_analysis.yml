@@ -245,10 +245,10 @@ jobs:
       run: ./install/openmcx ../.github/workflows/Tracefile_ObjectBased_Evaluation.ssd
       
     - name: Test Fail criterion
-      run: echo "Fail output is ${{ steps.cosimulation.outputs.missing_fields }}"  
+      run: echo "Fail output is ${{ steps.cosimulation.outputs.num_missing_fields }}"  
       
     - name: Failed?
-      if: steps.cosimulation.outputs.missing_fields == true
+      if: steps.cosimulation.outputs.num_missing_fields>0
       run: exit 1
 
 
