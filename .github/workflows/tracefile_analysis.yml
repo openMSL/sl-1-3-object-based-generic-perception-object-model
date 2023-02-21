@@ -123,7 +123,7 @@ jobs:
       
     - name: Copy Tracefile
       working-directory: osi-trace-file-player/trace_file_examples
-      run: mv 20220328T235835Z_sv_340_300_0076_protoBin.osi /tmp/osi/20220328T235835Z_sv_340_300_0076_protoBin.osi
+      run: cp .github/workflows/tracefile_analysis/20230221T153730Z_sv_340_300_0000_protoBin.osi /tmp/osi/20230221T153730Z_sv_340_300_0000_protoBin.osi
     
     - name: Cache Tracefile
       id: cache-tracefile
@@ -227,7 +227,7 @@ jobs:
         key: ${{ runner.os }}-evaluation-fmu
 
     - name: Copy OSI Check File
-      run: cp .github/workflows/osi_check.txt /tmp/osi_check.txt
+      run: cp .github/workflows/tracefile_analysis/osi_check.txt /tmp/osi_check.txt
 
     - name: Install dependencies
       run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
@@ -242,7 +242,7 @@ jobs:
     - name: Run OpenMCx
       id: cosimulation
       working-directory: openmcx
-      run: ./install/openmcx ../.github/workflows/Tracefile_ObjectBased_Evaluation.ssd
+      run: ./install/openmcx ../.github/workflows/tracefile_analysis/Tracefile_ObjectBased_Evaluation.ssd
       
     - name: Test Fail criterion
       run: echo "Fail output is ${{ steps.cosimulation.outputs.num_missing_fields }}"  
