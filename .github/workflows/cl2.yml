@@ -146,13 +146,6 @@ jobs:
         path: /tmp/tracefile_fmu
         key: ${{ runner.os }}-tracefile-fmu
 
-    - name: Cache Tracefile
-      id: cache-tracefile
-      uses: actions/cache@v3
-      with:
-        path: /tmp/osi
-        key: ${{ runner.os }}-tracefile
-    
     - name: Create Tracefile Directory
       run: mkdir /tmp/osi
       
