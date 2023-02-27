@@ -118,7 +118,7 @@ jobs:
         path: /tmp/tracefile_fmu
         key: ${{ runner.os }}-tracefile-fmu
 
-  build_osi-field-checker_fmu:
+  build_osi_field_checker_fmu:
     name: Build OSI Field Checker FMU
     runs-on: ubuntu-latest
 
@@ -173,8 +173,8 @@ jobs:
           path: /tmp/osi-field-checker
           key: ${{ runner.os }}-osi-field-checker
 
-  test:
-    needs: [build_model, build_tracefile_player, build_evaluation_fmu]
+  run_osi_field_check:
+    needs: [build_model, build_tracefile_player, build_osi_field_checker_fmu]
     name: Run Model FMU
     runs-on: ubuntu-latest
 
