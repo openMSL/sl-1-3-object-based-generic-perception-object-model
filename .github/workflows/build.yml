@@ -1,10 +1,9 @@
 name: Build
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_call:
+    inputs:
+    secrets:
 
 jobs:
   build:
@@ -48,3 +47,17 @@ jobs:
       working-directory: build
       run: cmake --build .
 
+    - name: Create FMU Directory
+      working-directory: build
+      run: mkdir /tmp/model_fmu
+
+    - name: Copy Model FMU
+      working-directory: build
+      run: cp ObjectBasedGenericPerceptionObjectModel.fmu /tmp/model_fmu/ObjectBasedGenericPerceptionObjectModel.fmu
+
+    - name: Cache Model FMU
+      id: cache-model-fmu
+      uses: actions/cache@v3
+      with:
+        path: /tmp/model_fmu
+        key: ${{ runner.os }}-model-fmu
