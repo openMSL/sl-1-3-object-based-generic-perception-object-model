@@ -118,8 +118,8 @@ jobs:
         path: /tmp/tracefile_fmu
         key: ${{ runner.os }}-tracefile-fmu
 
-  build_evaluation_fmu:
-    name: Build Evaluation FMU
+  build_osi-field-checker_fmu:
+    name: Build OSI Field Checker FMU
     runs-on: ubuntu-latest
 
     steps:
@@ -143,35 +143,35 @@ jobs:
         working-directory: protobuf-21.12
         run: sudo make install && sudo ldconfig
 
-      - name: Get Evaluation FMU
-        run: git clone https://github.com/Persival-GmbH/osi-check-fmu.git
+      - name: Clone OpenMSL Sensor Model Testing
+        run: git clone https://github.com/openMSL/sl-1-5-sensor-model-testing.git
 
       - name: Prepare C++ Build
-        working-directory: osi-check-fmu
+        working-directory: sl-1-5-sensor-model-testing
         run: git submodule update --init && mkdir build
 
       - name: Configure CMake
-        working-directory: osi-check-fmu/build
+        working-directory: sl-1-5-sensor-model-testing/build
         run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
 
       - name: Build C++
-        working-directory: osi-check-fmu/build
+        working-directory: sl-1-5-sensor-model-testing/build
         run: cmake --build .
 
       - name: Create FMU Directory
-        working-directory: osi-check-fmu/build
-        run: mkdir /tmp/evaluation_fmu
+        working-directory: sl-1-5-sensor-model-testing/build
+        run: mkdir /tmp/osi-field-checker
 
-      - name: Copy Evaluation FMU
-        working-directory: osi-check-fmu/build
-        run: cp OSICheck.fmu /tmp/evaluation_fmu/OSICheck.fmu
+      - name: Copy OSI Field Checker FMU
+        working-directory: sl-1-5-sensor-model-testing/build
+        run: cp OSIFieldChecker.fmu /tmp/osi-field-checker/OSIFieldChecker.fmu
 
-      - name: Cache Evaluation FMU
-        id: cache-evaluation-fmu
+      - name: Cache OSI Field Checker FMU
+        id: cache-osi-field-checker
         uses: actions/cache@v3
         with:
-          path: /tmp/evaluation_fmu
-          key: ${{ runner.os }}-evaluation-fmu
+          path: /tmp/osi-field-checker
+          key: ${{ runner.os }}-osi-field-checker
 
   test:
     needs: [build_model, build_tracefile_player, build_evaluation_fmu]
@@ -211,12 +211,12 @@ jobs:
     - name: Copy Tracefile
       run: cp .github/workflows/tracefile_analysis/20230221T153730Z_sv_340_300_0000_protoBin.osi /tmp/osi/20230221T153730Z_sv_340_300_0000_protoBin.osi
 
-    - name: Cache Evaluation FMU
-      id: cache-evaluation-fmu
+    - name: Cache OSI Field Checker
+      id: cache-osi-field-checker
       uses: actions/cache@v3
       with:
-        path: /tmp/evaluation_fmu
-        key: ${{ runner.os }}-evaluation-fmu
+        path: /tmp/osi-field-checker
+        key: ${{ runner.os }}-osi-field-checker
 
     - name: Copy OSI Check File
       run: cp .github/workflows/tracefile_analysis/osi_check.txt /tmp/osi_check.txt
@@ -234,7 +234,7 @@ jobs:
     - name: Run OpenMCx
       id: cosimulation
       working-directory: openmcx
-      run: ./install/openmcx ../.github/workflows/tracefile_analysis/Tracefile_ObjectBased_Evaluation.ssd
+      run: ./install/openmcx ../.github/workflows/tracefile_analysis/Tracefile_ObjectBased_OSIFieldChecker.ssd
            
     - name: Failed?
       if: steps.cosimulation.outputs.num_missing_fields>0
