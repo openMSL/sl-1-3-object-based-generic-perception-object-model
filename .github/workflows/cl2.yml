@@ -8,8 +8,8 @@ on:
 
 jobs:
   build_model:
+    name: Build Model
     uses: openMSL/sl-1-3-object-based-generic-perception-object-model/.github/workflows/build.yml@tracefile_runner
-
 
   build_tracefile_player:
     name: Build Tracefile Player FMU
@@ -157,7 +157,7 @@ jobs:
       run: mkdir /tmp/osi
       
     - name: Copy Tracefile
-      run: cp .github/workflows/tracefile_analysis/20230221T153730Z_sv_340_300_0000_protoBin.osi /tmp/osi/20230221T153730Z_sv_340_300_0000_protoBin.osi
+      run: cp .github/workflows/cl2/20230221T153730Z_sv_340_300_0000_protoBin.osi /tmp/osi/20230221T153730Z_sv_340_300_0000_protoBin.osi
 
     - name: Cache OSI Field Checker
       id: cache-osi-field-checker
@@ -167,7 +167,7 @@ jobs:
         key: ${{ runner.os }}-osi-field-checker
 
     - name: Copy OSI Check File
-      run: cp .github/workflows/tracefile_analysis/osi_check.txt /tmp/osi_check.txt
+      run: cp .github/workflows/cl2/osi_check.txt /tmp/osi_check.txt
 
     - name: Install dependencies
       run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
@@ -182,7 +182,7 @@ jobs:
     - name: Run OpenMCx
       id: cosimulation
       working-directory: openmcx
-      run: ./install/openmcx ../.github/workflows/tracefile_analysis/Tracefile_ObjectBased_OSIFieldChecker.ssd
+      run: ./install/openmcx ../.github/workflows/cl2/Tracefile_ObjectBased_OSIFieldChecker.ssd
            
     - name: Failed?
       if: steps.cosimulation.outputs.num_missing_fields>0
