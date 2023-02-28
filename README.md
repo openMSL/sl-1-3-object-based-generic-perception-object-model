@@ -1,8 +1,8 @@
 # SL 1-3 Object Based Generic Perception Object Model
 
 ![SPDX workflow](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/spdx.yml/badge.svg)
-![CPP Linter workflow](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cpp-linter.yml/badge.svg)
-![Build workflow](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/build.yml/badge.svg)
+![Credibility Assessment Level 1](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl1.yml/badge.svg)
+![Credibility Assessment Level 1](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl2.yml/badge.svg)
 
 <img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" width="100" />
 

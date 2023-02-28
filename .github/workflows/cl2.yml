@@ -1,4 +1,4 @@
-name: Tracefile Analysis
+name: Credibility Assessment Level 2
 
 on:
   push:
@@ -8,60 +8,8 @@ on:
 
 jobs:
   build_model:
-    name: Build Model FMU
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout Model
-      uses: actions/checkout@v3
-      with:
-        submodules: true
-
-    - name: Cache Dependencies
-      id: cache-depends
-      uses: actions/cache@v3
-      with:
-        path: protobuf-21.12
-        key: ${{ runner.os }}-v1-depends
-
-    - name: Download ProtoBuf
-      if: steps.cache-depends.outputs.cache-hit != 'true'
-      run: curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-all-21.12.tar.gz && tar xzvf protobuf-all-21.12.tar.gz
-
-    - name: Build ProtoBuf
-      if: steps.cache-depends.outputs.cache-hit != 'true'
-      working-directory: protobuf-21.12
-      run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make
-
-    - name: Install ProtoBuf
-      working-directory: protobuf-21.12
-      run: sudo make install && sudo ldconfig
-
-    - name: Prepare C++ Build
-      run: mkdir build
-
-    - name: Configure CMake
-      working-directory: build
-      run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
-
-    - name: Build C++
-      working-directory: build
-      run: cmake --build .
-      
-    - name: Create FMU Directory
-      working-directory: build
-      run: mkdir /tmp/model_fmu
-      
-    - name: Copy Model FMU
-      working-directory: build
-      run: cp ObjectBasedGenericPerceptionObjectModel.fmu /tmp/model_fmu/ObjectBasedGenericPerceptionObjectModel.fmu
-
-    - name: Cache Model FMU
-      id: cache-model-fmu
-      uses: actions/cache@v3
-      with:
-        path: /tmp/model_fmu
-        key: ${{ runner.os }}-model-fmu
+    name: Build Model
+    uses: openMSL/sl-1-3-object-based-generic-perception-object-model/.github/workflows/build.yml@tracefile_runner
 
   build_tracefile_player:
     name: Build Tracefile Player FMU
@@ -117,23 +65,9 @@ jobs:
       with:
         path: /tmp/tracefile_fmu
         key: ${{ runner.os }}-tracefile-fmu
-    
-    - name: Create Tracefile Directory
-      run: mkdir /tmp/osi
-      
-    - name: Copy Tracefile
-      working-directory: osi-trace-file-player/trace_file_examples
-      run: mv 20220328T235835Z_sv_340_300_0076_protoBin.osi /tmp/osi/20220328T235835Z_sv_340_300_0076_protoBin.osi
-    
-    - name: Cache Tracefile
-      id: cache-tracefile
-      uses: actions/cache@v3
-      with:
-        path: /tmp/osi
-        key: ${{ runner.os }}-tracefile
 
-  build_evaluation_fmu:
-    name: Build Evaluation FMU
+  build_osi_field_checker_fmu:
+    name: Build OSI Field Checker FMU
     runs-on: ubuntu-latest
 
     steps:
@@ -157,38 +91,38 @@ jobs:
         working-directory: protobuf-21.12
         run: sudo make install && sudo ldconfig
 
-      - name: Get Evaluation FMU
-        run: git clone https://github.com/Persival-GmbH/osi-check-fmu.git
+      - name: Clone OpenMSL Sensor Model Testing
+        run: git clone https://github.com/openMSL/sl-1-5-sensor-model-testing.git
 
       - name: Prepare C++ Build
-        working-directory: osi-check-fmu
+        working-directory: sl-1-5-sensor-model-testing
         run: git submodule update --init && mkdir build
 
       - name: Configure CMake
-        working-directory: osi-check-fmu/build
+        working-directory: sl-1-5-sensor-model-testing/build
         run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
 
       - name: Build C++
-        working-directory: osi-check-fmu/build
+        working-directory: sl-1-5-sensor-model-testing/build
         run: cmake --build .
 
       - name: Create FMU Directory
-        working-directory: osi-check-fmu/build
-        run: mkdir /tmp/evaluation_fmu
+        working-directory: sl-1-5-sensor-model-testing/build
+        run: mkdir /tmp/osi-field-checker
 
-      - name: Copy Evaluation FMU
-        working-directory: osi-check-fmu/build
-        run: cp OSICheck.fmu /tmp/evaluation_fmu/OSICheck.fmu
+      - name: Copy OSI Field Checker FMU
+        working-directory: sl-1-5-sensor-model-testing/build
+        run: cp OSIFieldChecker.fmu /tmp/osi-field-checker/OSIFieldChecker.fmu
 
-      - name: Cache Evaluation FMU
-        id: cache-evaluation-fmu
+      - name: Cache OSI Field Checker FMU
+        id: cache-osi-field-checker
         uses: actions/cache@v3
         with:
-          path: /tmp/evaluation_fmu
-          key: ${{ runner.os }}-evaluation-fmu
+          path: /tmp/osi-field-checker
+          key: ${{ runner.os }}-osi-field-checker
 
-  test:
-    needs: [build_model, build_tracefile_player, build_evaluation_fmu]
+  run_osi_field_check:
+    needs: [build_model, build_tracefile_player, build_osi_field_checker_fmu]
     name: Run Model FMU
     runs-on: ubuntu-latest
 
@@ -212,22 +146,21 @@ jobs:
         path: /tmp/tracefile_fmu
         key: ${{ runner.os }}-tracefile-fmu
 
-    - name: Cache Tracefile
-      id: cache-tracefile
-      uses: actions/cache@v3
-      with:
-        path: /tmp/osi
-        key: ${{ runner.os }}-tracefile
+    - name: Create Tracefile Directory
+      run: mkdir /tmp/osi
+      
+    - name: Copy Tracefile
+      run: cp .github/workflows/cl2/20230221T153730Z_sv_340_300_0000_protoBin.osi /tmp/osi/20230221T153730Z_sv_340_300_0000_protoBin.osi
 
-    - name: Cache Evaluation FMU
-      id: cache-evaluation-fmu
+    - name: Cache OSI Field Checker
+      id: cache-osi-field-checker
       uses: actions/cache@v3
       with:
-        path: /tmp/evaluation_fmu
-        key: ${{ runner.os }}-evaluation-fmu
+        path: /tmp/osi-field-checker
+        key: ${{ runner.os }}-osi-field-checker
 
     - name: Copy OSI Check File
-      run: cp .github/workflows/osi_check.txt /tmp/osi_check.txt
+      run: cp .github/workflows/cl2/osi_check.txt /tmp/osi_check.txt
 
     - name: Install dependencies
       run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
@@ -240,11 +173,12 @@ jobs:
       run: ./build.sh
       
     - name: Run OpenMCx
+      id: cosimulation
       working-directory: openmcx
-      run: ./install/openmcx ../.github/workflows/Tracefile_ObjectBased_Evaluation.ssd
+      run: ./install/openmcx ../.github/workflows/cl2/Tracefile_ObjectBased_OSIFieldChecker.ssd
+           
+    - name: Failed?
+      if: steps.cosimulation.outputs.num_missing_fields>0
+      run: exit 1
 
-    - name: Upload Test Results
-      uses: actions/upload-artifact@v3
-      with:
-        name: Missing-OSI-Fields
-        path: /tmp/missing_osi_fields.txt
+
