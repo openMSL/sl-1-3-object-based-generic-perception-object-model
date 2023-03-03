@@ -2,7 +2,7 @@
 
 ![SPDX workflow](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/spdx.yml/badge.svg)
 ![Credibility Assessment Level 1](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl1.yml/badge.svg)
-![Credibility Assessment Level 1](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl2.yml/badge.svg)
+![Credibility Assessment Level 2](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl2.yml/badge.svg)
 
 <img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" width="100" />
 
