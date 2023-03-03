@@ -9,8 +9,8 @@ on:
 jobs:
   build_model:
     name: Build Model
-    uses: openMSL/sl-1-3-object-based-generic-perception-object-model/.github/workflows/build.yml@tracefile_runner
+    uses: openMSL/sl-1-3-object-based-generic-perception-object-model/.github/workflows/build.yml@main
 
   cpp-linter:
     name: C++ Linter
-    uses: openMSL/sl-1-3-object-based-generic-perception-object-model/.github/workflows/cpp-linter.yml@tracefile_runner
+    uses: openMSL/sl-1-3-object-based-generic-perception-object-model/.github/workflows/cpp-linter.yml@main
