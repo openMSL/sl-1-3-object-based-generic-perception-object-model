@@ -257,7 +257,7 @@ NOTE: Currently, all information on model input is passed to the output.
 
 ### Install Dependencies in Windows 10
 
-1. Install [cmake](https://github.com/Kitware/CMake/releases/download/v3.20.3/cmake-3.20.3-windows-x86_64.msi) 
+1. Install [cmake](https://github.com/Kitware/CMake/releases/download/v3.20.3/cmake-3.20.3-windows-x86_64.msi)
 2. Install protobuf for [MSYS-2020](doc/build-instructions/install_protobuf_Win64_MSYS-2020.md) or [Visual Studio 2017](doc/build-instructions/install_protobuf_Win64_VS2017.md)
 
 ### Clone with SSH incl. Submodules, Build, and Install in Windows 10
@@ -284,7 +284,8 @@ NOTE: Currently, all information on model input is passed to the output.
    * If needed, you can install it via `sudo apt-get install libprotobuf-dev protobuf-compiler`
    * or from source:
      * Download [protobuf](https://github.com/protocolbuffers/protobuf/releases/tag/v3.0.0) and extract the archive.
-     * Try to run `./autogen.sh`, if it fails, download the gmock-1.7.0.zip from https://pkgs.fedoraproject.org/repo/pkgs/gmock/gmock-1.7.0.zip/073b984d8798ea1594f5e44d85b20d66/gmock-1.7.0.zip, extract it into the protobuf folder and rename the gmock-1.7.0 folder to gmock.
+     * Try to run `./autogen.sh`, if it fails, download the [gmock-1.7.0.zip](https://pkgs.fedoraproject.org/repo/pkgs/gmock/gmock-1.7.0.zip/073b984d8798ea1594f5e44d85b20d66/gmock-1.7.0.zip),
+     extract it into the protobuf folder and rename the gmock-1.7.0 folder to gmock.
      * Proceed with the installation with
 
      ```bash
@@ -314,10 +315,6 @@ NOTE: Currently, all information on model input is passed to the output.
 3. Take FMU from `FMU_INSTALL_DIR`
 
     (Please note that sources are not packed into the FMU at the moment.)
-
-## Licensing
-
-**Please read file [COPYING](COPYING), which is located in the project root, carefully.**
 
 ## Credits
 
@@ -351,7 +348,8 @@ We would like to thank Yifei Jiao for his contribution to the first prototype.
 
 Thanks also to all contributors of the following libraries:
 
-* [Open Simulation Interface](https://github.com/OpenSimulationInterface/open-simulation-interface), a generic interface based on protocol buffers for the environmental perception of automated driving functions in virtual scenarios
+* [Open Simulation Interface](https://github.com/OpenSimulationInterface/open-simulation-interface),
+a generic interface based on protocol buffers for the environmental perception of automated driving functions in virtual scenarios
 * [FMI Version 2.0: FMI for Model Exchange and Co-Simulation](https://fmi-standard.org/downloads/)
 * [Eigen](http://eigen.tuxfamily.org/), a C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
 * [Concaveman](https://github.com/sadaszewski/concaveman-cpp), an algorithm for concave hull generation
@@ -361,7 +359,7 @@ Thanks also to all contributors of the following libraries:
 
 <a name="Agafonkin2016">1</a>:
 V. Agafonkin. (2016) Conacveman.
-[Online]. Available: https://github.com/mapbox/concaveman
+[Online]. Available: [https://github.com/mapbox/concaveman](https://github.com/mapbox/concaveman)
 
 <a name="Park2013">2</a>:
 J.-S.  Park  and  S.-J.  Oh,
