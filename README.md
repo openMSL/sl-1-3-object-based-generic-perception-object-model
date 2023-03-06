@@ -107,7 +107,7 @@ $\bar{P}_{\text{thres}}=\dfrac{\lambda^2A_\text{p,ref}}{r_{\text{max}}^4}$
 
 Detection ranges to standard targets can typically be found in data sheets of commercial radar or lidar sensors.
 In most cases, a detection probability for the maximum range is given.
-Therefore, Gaussian noise is applied to the threshold with a specified standard deviation ![\xi}](https://latex.codecogs.com/svg.latex?&space;\xi), set in the model profile to 
+Therefore, Gaussian noise is applied to the threshold with a specified standard deviation ![\xi}](https://latex.codecogs.com/svg.latex?&space;\xi), set in the model profile to
 
 $P_{\text{thres}}\propto\mathcal{N}(\bar{P}_{\text{thres}},\xi^2)$
 
@@ -133,11 +133,12 @@ The output of the tracking module is a list of tracked objects.
 
 The profiles are parameterized in the files `profile_*.hpp.in`.
 The parameters are defined in the files `profile.hpp.in`.
-The profiles can be extended by the strategies with additional parameters and values in their respective folders as in e.g. `src/model/strategies/tracking-strategy/` with `profile_struct.hpp.in` with the parameters and `profile_*.hpp.in` with the values.
+The profiles can be extended by the strategies with additional parameters and values in their respective folders
+as in e.g. `src/model/strategies/tracking-strategy/` with `profile_struct.hpp.in` with the parameters and `profile_*.hpp.in` with the values.
 
 The profile to be loaded for simulation is set via a model parameter defined in the `modelDescription.xml` of the FMU.
 The first name in `src/model/profiles/profile_list.conf` is taken as default.
-If you would like to have a different one or if your simulation master does not support the configuration of model parameters, you have to adapt the *start* value of the parameter `profile` in `src/osmp/modelDescription.in.xml`.
+If you would like to have a different one or if your simulation master does not support the configuration of model parameters, you have to adapt the _start_ value of the parameter `profile` in `src/osmp/modelDescription.in.xml`.
 
 ### Sensor Parameters
 
@@ -230,9 +231,7 @@ Possible values are "flat" or "structured".
 
 ---
 
-**NOTE**
-
-Currently, all information on model input is passed to the output.
+NOTE: Currently, all information on model input is passed to the output.
 
 ---
 
@@ -258,12 +257,12 @@ Currently, all information on model input is passed to the output.
 
 ### Install Dependencies in Windows 10
 
-1. Install cmake from https://github.com/Kitware/CMake/releases/download/v3.20.3/cmake-3.20.3-windows-x86_64.msi
+1. Install [cmake](https://github.com/Kitware/CMake/releases/download/v3.20.3/cmake-3.20.3-windows-x86_64.msi) 
 2. Install protobuf for [MSYS-2020](doc/build-instructions/install_protobuf_Win64_MSYS-2020.md) or [Visual Studio 2017](doc/build-instructions/install_protobuf_Win64_VS2017.md)
 
 ### Clone with SSH incl. Submodules, Build, and Install in Windows 10
 
-1. Clone this repository [with SSH](https://docs.gitlab.com/ee/ssh/README.html) <ins>incl. submodules</ins>:
+1. Clone this repository [with SSH](https://docs.gitlab.com/ee/ssh/README.html) incl. submodules:
 
     ```bash
    git clone git@github.com:openMSL/object_based_generic_perception_object_model.git --recurse-submodules
@@ -284,32 +283,32 @@ Currently, all information on model input is passed to the output.
    * Check your version via `protoc --version`. It should output: `libprotoc 3.0.0`
    * If needed, you can install it via `sudo apt-get install libprotobuf-dev protobuf-compiler`
    * or from source:
-     * Download it from https://github.com/protocolbuffers/protobuf/releases/tag/v3.0.0 and extract the archive.
+     * Download [protobuf](https://github.com/protocolbuffers/protobuf/releases/tag/v3.0.0) and extract the archive.
      * Try to run `./autogen.sh`, if it fails, download the gmock-1.7.0.zip from https://pkgs.fedoraproject.org/repo/pkgs/gmock/gmock-1.7.0.zip/073b984d8798ea1594f5e44d85b20d66/gmock-1.7.0.zip, extract it into the protobuf folder and rename the gmock-1.7.0 folder to gmock.
      * Proceed with the installation with
 
      ```bash
-     $ make
-     $ sudo make install
-     $ sudo ldconfig # refresh shared library cache.
+     make
+     sudo make install
+     sudo ldconfig # refresh shared library cache.
      ```
 
 ### Clone with SSH incl. Submodules, Build, and Install in Ubuntu 18.04 / 20.04
 
-1. Clone this repository [with SSH](https://docs.gitlab.com/ee/ssh/README.html) <ins>incl. submodules</ins>:
+1. Clone this repository [with SSH](https://docs.gitlab.com/ee/ssh/README.html) incl. submodules:
 
    ```bash
-    $ git clone git@github.com:openMSL/object_based_generic_perception_object_model.git --recurse-submodules
+    git clone git@github.com:openMSL/object_based_generic_perception_object_model.git --recurse-submodules
     ```
 
 2. Build the model by executing in the extracted project root directory:
 
    ```bash
-    $ mkdir cmake-build
-    $ cd cmake-build
+    mkdir cmake-build
+    cd cmake-build
     # If FMU_INSTALL_DIR is not set, CMAKE_BINARY_DIR is used
-    $ cmake -DCMAKE_BUILD_TYPE=Release -DFMU_INSTALL_DIR:PATH=/tmp ..
-    $ make -j N_JOBS
+    cmake -DCMAKE_BUILD_TYPE=Release -DFMU_INSTALL_DIR:PATH=/tmp ..
+    make -j N_JOBS
     ```
 
 3. Take FMU from `FMU_INSTALL_DIR`
@@ -323,10 +322,10 @@ Currently, all information on model input is passed to the output.
 ## Credits
 
 C. Linnhoff, P. Rosenberger, and H. Winner,
-[*“Refining Object-Based Lidar Sensor Modeling — Challenging Ray Tracing as the Magic Bullet,”*](https://ieeexplore.ieee.org/document/9548071)
+[“Refining Object-Based Lidar Sensor Modeling — Challenging Ray Tracing as the Magic Bullet,”](https://ieeexplore.ieee.org/document/9548071)
 IEEE Sensors Journal, Volume 21, Issue 21, Nov. 1, 2021
 
-If you find our work useful in your research, please consider citing: 
+If you find our work useful in your research, please consider citing:
 
 ```
 @ARTICLE{linnhoff2021,
@@ -341,8 +340,9 @@ If you find our work useful in your research, please consider citing:
 }
 ```
 
-This work received funding from the research project 
-"[SET Level](https://setlevel.de/)" of the [PEGASUS ](https://pegasus-family.de) project family, promoted by the German Federal Ministry for Economic Affairs and Energy based on a decision of the German Bundestag.
+This work received funding from the research project
+"[SET Level](https://setlevel.de/)" of the [PEGASUS](https://pegasus-family.de) project family, promoted by the
+German Federal Ministry for Economic Affairs and Energy based on a decision of the German Bundestag.
 | SET Level                                                                                                | PEGASUS Family                                                                                                       | BMWi                                                                                                                                                                                 |
 |----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | <a href="https://setlevel.de"><img src="https://setlevel.de/assets/logo-setlevel.svg" width="100" /></a> | <a href="https://pegasus-family.de"><img src="https://setlevel.de/assets/logo-pegasus-family.svg" width="100" /></a> | <a href="https://www.bmwi.de/Redaktion/DE/Textsammlungen/Technologie/fahrzeug-und-systemtechnologien.html"><img src="https://setlevel.de/assets/logo-bmwi-en.svg" width="100" /></a> |
@@ -351,11 +351,11 @@ We would like to thank Yifei Jiao for his contribution to the first prototype.
 
 Thanks also to all contributors of the following libraries:
 
-- [Open Simulation Interface](https://github.com/OpenSimulationInterface/open-simulation-interface), a generic interface based on protocol buffers for the environmental perception of automated driving functions in virtual scenarios
-- [FMI Version 2.0: FMI for Model Exchange and Co-Simulation](https://fmi-standard.org/downloads/)
-- [Eigen](http://eigen.tuxfamily.org/), a C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
-- [Concaveman](https://github.com/sadaszewski/concaveman-cpp), an algorithm for concave hull generation
-- [Clipper](http://www.angusj.com/delphi/clipper.php), an open-source polygon clipping algorithm (Boost Software License V1.0)
+* [Open Simulation Interface](https://github.com/OpenSimulationInterface/open-simulation-interface), a generic interface based on protocol buffers for the environmental perception of automated driving functions in virtual scenarios
+* [FMI Version 2.0: FMI for Model Exchange and Co-Simulation](https://fmi-standard.org/downloads/)
+* [Eigen](http://eigen.tuxfamily.org/), a C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
+* [Concaveman](https://github.com/sadaszewski/concaveman-cpp), an algorithm for concave hull generation
+* [Clipper](http://www.angusj.com/delphi/clipper.php), an open-source polygon clipping algorithm (Boost Software License V1.0)
 
 ## References
 
