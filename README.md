@@ -324,7 +324,7 @@ IEEE Sensors Journal, Volume 21, Issue 21, Nov. 1, 2021
 
 If you find our work useful in your research, please consider citing:
 
-```
+```bibtex
 @ARTICLE{linnhoff2021,
   author={Linnhoff, Clemens and Rosenberger, Philipp and Winner, Hermann},
   journal={IEEE Sensors Journal}, 
