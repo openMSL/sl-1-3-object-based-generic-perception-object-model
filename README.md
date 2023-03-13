@@ -1,6 +1,6 @@
 # SL 1-3 Object Based Generic Perception Object Model
 
-![SPDX workflow](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/spdx.yml/badge.svg)
+![Credibility Assessment Level 0](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl0.yml/badge.svg)
 ![Credibility Assessment Level 1](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl1.yml/badge.svg)
 ![Credibility Assessment Level 2](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl2.yml/badge.svg)
 

@@ -1,4 +1,4 @@
-name: SPDX License Check
+name: Credibility Assessment Level 0
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
 
 jobs:
   check-spdx-headers:
+    name: SPDX License Check
     runs-on: ubuntu-latest
     steps:
     - name: checkout
