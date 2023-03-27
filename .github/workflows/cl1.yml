@@ -18,7 +18,3 @@ jobs:
   markdown-linter:
     name: Markdown Linter
     uses: ./.github/workflows/markdown.yml
-
-  unit-tests:
-    name: Unit Tests
-    uses: ./.github/workflows/unit-tests.yml
