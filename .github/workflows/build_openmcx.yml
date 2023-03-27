@@ -1,0 +1,29 @@
+name: Build OpenMCx
+
+on:
+  workflow_call:
+
+jobs:
+  build_openmcx:
+    name: Build OpenMCx
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cache OpenMCx
+        id: cache-openmcx
+        uses: actions/cache@v3
+        with:
+          path: openmcx
+          key: ${{ runner.os }}-openmcx
+
+      - name: Install dependencies
+        run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
+
+      - name: Get OpenMCx
+        if: steps.cache-openmcx.outputs.cache-hit != 'true'
+        run: git clone https://github.com/eclipse/openmcx.git
+
+      - name: Build OpenMCx
+        if: steps.cache-openmcx.outputs.cache-hit != 'true'
+        working-directory: openmcx
+        run: ./build.sh
