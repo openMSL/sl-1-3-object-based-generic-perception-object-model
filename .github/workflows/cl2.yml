@@ -9,176 +9,87 @@ on:
 jobs:
   build_model:
     name: Build Model
-    uses: openMSL/sl-1-3-object-based-generic-perception-object-model/.github/workflows/build.yml@main
+    uses: ./.github/workflows/build.yml
 
   build_tracefile_player:
     name: Build Tracefile Player FMU
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Cache Dependencies
-      id: cache-depends
-      uses: actions/cache@v3
-      with:
-        path: protobuf-21.12
-        key: ${{ runner.os }}-v1-depends
-
-    - name: Download ProtoBuf
-      if: steps.cache-depends.outputs.cache-hit != 'true'
-      run: curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-all-21.12.tar.gz && tar xzvf protobuf-all-21.12.tar.gz
-
-    - name: Build ProtoBuf
-      if: steps.cache-depends.outputs.cache-hit != 'true'
-      working-directory: protobuf-21.12
-      run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make
-
-    - name: Install ProtoBuf
-      working-directory: protobuf-21.12
-      run: sudo make install && sudo ldconfig
-
-    - name: Get Tracefile Player
-      run: git clone https://gitlab.com/persival-open-source/open-simulation-interface/osi-trace-file-player.git
-
-    - name: Prepare C++ Build
-      working-directory: osi-trace-file-player
-      run: git submodule update --init && mkdir build
-
-    - name: Configure CMake
-      working-directory: osi-trace-file-player/build
-      run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
-
-    - name: Build C++
-      working-directory: osi-trace-file-player/build
-      run: cmake --build .
-      
-    - name: Create FMU Directory
-      working-directory: osi-trace-file-player/build
-      run: mkdir /tmp/tracefile_fmu
-
-    - name: Copy Tracefile FMU
-      working-directory: osi-trace-file-player/build
-      run: cp src/OSMPTraceFilePlayer.fmu /tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu
-
-    - name: Cache Tracefile FMU
-      id: cache-tracefile-fmu
-      uses: actions/cache@v3
-      with:
-        path: /tmp/tracefile_fmu
-        key: ${{ runner.os }}-tracefile-fmu
+    uses: ./.github/workflows/build_tracefile_player.yml
 
   build_osi_field_checker_fmu:
     name: Build OSI Field Checker FMU
+    uses: ./.github/workflows/build_osi_field_checker.yml
+
+  build_openmcx:
+    name: Build OpenMCx
+    uses: ./.github/workflows/build_openmcx.yml
+
+  generate_integration_test_paths:
     runs-on: ubuntu-latest
+    name: Generate Integration Test Paths
 
     steps:
-      - name: Cache Dependencies
-        id: cache-depends
+      - uses: actions/checkout@v3
+      - name: Generate matrix with all integration tests
+        id: set-matrix
+        working-directory: test/integration
+        run: |
+          echo "matrix=$(ls -l | grep '^d' | awk -F ' ' '{print $9}' | grep -Po '\d{3}.*' | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> $GITHUB_OUTPUT
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+  run_integration_test:
+    needs: [build_model, build_tracefile_player, build_openmcx, build_osi_field_checker_fmu, generate_integration_test_paths]
+    name: Integration Test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        path: ${{ fromJson(needs.generate_integration_test_paths.outputs.matrix) }}
+
+    steps:
+      - name: Print matrix path
+        run: echo ${{ github.workspace }}/${{ matrix.path }}
+
+      - name: Checkout Model
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Cache Model FMU
+        id: cache-model-fmu
         uses: actions/cache@v3
         with:
-          path: protobuf-21.12
-          key: ${{ runner.os }}-v1-depends
+          path: /tmp/model_fmu
+          key: ${{ runner.os }}-model-fmu
 
-      - name: Download ProtoBuf
-        if: steps.cache-depends.outputs.cache-hit != 'true'
-        run: curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-all-21.12.tar.gz && tar xzvf protobuf-all-21.12.tar.gz
+      - name: Cache Tracefile FMU
+        id: cache-tracefile-fmu
+        uses: actions/cache@v3
+        with:
+          path: /tmp/tracefile_fmu
+          key: ${{ runner.os }}-tracefile-fmu
 
-      - name: Build ProtoBuf
-        if: steps.cache-depends.outputs.cache-hit != 'true'
-        working-directory: protobuf-21.12
-        run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make
-
-      - name: Install ProtoBuf
-        working-directory: protobuf-21.12
-        run: sudo make install && sudo ldconfig
-
-      - name: Clone OpenMSL Sensor Model Testing
-        run: git clone https://github.com/openMSL/sl-1-5-sensor-model-testing.git
-
-      - name: Prepare C++ Build
-        working-directory: sl-1-5-sensor-model-testing
-        run: git submodule update --init && mkdir build
-
-      - name: Configure CMake
-        working-directory: sl-1-5-sensor-model-testing/build
-        run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
-
-      - name: Build C++
-        working-directory: sl-1-5-sensor-model-testing/build
-        run: cmake --build .
-
-      - name: Create FMU Directory
-        working-directory: sl-1-5-sensor-model-testing/build
-        run: mkdir /tmp/osi-field-checker
-
-      - name: Copy OSI Field Checker FMU
-        working-directory: sl-1-5-sensor-model-testing/build
-        run: cp OSIFieldChecker.fmu /tmp/osi-field-checker/OSIFieldChecker.fmu
-
-      - name: Cache OSI Field Checker FMU
+      - name: Cache OSI Field Checker
         id: cache-osi-field-checker
         uses: actions/cache@v3
         with:
           path: /tmp/osi-field-checker
           key: ${{ runner.os }}-osi-field-checker
 
-  run_osi_field_check:
-    needs: [build_model, build_tracefile_player, build_osi_field_checker_fmu]
-    name: Run Model FMU
-    runs-on: ubuntu-latest
+      - name: Cache OpenMCx
+        id: cache-openmcx
+        uses: actions/cache@v3
+        with:
+          path: openmcx
+          key: ${{ runner.os }}-openmcx
 
-    steps:
-    - name: Checkout Model
-      uses: actions/checkout@v3
-      with:
-        submodules: true
-    
-    - name: Cache Model FMU
-      id: cache-model-fmu
-      uses: actions/cache@v3
-      with:
-        path: /tmp/model_fmu
-        key: ${{ runner.os }}-model-fmu
+      - name: Install dependencies
+        run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
 
-    - name: Cache Tracefile FMU
-      id: cache-tracefile-fmu
-      uses: actions/cache@v3
-      with:
-        path: /tmp/tracefile_fmu
-        key: ${{ runner.os }}-tracefile-fmu
+      - name: Run OpenMCx
+        id: cosimulation
+        run: ./openmcx/install/openmcx ./test/integration/${{ matrix.path }}/SystemStructure.ssd
 
-    - name: Create Tracefile Directory
-      run: mkdir /tmp/osi
-      
-    - name: Copy Tracefile
-      run: cp .github/workflows/cl2/20230221T153730Z_sv_340_300_0000_protoBin.osi /tmp/osi/20230221T153730Z_sv_340_300_0000_protoBin.osi
-
-    - name: Cache OSI Field Checker
-      id: cache-osi-field-checker
-      uses: actions/cache@v3
-      with:
-        path: /tmp/osi-field-checker
-        key: ${{ runner.os }}-osi-field-checker
-
-    - name: Copy OSI Check File
-      run: cp .github/workflows/cl2/osi_check.txt /tmp/osi_check.txt
-
-    - name: Install dependencies
-      run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
-        
-    - name: Get OpenMCx
-      run: git clone https://github.com/eclipse/openmcx.git
-      
-    - name: Build OpenMCx
-      working-directory: openmcx
-      run: ./build.sh
-      
-    - name: Run OpenMCx
-      id: cosimulation
-      working-directory: openmcx
-      run: ./install/openmcx ../.github/workflows/cl2/Tracefile_ObjectBased_OSIFieldChecker.ssd
-           
-    - name: Failed?
-      if: steps.cosimulation.outputs.num_missing_fields>0
-      run: exit 1
-
-
+      - name: Failed?
+        if: steps.cosimulation.outputs.failed == 1
+        run: exit 1
