@@ -3,9 +3,6 @@ name: Build
 on:
   workflow_call:
 
-env:
-  FMU_FILE_NAME: ObjectBasedGenericPerceptionObjectModel.fmu #TODO: Adjust to file name of your FMU
-
 jobs:
   build:
     name: Build FMU
@@ -54,7 +51,7 @@ jobs:
 
     - name: Copy Model FMU
       working-directory: build
-      run: cp $FMU_FILE_NAME /tmp/model_fmu/SensorModel.fmu
+      run: cp ${{ github.event.repository.name }}.fmu /tmp/model_fmu/${{ github.event.repository.name }}.fmu
 
     - name: Cache Model FMU
       id: cache-model-fmu
