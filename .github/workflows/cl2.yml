@@ -15,6 +15,10 @@ jobs:
     name: Build Tracefile Player FMU
     uses: ./.github/workflows/build_tracefile_player.yml
 
+  build_esmini:
+    name: Build esmini FMU
+    uses: ./.github/workflows/build_esmini.yml
+
   build_osi_field_checker_fmu:
     name: Build OSI Field Checker FMU
     uses: ./.github/workflows/build_osi_field_checker.yml
@@ -38,7 +42,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   run_integration_test:
-    needs: [build_model, build_tracefile_player, build_openmcx, build_osi_field_checker_fmu, generate_integration_test_paths]
+    needs: [build_model, build_tracefile_player, build_openmcx, build_osi_field_checker_fmu, build_esmini, generate_integration_test_paths]
     name: Integration Test
     runs-on: ubuntu-latest
     strategy:
@@ -68,6 +72,13 @@ jobs:
         with:
           path: /tmp/tracefile_fmu
           key: ${{ runner.os }}-tracefile-fmu
+
+      - name: Cache esmini FMU
+        id: cache-esmini-fmu
+        uses: actions/cache@v3
+        with:
+          path: /tmp/esmini_fmu
+          key: ${{ runner.os }}-esmini-fmu
 
       - name: Cache OSI Field Checker
         id: cache-osi-field-checker

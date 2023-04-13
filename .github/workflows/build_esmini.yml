@@ -1,0 +1,64 @@
+name: Build esmini FMU
+
+on:
+  workflow_call:
+
+jobs:
+  build_esmini:
+    name: Build esmini FMU
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cache esmini FMU
+        id: cache-esmini-fmu
+        uses: actions/cache@v3
+        with:
+          path: /tmp/esmini_fmu
+          key: ${{ runner.os }}-esmini-fmu
+
+      - name: Get esmini
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        run: git clone https://github.com/esmini/esmini.git
+
+      - name: Checkout dev Branch
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        working-directory: esmini
+        run: git checkout dev
+
+      - name: Update Submodules
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        working-directory: esmini
+        run: git submodule update --init
+
+      - name: Fetch Dependencies
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gdb ninja-build git pkg-config libgl1-mesa-dev libpthread-stubs0-dev libjpeg-dev libxml2-dev libpng-dev libtiff5-dev libgdal-dev libpoppler-dev libdcmtk-dev libgtk2.0-dev libcairo2-dev libpoppler-glib-dev libxrandr-dev libxinerama-dev curl cmake
+
+      - name: Build esmini
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        working-directory: esmini
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build . --config Release --target install
+
+      - name: Build esmini FMU
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        working-directory: esmini/OSMP_FMU
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build . --config Release
+
+      - name: Create esmini FMU Directory
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        run: mkdir /tmp/esmini_fmu
+
+      - name: Copy esmini FMU
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        working-directory: esmini/OSMP_FMU/build
+        run: cp EsminiOsiSource.fmu /tmp/esmini_fmu/EsminiOsiSource.fmu

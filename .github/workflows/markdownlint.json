@@ -6,7 +6,7 @@
     "MD013": {
         "code_blocks": false,
         "tables": false,
-        "line_length": 200
+        "line_length": 300
     },
     "MD033": {
         "allowed_elements": [
