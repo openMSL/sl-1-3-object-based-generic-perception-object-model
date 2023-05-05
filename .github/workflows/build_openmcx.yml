@@ -23,7 +23,18 @@ jobs:
         if: steps.cache-openmcx.outputs.cache-hit != 'true'
         run: git clone https://github.com/eclipse/openmcx.git
 
+      - name: Copy Commit ID to Cache
+        if: steps.cache-openmcx.outputs.cache-hit != 'true'
+        working-directory: openmcx
+        run: git rev-parse --short HEAD > commit-id.txt
+
       - name: Build OpenMCx
         if: steps.cache-openmcx.outputs.cache-hit != 'true'
         working-directory: openmcx
         run: ./build.sh
+
+      - name: Commit ID
+        working-directory: openmcx
+        run: |
+          echo "Commit ID: "
+          echo $(cat commit-id.txt)

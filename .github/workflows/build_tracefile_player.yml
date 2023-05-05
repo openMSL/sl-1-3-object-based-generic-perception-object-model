@@ -60,7 +60,20 @@ jobs:
         working-directory: osi-trace-file-player/build
         run: mkdir /tmp/tracefile_fmu
 
+      - name: Copy Commit ID to Cache
+        if: steps.cache-tracefile-fmu.outputs.cache-hit != 'true'
+        working-directory: osi-trace-file-player
+        run: |
+          git rev-parse --short HEAD > commit-id.txt
+          cp commit-id.txt /tmp/tracefile_fmu/commit-id.txt
+
       - name: Copy Tracefile FMU
         if: steps.cache-tracefile-fmu.outputs.cache-hit != 'true'
         working-directory: osi-trace-file-player/build
         run: cp src/OSMPTraceFilePlayer.fmu /tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu
+
+      - name: Commit ID
+        working-directory: /tmp/tracefile_fmu
+        run: |
+          echo "Commit ID: "
+          echo $(cat commit-id.txt)

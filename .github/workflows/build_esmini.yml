@@ -58,7 +58,20 @@ jobs:
         if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
         run: mkdir /tmp/esmini_fmu
 
+      - name: Copy Commit ID to Cache
+        if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
+        working-directory: esmini
+        run: |
+          git rev-parse --short HEAD > commit-id.txt
+          cp commit-id.txt /tmp/esmini_fmu/commit-id.txt
+
       - name: Copy esmini FMU
         if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'
         working-directory: esmini/OSMP_FMU/build
         run: cp EsminiOsiSource.fmu /tmp/esmini_fmu/EsminiOsiSource.fmu
+
+      - name: Commit ID
+        working-directory: /tmp/esmini_fmu
+        run: |
+          echo "Commit ID: "
+          echo $(cat commit-id.txt)
