@@ -5,6 +5,7 @@ on:
 
 jobs:
   unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Model
@@ -14,7 +15,7 @@ jobs:
 
     - name: Check unit tests exist
       id: check_files
-      uses: andstor/file-existence-action@v1
+      uses: andstor/file-existence-action@v2
       with:
         files: "test/unit"
 

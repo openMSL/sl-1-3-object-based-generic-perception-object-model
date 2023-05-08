@@ -1,8 +1,6 @@
 # SL 1-3 Object Based Generic Perception Object Model
 
-![Credibility Assessment Level 0](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl0.yml/badge.svg)
-![Credibility Assessment Level 1](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl1.yml/badge.svg)
-![Credibility Assessment Level 2](https://github.com/openMSL/sl-1-3-object-based-generic-perception-object-model/actions/workflows/cl2.yml/badge.svg)
+[![Credibility Assessment](../../actions/workflows/credibility_assessment.yml/badge.svg)](https://github.com/openMSL/sl-1-0-sensor-model-repository-template/actions/workflows/test_pipeline.yml)
 
 <img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" width="100" />
 

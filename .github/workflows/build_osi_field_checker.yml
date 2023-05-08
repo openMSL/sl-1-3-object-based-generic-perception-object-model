@@ -60,7 +60,20 @@ jobs:
         working-directory: sl-1-5-sensor-model-testing/build
         run: mkdir /tmp/osi-field-checker
 
+      - name: Copy Commit ID to Cache
+        if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
+        working-directory: sl-1-5-sensor-model-testing
+        run: |
+          git rev-parse --short HEAD > commit-id.txt
+          cp commit-id.txt /tmp/osi-field-checker/commit-id.txt
+
       - name: Copy OSI Field Checker FMU
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
         working-directory: sl-1-5-sensor-model-testing/build
         run: cp OSIFieldChecker.fmu /tmp/osi-field-checker/OSIFieldChecker.fmu
+
+      - name: Commit ID
+        working-directory: /tmp/osi-field-checker
+        run: |
+          echo "Commit ID: "
+          echo $(cat commit-id.txt)
