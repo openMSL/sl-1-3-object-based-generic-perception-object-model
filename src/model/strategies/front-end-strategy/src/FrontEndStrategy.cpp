@@ -191,17 +191,17 @@ std::vector<GroundTruthObject> FrontEndStrategy::bring_ground_truth_objects_to_u
     std::vector<GroundTruthObject> ground_truth_object_list;
 
     MountingPosition mounting_pose;
-    if (!profile.sensor_view_configuration.radar_sensor_view_configuration().empty())
+    if (input_sensor_view.radar_sensor_view_size() > 0)
     {  // radar
-        mounting_pose.CopyFrom(profile.sensor_view_configuration.radar_sensor_view_configuration(0).mounting_position());
+        mounting_pose.CopyFrom(input_sensor_view.radar_sensor_view(0).view_configuration().mounting_position());
     }
-    else if (!profile.sensor_view_configuration.lidar_sensor_view_configuration().empty())
+    else if (input_sensor_view.lidar_sensor_view_size() > 0)
     {  // lidar
-        mounting_pose.CopyFrom(profile.sensor_view_configuration.lidar_sensor_view_configuration(0).mounting_position());
+        mounting_pose.CopyFrom(input_sensor_view.lidar_sensor_view(0).view_configuration().mounting_position());
     }
     else
     {
-        alert("No lidar or radar sensor view in profile!");
+        alert("No lidar or radar sensor view found!");
     }
 
     for (const auto& current_object : input_sensor_view.global_ground_truth().stationary_object())
@@ -331,13 +331,13 @@ void FrontEndStrategy::write_visible_vertices_to_detections(osi3::SensorData& se
 {
     auto* current_lidar = sensor_data.mutable_feature_data()->add_lidar_sensor();
     MountingPosition mounting_pose;
-    if (!profile.sensor_view_configuration.radar_sensor_view_configuration().empty())
+    if (sensor_data.sensor_view(0).radar_sensor_view_size() > 0)
     {  // radar
-        mounting_pose.CopyFrom(profile.sensor_view_configuration.radar_sensor_view_configuration(0).mounting_position());
+        mounting_pose.CopyFrom(sensor_data.sensor_view(0).radar_sensor_view(0).view_configuration().mounting_position());
     }
-    else if (!profile.sensor_view_configuration.lidar_sensor_view_configuration().empty())
+    else if (sensor_data.sensor_view(0).lidar_sensor_view_size() > 0)
     {  // lidar
-        mounting_pose.CopyFrom(profile.sensor_view_configuration.lidar_sensor_view_configuration(0).mounting_position());
+        mounting_pose.CopyFrom(sensor_data.sensor_view(0).lidar_sensor_view(0).view_configuration().mounting_position());
     }
     current_lidar->mutable_header()->mutable_mounting_position()->mutable_position()->set_x(mounting_pose.position().x());
     current_lidar->mutable_header()->mutable_mounting_position()->mutable_position()->set_y(mounting_pose.position().y());
