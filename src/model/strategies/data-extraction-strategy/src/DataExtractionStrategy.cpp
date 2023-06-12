@@ -279,11 +279,14 @@ void DataExtractionStrategy::transform_detections_to_logical_detections(osi3::Se
         point_cartesian_sensor.set_y(distance * cos(elevation) * sin(azimuth));
         point_cartesian_sensor.set_z(distance * sin(elevation));
         osi3::Vector3d point_cartesian_vehicle = TF::transform_from_local_coordinates(point_cartesian_sensor, mounting_pose.orientation(), mounting_pose.position());
+        osi3::Vector3d point_cartesian_virtual_sensor = TF::transform_to_local_coordinates(point_cartesian_vehicle,
+                                                                                           sensor_data.sensor_view(0).mounting_position().orientation(),
+                                                                                           sensor_data.sensor_view(0).mounting_position().position());
 
         auto* current_logical_detection = sensor_data.mutable_logical_detection_data()->add_logical_detection();
-        current_logical_detection->mutable_position()->set_x(point_cartesian_vehicle.x());
-        current_logical_detection->mutable_position()->set_y(point_cartesian_vehicle.y());
-        current_logical_detection->mutable_position()->set_z(point_cartesian_vehicle.z());
+        current_logical_detection->mutable_position()->set_x(point_cartesian_virtual_sensor.x());
+        current_logical_detection->mutable_position()->set_y(point_cartesian_virtual_sensor.y());
+        current_logical_detection->mutable_position()->set_z(point_cartesian_virtual_sensor.z());
         current_logical_detection->set_intensity(current_detection.intensity());
         current_logical_detection->mutable_object_id()->set_value(current_detection.object_id().value());
     }
