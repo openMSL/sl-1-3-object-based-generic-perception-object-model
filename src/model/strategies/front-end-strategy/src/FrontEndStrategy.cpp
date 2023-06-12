@@ -41,7 +41,7 @@ void FrontEndStrategy::apply(osi3::SensorData& sensor_data)
     }
 }
 
-void FrontEndStrategy::check_sensor_data_input(const osi3::SensorData& sensor_data, const Alert& alert)
+void FrontEndStrategy::check_sensor_data_input(osi3::SensorData& sensor_data, const Alert& alert)
 {
     if (sensor_data.sensor_view().empty())
     {
@@ -50,6 +50,17 @@ void FrontEndStrategy::check_sensor_data_input(const osi3::SensorData& sensor_da
     if (sensor_data.sensor_view(0).global_ground_truth().moving_object().empty())
     {
         alert("GT moving objects empty");
+    }
+    if (!sensor_data.sensor_view(0).has_mounting_position())
+    {
+        alert("Input sensor_view does not contain a mounting position. Mounting position replaced with values from profile");
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_position()->set_x(profile.sensor_view_configuration.mounting_position().position().x());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_position()->set_y(profile.sensor_view_configuration.mounting_position().position().y());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_position()->set_z(profile.sensor_view_configuration.mounting_position().position().z());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_yaw(profile.sensor_view_configuration.mounting_position().orientation().yaw());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_yaw(profile.sensor_view_configuration.mounting_position().orientation().yaw());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_pitch(profile.sensor_view_configuration.mounting_position().orientation().pitch());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_roll(profile.sensor_view_configuration.mounting_position().orientation().roll());
     }
 }
 
@@ -229,6 +240,21 @@ void FrontEndStrategy::write_vertices_to_logical_detections(osi3::SensorData& se
 void FrontEndStrategy::write_visible_vertices_to_detections(osi3::SensorData& sensor_data, std::vector<GroundTruthObject>& ground_truth_object_list)
 {
     auto* current_lidar = sensor_data.mutable_feature_data()->add_lidar_sensor();
+    MountingPosition mounting_pose;
+    if (!profile.sensor_view_configuration.radar_sensor_view_configuration().empty())
+    {  // radar
+        mounting_pose.CopyFrom(profile.sensor_view_configuration.radar_sensor_view_configuration(0).mounting_position());
+    }
+    else if (!profile.sensor_view_configuration.lidar_sensor_view_configuration().empty())
+    {  // lidar
+        mounting_pose.CopyFrom(profile.sensor_view_configuration.lidar_sensor_view_configuration(0).mounting_position());
+    }
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_position()->set_x(mounting_pose.position().x());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_position()->set_y(mounting_pose.position().y());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_position()->set_z(mounting_pose.position().z());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_orientation()->set_yaw(mounting_pose.orientation().yaw());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_orientation()->set_pitch(mounting_pose.orientation().pitch());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_orientation()->set_roll(mounting_pose.orientation().roll());
     for (auto& current_object : ground_truth_object_list)
     {
         for (auto& current_vertex : current_object.visible_bounding_box_vertices_sensor_coord)

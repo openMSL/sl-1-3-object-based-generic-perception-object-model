@@ -27,9 +27,9 @@ namespace model::profile::MidRange_Radar {
         MidRange_Radar.sensor_view_configuration.set_range(200.0);
         MidRange_Radar.sensor_view_configuration.set_field_of_view_horizontal(180.0 / 180 * M_PI);
         MidRange_Radar.sensor_view_configuration.set_field_of_view_vertical(170.0 / 180 * M_PI);
-        MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_x(3.82);
-        MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_y(0.35);
-        MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_z(0.24);
+        MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_x(0.0);
+        MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_y(0.0);
+        MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_z(0.0);
         MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_orientation()->set_roll(0.0 / 180 * M_PI);
         MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_orientation()->set_pitch(0.0 / 180 * M_PI);
         MidRange_Radar.sensor_view_configuration.mutable_mounting_position()->mutable_orientation()->set_yaw(0.0 / 180 * M_PI);
