@@ -59,8 +59,10 @@ void FrontEndStrategy::check_sensor_data_input(osi3::SensorData& sensor_data, co
         sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_position()->set_y(profile.sensor_view_configuration.mounting_position().position().y());
         sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_position()->set_z(profile.sensor_view_configuration.mounting_position().position().z());
         sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_yaw(profile.sensor_view_configuration.mounting_position().orientation().yaw());
-        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_pitch(profile.sensor_view_configuration.mounting_position().orientation().pitch());
-        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_roll(profile.sensor_view_configuration.mounting_position().orientation().roll());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_pitch(
+            profile.sensor_view_configuration.mounting_position().orientation().pitch());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_roll(
+            profile.sensor_view_configuration.mounting_position().orientation().roll());
     }
     if (profile.sensor_view_configuration.lidar_sensor_view_configuration_size() > 0)
     {
@@ -97,7 +99,7 @@ void FrontEndStrategy::check_sensor_data_input(osi3::SensorData& sensor_data, co
         }
         if (replace_lidar_mounting)
         {
-            auto *mounting_position_out = sensor_data.mutable_sensor_view(0)->mutable_lidar_sensor_view(0)->mutable_view_configuration()->mutable_mounting_position();
+            auto* mounting_position_out = sensor_data.mutable_sensor_view(0)->mutable_lidar_sensor_view(0)->mutable_view_configuration()->mutable_mounting_position();
             const auto& mounting_position_profile = profile.sensor_view_configuration.lidar_sensor_view_configuration(0).mounting_position();
             mounting_position_out->mutable_position()->set_x(mounting_position_profile.position().x());
             mounting_position_out->mutable_position()->set_y(mounting_position_profile.position().y());
@@ -142,7 +144,7 @@ void FrontEndStrategy::check_sensor_data_input(osi3::SensorData& sensor_data, co
         }
         if (replace_radar_mounting)
         {
-            auto *mounting_position_out = sensor_data.mutable_sensor_view(0)->mutable_radar_sensor_view(0)->mutable_view_configuration()->mutable_mounting_position();
+            auto* mounting_position_out = sensor_data.mutable_sensor_view(0)->mutable_radar_sensor_view(0)->mutable_view_configuration()->mutable_mounting_position();
             const auto& mounting_position_profile = profile.sensor_view_configuration.radar_sensor_view_configuration(0).mounting_position();
             mounting_position_out->mutable_position()->set_x(mounting_position_profile.position().x());
             mounting_position_out->mutable_position()->set_y(mounting_position_profile.position().y());

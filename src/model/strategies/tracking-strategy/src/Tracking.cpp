@@ -243,9 +243,9 @@ void Tracking::set_rcs(DetectedMovingObject* current_moving_object)
 }
 
 void Tracking::transform_gt_object_to_virtual_sensor_mount(const MovingObject& current_gt_object,
-                                                            DetectedMovingObject* current_moving_object,
-                                                            const TF::EgoData& ego_data,
-                                                            const osi3::MountingPosition& virtual_sensor_mount_pos)
+                                                           DetectedMovingObject* current_moving_object,
+                                                           const TF::EgoData& ego_data,
+                                                           const osi3::MountingPosition& virtual_sensor_mount_pos)
 {
 
     /// Relative position of the object in the ego coordinate system (x_rel)
@@ -262,7 +262,8 @@ void Tracking::transform_gt_object_to_virtual_sensor_mount(const MovingObject& c
     if (current_gt_object.base().has_velocity())
     {
         auto object_velocity_ego_coord = TF::transform_to_local_coordinates(current_gt_object.base().velocity(), ego_data.ego_base.orientation(), ego_data.ego_base.velocity());
-        auto object_velocity_virtual_sensor_coord = TF::transform_to_local_coordinates(current_gt_object.base().velocity(), virtual_sensor_mount_pos.orientation(), osi3::Vector3d());
+        auto object_velocity_virtual_sensor_coord =
+            TF::transform_to_local_coordinates(current_gt_object.base().velocity(), virtual_sensor_mount_pos.orientation(), osi3::Vector3d());
         current_moving_object->mutable_base()->mutable_velocity()->CopyFrom(object_velocity_virtual_sensor_coord);
     }
     else
@@ -273,8 +274,9 @@ void Tracking::transform_gt_object_to_virtual_sensor_mount(const MovingObject& c
     /// Relative orientation rate of object (delta_rate)
     if (current_gt_object.base().has_orientation_rate())
     {
-        current_moving_object->mutable_base()->mutable_orientation_rate()->CopyFrom(
-            TF::calc_relative_orientation_to_local(current_gt_object.base().orientation_rate(), ego_data.ego_base.orientation_rate())); //virtual sensor same as ego, because virtual sensor does not have a separate orientation rate
+        current_moving_object->mutable_base()->mutable_orientation_rate()->CopyFrom(TF::calc_relative_orientation_to_local(
+            current_gt_object.base().orientation_rate(),
+            ego_data.ego_base.orientation_rate()));  // virtual sensor same as ego, because virtual sensor does not have a separate orientation rate
     }
     else
     {
