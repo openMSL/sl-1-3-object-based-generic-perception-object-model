@@ -70,6 +70,6 @@ class FrontEndStrategy : public Strategy
     static GroundTruthObject get_moving_object_from_ground_truth(const osi3::MovingObject& input_object, const TF::EgoData& ego_data, const osi3::MountingPosition& mounting_pose);
     static void apply_noise_to_visible_vertices(std::vector<GroundTruthObject>& ground_truth_object_list, const Profile& profile);
     static void write_vertices_to_logical_detections(osi3::SensorData& sensor_data, std::vector<GroundTruthObject>& ground_truth_object_list, const TF::EgoData& ego_data);
-    void write_visible_vertices_to_detections(osi3::SensorData& sensor_data, std::vector<GroundTruthObject>& ground_truth_object_list);
+    static void write_visible_vertices_to_detections(osi3::SensorData& sensor_data, std::vector<GroundTruthObject>& ground_truth_object_list);
 };
 #endif  // FRONT_END_STRATEGY_HPP
