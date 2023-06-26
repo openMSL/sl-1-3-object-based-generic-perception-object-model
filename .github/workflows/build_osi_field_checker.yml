@@ -23,7 +23,7 @@ jobs:
       - name: Build ProtoBuf
         if: steps.cache-protobuf.outputs.cache-hit != 'true'
         working-directory: protobuf-21.12
-        run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make
+        run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make -j4
 
       - name: Install ProtoBuf
         working-directory: protobuf-21.12
@@ -53,7 +53,7 @@ jobs:
       - name: Build C++
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
         working-directory: sl-1-5-sensor-model-testing/build
-        run: cmake --build .
+        run: cmake --build . -j4
 
       - name: Create FMU Directory
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'

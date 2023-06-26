@@ -1,0 +1,78 @@
+name: Build Tracefile Writer
+
+on:
+  workflow_call:
+
+jobs:
+  build_tracefile_player:
+    name: Build Tracefile Writer FMU
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cache Protobuf
+        id: cache-protobuf
+        uses: actions/cache@v3
+        with:
+          path: protobuf-21.12
+          key: ${{ runner.os }}-protobuf
+
+      - name: Download ProtoBuf
+        if: steps.cache-protobuf.outputs.cache-hit != 'true'
+        run: curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-all-21.12.tar.gz && tar xzvf protobuf-all-21.12.tar.gz
+
+      - name: Build ProtoBuf
+        if: steps.cache-protobuf.outputs.cache-hit != 'true'
+        working-directory: protobuf-21.12
+        run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make
+
+      - name: Install ProtoBuf
+        working-directory: protobuf-21.12
+        run: sudo make install && sudo ldconfig
+
+      - name: Cache Tracefile Writer FMU
+        id: cache-tracefile-writer-fmu
+        uses: actions/cache@v3
+        with:
+          path: /tmp/tracefile_writer_fmu
+          key: ${{ runner.os }}-tracefile-writer-fmu
+
+      - name: Get Tracefile Player
+        if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
+        run: git clone https://github.com/Persival-GmbH/osi-sensordata-trace-file-writer.git
+
+      - name: Prepare C++ Build
+        if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
+        working-directory: osi-sensordata-trace-file-writer
+        run: git submodule update --init && mkdir build
+
+      - name: Configure CMake
+        if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
+        working-directory: osi-sensordata-trace-file-writer/build
+        run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
+
+      - name: Build C++
+        if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
+        working-directory: osi-sensordata-trace-file-writer/build
+        run: cmake --build .
+
+      - name: Create FMU Directory
+        if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
+        run: mkdir /tmp/tracefile_writer_fmu
+
+      - name: Copy Commit ID to Cache
+        if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
+        working-directory: osi-sensordata-trace-file-writer
+        run: |
+          git rev-parse --short HEAD > commit-id.txt
+          cp commit-id.txt /tmp/tracefile_writer_fmu/commit-id.txt
+
+      - name: Copy Tracefile Writer FMU
+        if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
+        working-directory: osi-sensordata-trace-file-writer/build
+        run: cp osi-sensordata-trace-file-writer.fmu /tmp/tracefile_writer_fmu/osi-sensordata-trace-file-writer.fmu
+
+      - name: Commit ID
+        working-directory: /tmp/tracefile_writer_fmu
+        run: |
+          echo "Commit ID: "
+          echo $(cat commit-id.txt)

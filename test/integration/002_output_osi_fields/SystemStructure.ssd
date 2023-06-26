@@ -11,7 +11,7 @@
             </ssd:ParameterBinding>
         </ssd:ParameterBindings>
         <ssd:Elements>
-            <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_fmu/OSMPTraceFilePlayer.fmu" implementation="CoSimulation" name="OSMPTraceFilePlayer" description="Demonstration C++ SensorView Source FMU for OSI Sensor Model Packaging">
+            <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_player_fmu/OSMPTraceFilePlayer.fmu" implementation="CoSimulation" name="OSMPTraceFilePlayer" description="Demonstration C++ SensorView Source FMU for OSI Sensor Model Packaging">
                 <ssd:Connectors>
                     <ssd:Connector name="OSMPSensorViewOut.base.hi" kind="output">
                         <ssc:Integer/>
