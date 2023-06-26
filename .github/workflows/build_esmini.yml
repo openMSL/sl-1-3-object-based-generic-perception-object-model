@@ -43,7 +43,7 @@ jobs:
           mkdir build
           cd build
           cmake ..
-          cmake --build . --config Release --target install
+          cmake --build . --config Release --target install -j4
 
       - name: Build esmini FMU
         if: steps.cache-esmini-fmu.outputs.cache-hit != 'true'

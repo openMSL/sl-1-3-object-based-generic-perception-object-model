@@ -8,6 +8,10 @@ jobs:
     name: Build Tracefile Player FMU
     uses: ./.github/workflows/build_tracefile_player.yml
 
+  build_tracefile_writer:
+    name: Build Tracefile Writer FMU
+    uses: ./.github/workflows/build_tracefile_writer.yml
+
   build_esmini:
     name: Build esmini FMU
     uses: ./.github/workflows/build_esmini.yml
@@ -35,7 +39,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   run_integration_test:
-    needs: [build_tracefile_player, build_openmcx, build_osi_field_checker_fmu, build_esmini, generate_integration_test_paths]
+    needs: [build_tracefile_player, build_tracefile_writer, build_openmcx, build_osi_field_checker_fmu, build_esmini, generate_integration_test_paths]
     name: Integration Test
     runs-on: ubuntu-latest
     strategy:
@@ -52,6 +56,13 @@ jobs:
         with:
           submodules: true
 
+      - name: Cache Protobuf
+        id: cache-protobuf
+        uses: actions/cache@v3
+        with:
+          path: protobuf-21.12
+          key: ${{ runner.os }}-protobuf
+
       - name: Cache Model FMU
         id: cache-model-fmu
         uses: actions/cache@v3
@@ -59,12 +70,19 @@ jobs:
           path: /tmp/model_fmu
           key: ${{ runner.os }}-model-fmu
 
-      - name: Cache Tracefile FMU
-        id: cache-tracefile-fmu
+      - name: Cache Tracefile Player FMU
+        id: cache-tracefile-player-fmu
         uses: actions/cache@v3
         with:
-          path: /tmp/tracefile_fmu
-          key: ${{ runner.os }}-tracefile-fmu
+          path: /tmp/tracefile_player_fmu
+          key: ${{ runner.os }}-tracefile-player-fmu
+
+      - name: Cache Tracefile Writer FMU
+        id: cache-tracefile-writer-fmu
+        uses: actions/cache@v3
+        with:
+          path: /tmp/tracefile_writer_fmu
+          key: ${{ runner.os }}-tracefile-writer-fmu
 
       - name: Cache esmini FMU
         id: cache-esmini-fmu
@@ -90,9 +108,72 @@ jobs:
       - name: Install dependencies
         run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
 
+      - name: Create Output Folder
+        working-directory: ./test/integration/${{ matrix.path }}
+        run: mkdir output
+
       - name: Run OpenMCx
         id: cosimulation
         run: ./openmcx/install/openmcx ./test/integration/${{ matrix.path }}/SystemStructure.ssd
+
+      - name: Check For Trace Files
+        id: check-for-trace-files
+        working-directory: ./test/integration/${{ matrix.path }}/output
+        run: |
+          ( count=`ls -1 *.osi 2>/dev/null | wc -l`
+          if [ $count == 0 ]; then
+          echo No trace file found.
+          echo "found_trace=0" >> $GITHUB_OUTPUT
+          elif [ $count == 1 ]; then
+          echo "found_trace=1" >> $GITHUB_OUTPUT
+          filename=$(ls -1 *.osi)
+          echo "trace_file_name=${filename}" >> $GITHUB_OUTPUT
+          else
+          echo More than one trace file.
+          echo "found_trace=0" >> $GITHUB_OUTPUT
+          fi
+          )
+
+      - name: Archive Trace File
+        if: steps.check-for-trace-files.outputs.found_trace == 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.check-for-trace-files.outputs.trace_file_name }}
+          path: ./test/integration/${{ matrix.path }}/output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
+          
+      - name: Check For Python Scripts
+        id: check-for-python-scripts
+        working-directory: ./test/integration/${{ matrix.path }}
+        run: |
+          ( count=`ls -1 *.py 2>/dev/null | wc -l`
+          if [ $count == 0 ]; then
+          echo No python script found.
+          echo "found_script=0" >> $GITHUB_OUTPUT
+          elif [ $count == 1 ]; then
+          echo "found_script=1" >> $GITHUB_OUTPUT
+          filename=$(ls -1 *.py)
+          echo "python_file_name=${filename}" >> $GITHUB_OUTPUT
+          else
+          echo More than one trace file.
+          echo "found_script=0" >> $GITHUB_OUTPUT
+          fi
+          )
+
+      - name: Install ProtoBuf
+        working-directory: protobuf-21.12
+        run: sudo make install && sudo ldconfig
+        
+      - name: Install Analysis Dependencies
+        if: steps.check-for-python-scripts.outputs.found_script == 1
+        working-directory: ./lib/open-simulation-interface
+        run: |
+          python3 -m pip install protobuf==4.21.12
+          python3 -m pip install .
+          
+      - name: Run Trace File Analysis
+        if: steps.check-for-python-scripts.outputs.found_script == 1
+        working-directory: ./test/integration/${{ matrix.path }}
+        run: python3 ${{ steps.check-for-python-scripts.outputs.python_file_name }} output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
 
       - name: Failed?
         if: steps.cosimulation.outputs.failed == 1
