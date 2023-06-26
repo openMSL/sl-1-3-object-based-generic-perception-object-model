@@ -28,7 +28,7 @@ jobs:
     - name: Build ProtoBuf
       if: steps.cache-protobuf.outputs.cache-hit != 'true'
       working-directory: protobuf-21.12
-      run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make
+      run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make -j4
 
     - name: Install ProtoBuf
       working-directory: protobuf-21.12
@@ -43,7 +43,7 @@ jobs:
 
     - name: Build C++
       working-directory: build
-      run: cmake --build .
+      run: cmake --build . -j4 --config Release
 
     - name: Create FMU Directory
       working-directory: build
