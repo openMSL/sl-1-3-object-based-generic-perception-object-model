@@ -19,6 +19,7 @@ using namespace model;
 void FrontEndStrategy::apply(osi3::SensorData& sensor_data)
 {
     log("Starting Front-End");
+    std::cout << "Starting Front-End" << std::endl;
 
     check_sensor_data_input(sensor_data, alert);
     const osi3::SensorView& input_sensor_view = sensor_data.sensor_view(0);
@@ -41,7 +42,7 @@ void FrontEndStrategy::apply(osi3::SensorData& sensor_data)
     }
 }
 
-void FrontEndStrategy::check_sensor_data_input(const osi3::SensorData& sensor_data, const Alert& alert)
+void FrontEndStrategy::check_sensor_data_input(osi3::SensorData& sensor_data, const Alert& alert)
 {
     if (sensor_data.sensor_view().empty())
     {
@@ -50,6 +51,108 @@ void FrontEndStrategy::check_sensor_data_input(const osi3::SensorData& sensor_da
     if (sensor_data.sensor_view(0).global_ground_truth().moving_object().empty())
     {
         alert("GT moving objects empty");
+    }
+    if (!sensor_data.sensor_view(0).has_mounting_position())
+    {
+        alert("Input sensor_view does not contain a mounting position. Mounting position replaced with values from profile");
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_position()->set_x(profile.sensor_view_configuration.mounting_position().position().x());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_position()->set_y(profile.sensor_view_configuration.mounting_position().position().y());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_position()->set_z(profile.sensor_view_configuration.mounting_position().position().z());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_yaw(profile.sensor_view_configuration.mounting_position().orientation().yaw());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_pitch(
+            profile.sensor_view_configuration.mounting_position().orientation().pitch());
+        sensor_data.mutable_sensor_view(0)->mutable_mounting_position()->mutable_orientation()->set_roll(
+            profile.sensor_view_configuration.mounting_position().orientation().roll());
+    }
+    if (profile.sensor_view_configuration.lidar_sensor_view_configuration_size() > 0)
+    {
+        bool replace_lidar_mounting = false;
+        if (sensor_data.sensor_view(0).lidar_sensor_view_size() > 0)
+        {
+            auto lidar_sensor_view_config = sensor_data.sensor_view(0).lidar_sensor_view(0).view_configuration();
+            if (lidar_sensor_view_config.has_mounting_position())
+            {
+                const auto& mounting_position_in = lidar_sensor_view_config.mounting_position();
+                const auto& mounting_position_profile = profile.sensor_view_configuration.lidar_sensor_view_configuration(0).mounting_position();
+                if (mounting_position_in.position().x() != mounting_position_profile.position().x() ||
+                    mounting_position_in.position().y() != mounting_position_profile.position().y() ||
+                    mounting_position_in.position().z() != mounting_position_profile.position().z() ||
+                    mounting_position_in.orientation().yaw() != mounting_position_profile.orientation().yaw() ||
+                    mounting_position_in.orientation().pitch() != mounting_position_profile.orientation().pitch() ||
+                    mounting_position_in.orientation().roll() != mounting_position_profile.orientation().roll())
+                {
+                    alert("Input lidar_sensor_view_config mounting position different from profile. Input mounting position will be used.");
+                }
+            }
+            else
+            {
+                alert("Input lidar_sensor_view_config does not contain a mounting position. Mounting position replaced with values from profile");
+                replace_lidar_mounting = true;
+            }
+        }
+        else
+        {
+            alert("Input lidar_sensor_view does not contain a view_configuration. Mounting position replaced with values from profile.");
+
+            replace_lidar_mounting = true;
+            sensor_data.mutable_sensor_view(0)->add_lidar_sensor_view();
+        }
+        if (replace_lidar_mounting)
+        {
+            auto* mounting_position_out = sensor_data.mutable_sensor_view(0)->mutable_lidar_sensor_view(0)->mutable_view_configuration()->mutable_mounting_position();
+            const auto& mounting_position_profile = profile.sensor_view_configuration.lidar_sensor_view_configuration(0).mounting_position();
+            mounting_position_out->mutable_position()->set_x(mounting_position_profile.position().x());
+            mounting_position_out->mutable_position()->set_y(mounting_position_profile.position().y());
+            mounting_position_out->mutable_position()->set_z(mounting_position_profile.position().z());
+            mounting_position_out->mutable_orientation()->set_yaw(mounting_position_profile.orientation().yaw());
+            mounting_position_out->mutable_orientation()->set_pitch(mounting_position_profile.orientation().pitch());
+            mounting_position_out->mutable_orientation()->set_roll(mounting_position_profile.orientation().roll());
+        }
+    }
+    if (profile.sensor_view_configuration.radar_sensor_view_configuration_size() > 0)
+    {
+        bool replace_radar_mounting = false;
+        if (sensor_data.sensor_view(0).radar_sensor_view_size() > 0)
+        {
+            auto radar_sensor_view_config = sensor_data.sensor_view(0).radar_sensor_view(0).view_configuration();
+            if (radar_sensor_view_config.has_mounting_position())
+            {
+                const auto& mounting_position_in = radar_sensor_view_config.mounting_position();
+                const auto& mounting_position_profile = profile.sensor_view_configuration.radar_sensor_view_configuration(0).mounting_position();
+                if (mounting_position_in.position().x() != mounting_position_profile.position().x() ||
+                    mounting_position_in.position().y() != mounting_position_profile.position().y() ||
+                    mounting_position_in.position().z() != mounting_position_profile.position().z() ||
+                    mounting_position_in.orientation().yaw() != mounting_position_profile.orientation().yaw() ||
+                    mounting_position_in.orientation().pitch() != mounting_position_profile.orientation().pitch() ||
+                    mounting_position_in.orientation().roll() != mounting_position_profile.orientation().roll())
+                {
+                    alert("Input radar_sensor_view_config mounting position different from profile. Input mounting position will be used.");
+                }
+            }
+            else
+            {
+                alert("Input radar_sensor_view_config does not contain a mounting position. Mounting position replaced with values from profile");
+                replace_radar_mounting = true;
+            }
+        }
+        else
+        {
+            alert("Input radar_sensor_view does not contain a view_configuration. Mounting position replaced with values from profile.");
+
+            replace_radar_mounting = true;
+            sensor_data.mutable_sensor_view(0)->add_radar_sensor_view();
+        }
+        if (replace_radar_mounting)
+        {
+            auto* mounting_position_out = sensor_data.mutable_sensor_view(0)->mutable_radar_sensor_view(0)->mutable_view_configuration()->mutable_mounting_position();
+            const auto& mounting_position_profile = profile.sensor_view_configuration.radar_sensor_view_configuration(0).mounting_position();
+            mounting_position_out->mutable_position()->set_x(mounting_position_profile.position().x());
+            mounting_position_out->mutable_position()->set_y(mounting_position_profile.position().y());
+            mounting_position_out->mutable_position()->set_z(mounting_position_profile.position().z());
+            mounting_position_out->mutable_orientation()->set_yaw(mounting_position_profile.orientation().yaw());
+            mounting_position_out->mutable_orientation()->set_pitch(mounting_position_profile.orientation().pitch());
+            mounting_position_out->mutable_orientation()->set_roll(mounting_position_profile.orientation().roll());
+        }
     }
 }
 
@@ -90,17 +193,17 @@ std::vector<GroundTruthObject> FrontEndStrategy::bring_ground_truth_objects_to_u
     std::vector<GroundTruthObject> ground_truth_object_list;
 
     MountingPosition mounting_pose;
-    if (!profile.sensor_view_configuration.radar_sensor_view_configuration().empty())
+    if (input_sensor_view.radar_sensor_view_size() > 0)
     {  // radar
-        mounting_pose.CopyFrom(profile.sensor_view_configuration.radar_sensor_view_configuration(0).mounting_position());
+        mounting_pose.CopyFrom(input_sensor_view.radar_sensor_view(0).view_configuration().mounting_position());
     }
-    else if (!profile.sensor_view_configuration.lidar_sensor_view_configuration().empty())
+    else if (input_sensor_view.lidar_sensor_view_size() > 0)
     {  // lidar
-        mounting_pose.CopyFrom(profile.sensor_view_configuration.lidar_sensor_view_configuration(0).mounting_position());
+        mounting_pose.CopyFrom(input_sensor_view.lidar_sensor_view(0).view_configuration().mounting_position());
     }
     else
     {
-        alert("No lidar or radar sensor view in profile!");
+        alert("No lidar or radar sensor view found!");
     }
 
     for (const auto& current_object : input_sensor_view.global_ground_truth().stationary_object())
@@ -229,6 +332,21 @@ void FrontEndStrategy::write_vertices_to_logical_detections(osi3::SensorData& se
 void FrontEndStrategy::write_visible_vertices_to_detections(osi3::SensorData& sensor_data, std::vector<GroundTruthObject>& ground_truth_object_list)
 {
     auto* current_lidar = sensor_data.mutable_feature_data()->add_lidar_sensor();
+    MountingPosition mounting_pose;
+    if (sensor_data.sensor_view(0).radar_sensor_view_size() > 0)
+    {  // radar
+        mounting_pose.CopyFrom(sensor_data.sensor_view(0).radar_sensor_view(0).view_configuration().mounting_position());
+    }
+    else if (sensor_data.sensor_view(0).lidar_sensor_view_size() > 0)
+    {  // lidar
+        mounting_pose.CopyFrom(sensor_data.sensor_view(0).lidar_sensor_view(0).view_configuration().mounting_position());
+    }
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_position()->set_x(mounting_pose.position().x());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_position()->set_y(mounting_pose.position().y());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_position()->set_z(mounting_pose.position().z());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_orientation()->set_yaw(mounting_pose.orientation().yaw());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_orientation()->set_pitch(mounting_pose.orientation().pitch());
+    current_lidar->mutable_header()->mutable_mounting_position()->mutable_orientation()->set_roll(mounting_pose.orientation().roll());
     for (auto& current_object : ground_truth_object_list)
     {
         for (auto& current_vertex : current_object.visible_bounding_box_vertices_sensor_coord)

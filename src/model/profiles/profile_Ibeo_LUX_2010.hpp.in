@@ -27,9 +27,9 @@ namespace model::profile::Ibeo_LUX_2010 {
         Ibeo_LUX_2010.sensor_view_configuration.set_range(400.0);
         Ibeo_LUX_2010.sensor_view_configuration.set_field_of_view_horizontal(180.0 / 180 * M_PI);
         Ibeo_LUX_2010.sensor_view_configuration.set_field_of_view_vertical(170.0 / 180 * M_PI);
-        Ibeo_LUX_2010.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_x(5.0);
+        Ibeo_LUX_2010.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_x(0.0);
         Ibeo_LUX_2010.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_y(0.0);
-        Ibeo_LUX_2010.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_z(0.489);
+        Ibeo_LUX_2010.sensor_view_configuration.mutable_mounting_position()->mutable_position()->set_z(0.0);
         Ibeo_LUX_2010.sensor_view_configuration.mutable_mounting_position()->mutable_orientation()->set_roll(0.0 / 180 * M_PI);
         Ibeo_LUX_2010.sensor_view_configuration.mutable_mounting_position()->mutable_orientation()->set_pitch(-0.5 / 180 * M_PI);
         Ibeo_LUX_2010.sensor_view_configuration.mutable_mounting_position()->mutable_orientation()->set_yaw(0-0.25 / 180 * M_PI);

@@ -57,7 +57,7 @@ class FrontEndStrategy : public Strategy
     void apply(osi3::SensorData& sensor_data) override;
 
   private:
-    static void check_sensor_data_input(const osi3::SensorData& sensor_data, const Alert& alert);
+    void check_sensor_data_input(osi3::SensorData& sensor_data, const Alert& alert);
     static void set_sensor_data_timestamp(osi3::SensorData& sensor_data, const osi3::SensorView& input_sensor_view, const Alert& alert);
     static bool simulate_sensor_failure(osi3::SensorData& sensor_data, const Profile& profile, const Log& log);
     static std::vector<GroundTruthObject> bring_ground_truth_objects_to_unified_format(const osi3::SensorView& input_sensor_view,

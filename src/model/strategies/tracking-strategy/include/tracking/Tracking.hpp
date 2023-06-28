@@ -51,7 +51,10 @@ class Tracking : public Strategy
 
     void set_object_dimension_with_tracking(const Dimension3d& current_dimension, Dimension3d* new_dimension, bool object_contained_in_history, int historical_object_no) const;
 
-    void transform_gt_object_to_ego_coordinate_system(const MovingObject& current_gt_object, DetectedMovingObject* current_moving_object, const TF::EgoData& ego_data);
+    void transform_gt_object_to_virtual_sensor_mount(const MovingObject& current_gt_object,
+                                                     DetectedMovingObject* current_moving_object,
+                                                     const TF::EgoData& ego_data,
+                                                     const osi3::MountingPosition& virtual_sensor_mount_pos);
 
     static void get_pcl_segment_of_current_object(const LogicalDetectionData& logical_detection_data, Tracking::Data& data_of_current_time_step, uint64_t gt_object_id);
 

@@ -1,9 +1,43 @@
-cmake*
-build/
-.vscode/
-.editorconfig
-out/
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Build folder
+/build*
+/cmake-build*
+
+# IDE configs
 .idea/
 .vs/
-*.bat
-*.sh
+.vscode/
+.editorconfig
+__pycache__
