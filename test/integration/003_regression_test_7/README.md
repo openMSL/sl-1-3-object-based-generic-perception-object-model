@@ -20,4 +20,4 @@ In the analyze.py script the average x position of the detected moving objects o
 
 ## Pass/Fail Criterion
 
-The test fails, if it differs from the expectation value of x = 15.646 m by more than a tolerance of 0.1 m.
+The test fails, if it differs from the expectation value of x = 15.646 m by more than an exemplary tolerance of 0.1 m.
