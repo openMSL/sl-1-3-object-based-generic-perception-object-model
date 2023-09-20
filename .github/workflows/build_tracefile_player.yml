@@ -38,38 +38,38 @@ jobs:
 
       - name: Get Tracefile Player
         if: steps.cache-tracefile-player-fmu.outputs.cache-hit != 'true'
-        run: git clone https://gitlab.com/persival-open-source/open-simulation-interface/osi-trace-file-player.git
+        run: git clone https://github.com/openMSL/sl-5-5-osi-trace-file-player.git
 
       - name: Prepare C++ Build
         if: steps.cache-tracefile-player-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-trace-file-player
+        working-directory: sl-5-5-osi-trace-file-player
         run: git submodule update --init && mkdir build
 
       - name: Configure CMake
         if: steps.cache-tracefile-player-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-trace-file-player/build
+        working-directory: sl-5-5-osi-trace-file-player/build
         run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
 
       - name: Build C++
         if: steps.cache-tracefile-player-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-trace-file-player/build
+        working-directory: sl-5-5-osi-trace-file-player/build
         run: cmake --build .
 
       - name: Create FMU Directory
         if: steps.cache-tracefile-player-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-trace-file-player/build
+        working-directory: sl-5-5-osi-trace-file-player/build
         run: mkdir /tmp/tracefile_player_fmu
 
       - name: Copy Commit ID to Cache
         if: steps.cache-tracefile-player-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-trace-file-player
+        working-directory: sl-5-5-osi-trace-file-player
         run: |
           git rev-parse --short HEAD > commit-id.txt
           cp commit-id.txt /tmp/tracefile_player_fmu/commit-id.txt
 
       - name: Copy Tracefile FMU
         if: steps.cache-tracefile-player-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-trace-file-player/build
+        working-directory: sl-5-5-osi-trace-file-player/build
         run: cp src/OSMPTraceFilePlayer.fmu /tmp/tracefile_player_fmu/OSMPTraceFilePlayer.fmu
 
       - name: Commit ID

@@ -36,40 +36,40 @@ jobs:
           path: /tmp/osi-field-checker
           key: ${{ runner.os }}-osi-field-checker
 
-      - name: Clone OpenMSL Sensor Model Testing
+      - name: Clone OpenMSL OSI Field Checker
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
-        run: git clone https://github.com/openMSL/sl-1-5-sensor-model-testing.git
+        run: git clone https://github.com/openMSL/sl-5-2-osi-field-checker.git
 
       - name: Prepare C++ Build
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
-        working-directory: sl-1-5-sensor-model-testing
+        working-directory: sl-5-2-osi-field-checker
         run: git submodule update --init && mkdir build
 
       - name: Configure CMake
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
-        working-directory: sl-1-5-sensor-model-testing/build
+        working-directory: sl-5-2-osi-field-checker/build
         run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
 
       - name: Build C++
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
-        working-directory: sl-1-5-sensor-model-testing/build
+        working-directory: sl-5-2-osi-field-checker/build
         run: cmake --build . -j4
 
       - name: Create FMU Directory
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
-        working-directory: sl-1-5-sensor-model-testing/build
+        working-directory: sl-5-2-osi-field-checker/build
         run: mkdir /tmp/osi-field-checker
 
       - name: Copy Commit ID to Cache
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
-        working-directory: sl-1-5-sensor-model-testing
+        working-directory: sl-5-2-osi-field-checker
         run: |
           git rev-parse --short HEAD > commit-id.txt
           cp commit-id.txt /tmp/osi-field-checker/commit-id.txt
 
       - name: Copy OSI Field Checker FMU
         if: steps.cache-osi-field-checker.outputs.cache-hit != 'true'
-        working-directory: sl-1-5-sensor-model-testing/build
+        working-directory: sl-5-2-osi-field-checker/build
         run: cp OSIFieldChecker.fmu /tmp/osi-field-checker/OSIFieldChecker.fmu
 
       - name: Commit ID

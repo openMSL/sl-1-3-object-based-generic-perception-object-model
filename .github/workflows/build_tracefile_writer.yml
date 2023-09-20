@@ -38,21 +38,21 @@ jobs:
 
       - name: Get Tracefile Player
         if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
-        run: git clone https://github.com/Persival-GmbH/osi-sensordata-trace-file-writer.git
+        run: git clone https://github.com/openMSL/sl-5-6-osi-trace-file-writer.git
 
       - name: Prepare C++ Build
         if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-sensordata-trace-file-writer
+        working-directory: sl-5-6-osi-trace-file-writer
         run: git submodule update --init && mkdir build
 
       - name: Configure CMake
         if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-sensordata-trace-file-writer/build
+        working-directory: sl-5-6-osi-trace-file-writer/build
         run: cmake -DCMAKE_PREFIX_PATH:PATH=${DEPS_DIR}/protobuf/install ..
 
       - name: Build C++
         if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-sensordata-trace-file-writer/build
+        working-directory: sl-5-6-osi-trace-file-writer/build
         run: cmake --build .
 
       - name: Create FMU Directory
@@ -61,15 +61,15 @@ jobs:
 
       - name: Copy Commit ID to Cache
         if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-sensordata-trace-file-writer
+        working-directory: sl-5-6-osi-trace-file-writer
         run: |
           git rev-parse --short HEAD > commit-id.txt
           cp commit-id.txt /tmp/tracefile_writer_fmu/commit-id.txt
 
       - name: Copy Tracefile Writer FMU
         if: steps.cache-tracefile-writer-fmu.outputs.cache-hit != 'true'
-        working-directory: osi-sensordata-trace-file-writer/build
-        run: cp osi-sensordata-trace-file-writer.fmu /tmp/tracefile_writer_fmu/osi-sensordata-trace-file-writer.fmu
+        working-directory: sl-5-6-osi-trace-file-writer/build
+        run: cp osi-trace-file-writer.fmu /tmp/tracefile_writer_fmu/osi-trace-file-writer.fmu
 
       - name: Commit ID
         working-directory: /tmp/tracefile_writer_fmu
