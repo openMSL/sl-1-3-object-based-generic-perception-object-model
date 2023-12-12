@@ -11,7 +11,7 @@ It includes typical sensor artifacts like soft FoV transitions, different detect
 occlusion effects depending on the sensor technology as well as simulation of tracking behavior.
 The model output are object lists for OSI SenorData moving objects.
 
-<img src="doc/img/model_video.gif" width="800" />
+<img src="doc/img/model_video.gif" alt="Sensor Demo" width="800" />
 
 The architecture of the model as well as the parameterization structure are designed to be as generic as possible
 to fit both radar and lidar sensors to utilize similarities in signal propagation and signal processing in both technologies.
@@ -32,7 +32,7 @@ This is where the magic happens.
 The `apply()` function of the strategy is called by the `do_calc()` function of the Framework.
 The strategy itself is structured into four modules as shown in the image below.
 
-<img src="doc/img/model_overview.png" width="300" />
+<img src="doc/img/model_overview.png" alt="Model Overview" width="300" />
 
 ### Sensor Technology Independent Modeling
 
@@ -77,7 +77,7 @@ The mentioned refined bounding boxes reflect typical vehicle shapes instead of s
 The figure below shows different examples of refined bounding boxes as a side-view. They can be further adapted by adding more vertices to enhance their fidelity,
 e.g. for the pillar positions, wheels, etc.
 
-<img src="doc/img/refined_bounding_boxes.png" width="300" />
+<img src="doc/img/refined_bounding_boxes.png" alt="Refined Bounding Boxes" width="300" />
 
 The bounding box shapes are selected depending on the ground truth object class and adjusted to the object's dimensions.
 Consequently, this approach reveals a gap in the OSI definition of vehicle classes.
