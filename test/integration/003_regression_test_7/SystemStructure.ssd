@@ -81,15 +81,15 @@
             </ssd:Component>
             <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_writer_fmu/osi-trace-file-writer.fmu" implementation="CoSimulation" name="osi-trace-file-writer" description="Write binary OSI SensorData trace files">
                             <ssd:Connectors>
-                                <ssd:Connector name="OSMPSensorDataIn.size" kind="input">
+                                <ssd:Connector name="OSIIn.size" kind="input">
                                     <ssc:Integer/>
                                     <ssd:ConnectorGeometry x="0.0" y="0.25"/>
                                 </ssd:Connector>
-                                <ssd:Connector name="OSMPSensorDataIn.base.hi" kind="input">
+                                <ssd:Connector name="OSIIn.base.hi" kind="input">
                                     <ssc:Integer/>
                                     <ssd:ConnectorGeometry x="0.0" y="0.5"/>
                                 </ssd:Connector>
-                                <ssd:Connector name="OSMPSensorDataIn.base.lo" kind="input">
+                                <ssd:Connector name="OSIIn.base.lo" kind="input">
                                     <ssc:Integer/>
                                     <ssd:ConnectorGeometry x="0.0" y="0.75"/>
                                 </ssd:Connector>
@@ -109,6 +109,9 @@
                                                 <ssv:Parameter name="custom_name" description="">
                                                     <ssv:String value="003_regression_test_7"/>
                                                 </ssv:Parameter>
+                                                <ssv:Parameter name="type" description="">
+                                                    <ssv:String value="sd"/>
+                                                </ssv:Parameter>
                                             </ssv:Parameters>
                                         </ssv:ParameterSet>
                                     </ssd:ParameterValues>
@@ -120,9 +123,9 @@
             <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.base.hi" endElement="SensorModel" endConnector="OSMPSensorViewIn.base.hi" suppressUnitConversion="false"/>
             <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.size" endElement="SensorModel" endConnector="OSMPSensorViewIn.size" suppressUnitConversion="false"/>
             <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.base.lo" endElement="SensorModel" endConnector="OSMPSensorViewIn.base.lo" suppressUnitConversion="false"/>
-            <ssd:Connection startElement="SensorModel" startConnector="OSMPSensorDataOut.base.hi" endElement="osi-trace-file-writer" endConnector="OSMPSensorDataIn.base.hi" suppressUnitConversion="false"/>
-                        <ssd:Connection startElement="osi-trace-file-writer" startConnector="OSMPSensorDataIn.base.lo" endElement="SensorModel" endConnector="OSMPSensorDataOut.base.lo" suppressUnitConversion="false"/>
-                        <ssd:Connection startElement="SensorModel" startConnector="OSMPSensorDataOut.size" endElement="osi-trace-file-writer" endConnector="OSMPSensorDataIn.size" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="SensorModel" startConnector="OSMPSensorDataOut.base.hi" endElement="osi-trace-file-writer" endConnector="OSIIn.base.hi" suppressUnitConversion="false"/>
+                        <ssd:Connection startElement="osi-trace-file-writer" startConnector="OSIIn.base.lo" endElement="SensorModel" endConnector="OSMPSensorDataOut.base.lo" suppressUnitConversion="false"/>
+                        <ssd:Connection startElement="SensorModel" startConnector="OSMPSensorDataOut.size" endElement="osi-trace-file-writer" endConnector="OSIIn.size" suppressUnitConversion="false"/>
         </ssd:Connections>
         <ssd:SystemGeometry x1="-619.0" y1="-666.5" x2="1849.5" y2="126.5"/>
     </ssd:System>

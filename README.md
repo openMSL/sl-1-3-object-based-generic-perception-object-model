@@ -2,7 +2,7 @@
 
 [![Credibility Assessment](../../actions/workflows/credibility_assessment.yml/badge.svg)](https://github.com/openMSL/sl-1-0-sensor-model-repository-template/actions/workflows/test_pipeline.yml)
 
-<img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" width="100" />
+<img align="right" src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/object-based-generic-perception-object-model/uploads/17c84e9ec0acf0fac2e35855f038ad0b/fzdlogo.jpg" alt="FZD" width="100" />
 
 This model is a highly parameterizable generic perception sensor and tracking model.
 It can be parameterized as a Lidar or a Radar.
@@ -11,7 +11,7 @@ It includes typical sensor artifacts like soft FoV transitions, different detect
 occlusion effects depending on the sensor technology as well as simulation of tracking behavior.
 The model output are object lists for OSI SenorData moving objects.
 
-<img src="doc/img/model_video.gif" width="800" />
+<img src="doc/img/model_video.gif" alt="Sensor Demo" width="800" />
 
 The architecture of the model as well as the parameterization structure are designed to be as generic as possible
 to fit both radar and lidar sensors to utilize similarities in signal propagation and signal processing in both technologies.
@@ -32,7 +32,7 @@ This is where the magic happens.
 The `apply()` function of the strategy is called by the `do_calc()` function of the Framework.
 The strategy itself is structured into four modules as shown in the image below.
 
-<img src="doc/img/model_overview.png" width="300" />
+<img src="doc/img/model_overview.png" alt="Model Overview" width="300" />
 
 ### Sensor Technology Independent Modeling
 
@@ -77,7 +77,7 @@ The mentioned refined bounding boxes reflect typical vehicle shapes instead of s
 The figure below shows different examples of refined bounding boxes as a side-view. They can be further adapted by adding more vertices to enhance their fidelity,
 e.g. for the pillar positions, wheels, etc.
 
-<img src="doc/img/refined_bounding_boxes.png" width="300" />
+<img src="doc/img/refined_bounding_boxes.png" alt="Refined Bounding Boxes" width="300" />
 
 The bounding box shapes are selected depending on the ground truth object class and adjusted to the object's dimensions.
 Consequently, this approach reveals a gap in the OSI definition of vehicle classes.
@@ -340,7 +340,7 @@ This work received funding from the research project
 German Federal Ministry for Economic Affairs and Energy based on a decision of the German Bundestag.
 | SET Level                                                                                                | PEGASUS Family                                                                                                       | BMWi                                                                                                                                                                                 |
 |----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <a href="https://setlevel.de"><img src="https://setlevel.de/assets/logo-setlevel.svg" width="100" /></a> | <a href="https://pegasus-family.de"><img src="https://setlevel.de/assets/logo-pegasus-family.svg" width="100" /></a> | <a href="https://www.bmwi.de/Redaktion/DE/Textsammlungen/Technologie/fahrzeug-und-systemtechnologien.html"><img src="https://setlevel.de/assets/logo-bmwi-en.svg" width="100" /></a> |
+| <a href="https://setlevel.de"><img src="https://setlevel.de/assets/logo-setlevel.svg" alt="SETLevel" width="100" /></a> | <a href="https://pegasus-family.de"><img src="https://setlevel.de/assets/logo-pegasus-family.svg" alt="Pegasus" width="100" /></a> | <a href="https://www.bmwi.de/Redaktion/DE/Textsammlungen/Technologie/fahrzeug-und-systemtechnologien.html"><img src="https://setlevel.de/assets/logo-bmwi-en.svg" alt="BMWi" width="100" /></a> |
 
 We would like to thank Yifei Jiao for his contribution to the first prototype.
 

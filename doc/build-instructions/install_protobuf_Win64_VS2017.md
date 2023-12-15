@@ -27,8 +27,8 @@
 3. Open protobuf.sln located in build-dir from above with **Visual Studio 2017**
 4. Change Properties->C/C++->Code Generation of **all** solutions for Configuration *Release* AND *Debug*<br>
    - Runtime Library for *Release* must be set to "Multi-threaded DLL (/MD)":<br>
-     <img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/reflection-based-lidar-object-model/uploads/38c646d7442362bbbbce936d67a26836/ASM_protobuf_runtime_library_release.png"  width="800"><br><br>
+     <img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/reflection-based-lidar-object-model/uploads/38c646d7442362bbbbce936d67a26836/ASM_protobuf_runtime_library_release.png" alt="Release" width="800"><br><br>
    - Runtime Library for *Debug* must be set to "Multi-threaded Debug DLL (/MDd)":<br>
-     <img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/reflection-based-lidar-object-model/uploads/be2f9e3f0cda9da9bb4686805379b37e/ASM_protobuf_runtime_library_debug.png"  width="800">
+     <img src="https://gitlab.com/tuda-fzd/perception-sensor-modeling/reflection-based-lidar-object-model/uploads/be2f9e3f0cda9da9bb4686805379b37e/ASM_protobuf_runtime_library_debug.png" alt="Debug" width="800">
 5. Build Solution for *Release* AND for *Debug*
 6. Build INSTALL for *Release* AND for *Debug*

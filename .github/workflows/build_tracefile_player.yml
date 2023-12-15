@@ -70,7 +70,7 @@ jobs:
       - name: Copy Tracefile FMU
         if: steps.cache-tracefile-player-fmu.outputs.cache-hit != 'true'
         working-directory: sl-5-5-osi-trace-file-player/build
-        run: cp src/OSMPTraceFilePlayer.fmu /tmp/tracefile_player_fmu/OSMPTraceFilePlayer.fmu
+        run: cp OSMPTraceFilePlayer.fmu /tmp/tracefile_player_fmu/OSMPTraceFilePlayer.fmu
 
       - name: Commit ID
         working-directory: /tmp/tracefile_player_fmu
