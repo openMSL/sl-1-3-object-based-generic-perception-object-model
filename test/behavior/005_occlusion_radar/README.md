@@ -1,4 +1,4 @@
-# 002 Object in FOV
+# 005 Occlusion Radar
 
 This test checks if an object occluded by another object is still detected by the radar model due to multi path propagation beneath the occluding object.
 

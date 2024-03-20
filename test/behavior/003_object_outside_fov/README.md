@@ -1,4 +1,4 @@
-# 002 Object in FOV
+# 003 Object Outside FOV
 
 This test checks if an object outside the field of view of the sensor is not detected by the model.
 

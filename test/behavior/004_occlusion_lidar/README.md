@@ -1,4 +1,4 @@
-# 002 Object in FOV
+# 004 Occlusion Lidar
 
 This test checks if an object occluded by another object is not detected by the lidar model.
 
