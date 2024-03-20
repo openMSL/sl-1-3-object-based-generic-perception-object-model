@@ -33,7 +33,7 @@
                             <ssv:ParameterSet version="1.0" name="Internal Parameter-Set">
                                 <ssv:Parameters>
                                     <ssv:Parameter name="trace_path">
-                                        <ssv:String value="./test/integration/003_regression_test_7/"/>
+                                        <ssv:String value="./test/behavior/001_regression_test_7/"/>
                                     </ssv:Parameter>
                                 </ssv:Parameters>
                             </ssv:ParameterSet>
@@ -101,13 +101,13 @@
                                         <ssv:ParameterSet version="1.0" name="Parameter-Set">
                                             <ssv:Parameters>
                                                 <ssv:Parameter name="trace_path" description="">
-                                                    <ssv:String value="./test/integration/003_regression_test_7/output/"/>
+                                                    <ssv:String value="./test/behavior/001_regression_test_7/output/"/>
                                                 </ssv:Parameter>
                                                 <ssv:Parameter name="protobuf_version" description="">
                                                     <ssv:String value="2112"/>
                                                 </ssv:Parameter>
                                                 <ssv:Parameter name="custom_name" description="">
-                                                    <ssv:String value="003_regression_test_7"/>
+                                                    <ssv:String value="001_regression_test_7"/>
                                                 </ssv:Parameter>
                                                 <ssv:Parameter name="type" description="">
                                                     <ssv:String value="sd"/>
