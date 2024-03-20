@@ -1,3 +1,6 @@
+# Copyright 2024 BMW AG
+# SPDX-License-Identifier: MPL-2.0
+
 from osi3.osi_sensorview_pb2 import SensorView
 import struct
 
