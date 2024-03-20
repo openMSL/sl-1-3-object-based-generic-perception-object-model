@@ -40,7 +40,7 @@ ego_vehicle.base.dimension.length = 5
 ego_vehicle.base.dimension.width = 2
 ego_vehicle.base.dimension.height = 1.5
 
-ego_vehicle.vehicle_attributes.bbcenter_to_rear.x = 1.5
+ego_vehicle.vehicle_attributes.bbcenter_to_rear.x = -1.5
 ego_vehicle.vehicle_attributes.bbcenter_to_rear.y = 0.0
 ego_vehicle.vehicle_attributes.bbcenter_to_rear.z = -0.5
 
