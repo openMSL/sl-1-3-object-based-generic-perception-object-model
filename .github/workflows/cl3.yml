@@ -88,6 +88,34 @@ jobs:
       - name: Install dependencies
         run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
 
+      - name: Install ProtoBuf
+        working-directory: protobuf-21.12
+        run: sudo make install && sudo ldconfig
+
+      - name: Check if analysis script exists
+        id: check_analysis_script
+        uses: andstor/file-existence-action@v3
+        with:
+          files: test/behavior/${{ matrix.path }}/analyse.py
+
+      - name: Check if trace file generator exists
+        id: check_trace_generator
+        uses: andstor/file-existence-action@v3
+        with:
+          files: test/behavior/${{ matrix.path }}/generate_test_trace.py
+
+      - name: Install OSI for python
+        if: steps.check_analysis_script.outputs.found_script == 1 || steps.check_trace_generator.outputs.found_script == 1
+        working-directory: ./lib/open-simulation-interface
+        run: |
+          python3 -m pip install protobuf==4.21.12
+          python3 -m pip install .
+
+      - name: Run test trace generation
+        if: steps.check_trace_generator.outputs.files_exists == 'true'
+        working-directory: ./test/behavior/${{ matrix.path }}
+        run: python3 generate_test_trace.py
+
       - name: Create Output Folder
         working-directory: ./test/behavior/${{ matrix.path }}
         run: mkdir output
@@ -121,39 +149,10 @@ jobs:
           name: ${{ steps.check-for-trace-files.outputs.trace_file_name }}
           path: ./test/behavior/${{ matrix.path }}/output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
           
-      - name: Check For Python Scripts
-        id: check-for-python-scripts
-        working-directory: ./test/behavior/${{ matrix.path }}
-        run: |
-          ( count=`ls -1 *.py 2>/dev/null | wc -l`
-          if [ $count == 0 ]; then
-          echo No python script found.
-          echo "found_script=0" >> $GITHUB_OUTPUT
-          elif [ $count == 1 ]; then
-          echo "found_script=1" >> $GITHUB_OUTPUT
-          filename=$(ls -1 *.py)
-          echo "python_file_name=${filename}" >> $GITHUB_OUTPUT
-          else
-          echo More than one trace file.
-          echo "found_script=0" >> $GITHUB_OUTPUT
-          fi
-          )
-
-      - name: Install ProtoBuf
-        working-directory: protobuf-21.12
-        run: sudo make install && sudo ldconfig
-        
-      - name: Install Analysis Dependencies
-        if: steps.check-for-python-scripts.outputs.found_script == 1
-        working-directory: ./lib/open-simulation-interface
-        run: |
-          python3 -m pip install protobuf==4.21.12
-          python3 -m pip install .
-          
       - name: Run Trace File Analysis
         if: steps.check-for-python-scripts.outputs.found_script == 1
         working-directory: ./test/behavior/${{ matrix.path }}
-        run: python3 ${{ steps.check-for-python-scripts.outputs.python_file_name }} output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
+        run: python3 analyze.py output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
 
       - name: Failed?
         if: steps.cosimulation.outputs.failed == 1
