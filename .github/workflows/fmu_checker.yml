@@ -11,14 +11,34 @@ jobs:
     steps:
     - name: Cache Model FMU
       id: cache-model-fmu
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: /tmp/model_fmu
         key: ${{ runner.os }}-model-fmu-${{ github.sha }}
 
+    - name: Cache Protobuf
+      id: cache-protobuf
+      uses: actions/cache@v4
+      with:
+        path: protobuf-21.12
+        key: ${{ runner.os }}-protobuf
+
+    - name: Download ProtoBuf
+      if: steps.cache-protobuf.outputs.cache-hit != 'true'
+      run: curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-all-21.12.tar.gz && tar xzvf protobuf-all-21.12.tar.gz
+
+    - name: Build ProtoBuf
+      if: steps.cache-protobuf.outputs.cache-hit != 'true'
+      working-directory: protobuf-21.12
+      run: ./configure DIST_LANG=cpp --disable-shared CXXFLAGS="-fPIC" && make -j4
+
+    - name: Install ProtoBuf
+      working-directory: protobuf-21.12
+      run: sudo make install && sudo ldconfig
+
     - name: Cache FMUComplianceChecker
       id: cache-fmu-checker
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: /tmp/FMUComplianceChecker
         key: ${{ runner.os }}-fmu-checker
@@ -54,13 +74,13 @@ jobs:
     steps:
       - name: Cache Model FMU
         id: cache-model-fmu
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /tmp/model_fmu
           key: ${{ runner.os }}-model-fmu-${{ github.sha }}
 
       - name: Install FMPy
-        run: python -m pip install fmpy[complete]
+        run: python -m pip install fmpy==0.3.16
 
       - name: Run FMPy Validate
         working-directory: /tmp/model_fmu

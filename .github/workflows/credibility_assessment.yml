@@ -19,3 +19,8 @@ jobs:
     name: CL 2
     needs: cl1
     uses: ./.github/workflows/cl2.yml
+
+  cl3:
+    name: CL 3
+    needs: cl2
+    uses: ./.github/workflows/cl3.yml
