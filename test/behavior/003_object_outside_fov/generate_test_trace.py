@@ -61,7 +61,7 @@ for i in range(10):
     moving_object.base.dimension.width = 2
     moving_object.base.dimension.height = 1.5
 
-    moving_object.base.position.x = 350.0
+    moving_object.base.position.x = 400.0
     moving_object.base.position.y = 0.0
     moving_object.base.position.z = 0.0
 
