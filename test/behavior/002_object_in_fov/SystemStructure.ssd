@@ -73,7 +73,11 @@
                     <ssd:ParameterBinding>
                         <ssd:ParameterValues>
                             <ssv:ParameterSet version="1.0" name="Internal Parameter-Set">
-                                <ssv:Parameters/>
+                                <ssv:Parameters>
+                                    <ssv:Parameter name="profile" description="">
+                                        <ssv:String value="SCALA_1"/>
+                                    </ssv:Parameter>
+                                </ssv:Parameters>
                             </ssv:ParameterSet>
                         </ssd:ParameterValues>
                     </ssd:ParameterBinding>
