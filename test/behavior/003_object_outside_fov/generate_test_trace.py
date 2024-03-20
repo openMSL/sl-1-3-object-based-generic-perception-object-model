@@ -4,7 +4,7 @@
 from osi3.osi_sensorview_pb2 import SensorView
 import struct
 
-f = open("test_trace.osi", "ab")
+f = open("20000000T000000Z_sv_360_32112_10.osi", "ab")
 # Generate SensorView
 sensor_view = SensorView()
 sensor_view.version.version_major = 3

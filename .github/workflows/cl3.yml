@@ -150,7 +150,7 @@ jobs:
           path: ./test/behavior/${{ matrix.path }}/output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
           
       - name: Run Trace File Analysis
-        if: steps.check_analysis_script.outputs.found_script == 'true'
+        if: steps.check_analysis_script.outputs.files_exists == 'true'
         working-directory: ./test/behavior/${{ matrix.path }}
         run: python3 analyze.py output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
 
