@@ -1,6 +1,6 @@
 # 002 Object in FOV
 
-This test checks if an object occluded by another object is not detected by the lidar model.
+This test checks if an object occluded by another object is still detected by the radar model due to multi path propagation beneath the occluding object.
 
 ## System Structure Definition
 
@@ -22,9 +22,9 @@ The x-coordinates of the objects in this scenario are:
 
 ## Metric
 
-Object 2 is expected to be occluded and therefore not seen by the sensor
+Both objects are expected to be seen.
 In the analyze.py script the average number of detected moving objects over all simulation time steps is calculated.
 
 ## Pass/Fail Criterion
 
-The test fails, if it differs from the expectation value of 1.0, as only one vehicle is expected to be seen.
+The test fails, if it differs from the expectation value of 2.0, as both vehicles are expected to be seen.

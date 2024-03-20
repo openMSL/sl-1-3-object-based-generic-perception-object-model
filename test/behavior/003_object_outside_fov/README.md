@@ -15,9 +15,9 @@ The output of the sensor model is written into a binary SensorData trace file fo
 The scenario contained in the given trace file consists of a vehicle placed on the x-axis (y = 0) in front of the ego vehicle in the sensor's field of view.
 The x-coordinates of the objects in this scenario are:
 
-- ego: 10 m
-- ego bbcenter2rear: -1.146 m
-- object: 350 m
+- ego: 0 m
+- ego bbcenter2rear: -1.5 m
+- object: 400 m
 
 ## Metric
 

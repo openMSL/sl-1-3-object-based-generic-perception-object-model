@@ -40,13 +40,31 @@ ego_vehicle.base.dimension.length = 5
 ego_vehicle.base.dimension.width = 2
 ego_vehicle.base.dimension.height = 1.5
 
-ego_vehicle.vehicle_attributes.bbcenter_to_rear.x = -1.5
+ego_vehicle.vehicle_attributes.bbcenter_to_rear.x = 1.5
 ego_vehicle.vehicle_attributes.bbcenter_to_rear.y = 0.0
 ego_vehicle.vehicle_attributes.bbcenter_to_rear.z = -0.5
 
-# Add moving object
-moving_object = sv_ground_truth.moving_object.add()
-moving_object.id.value = 13
+# Add moving objects
+obj1 = sv_ground_truth.moving_object.add()
+obj1.id.value = 13
+obj1.type = 2
+obj1.vehicle_classification.type = 2
+
+obj1.base.dimension.length = 5
+obj1.base.dimension.width = 2
+obj1.base.dimension.height = 1.5
+
+obj1.vehicle_attributes.ground_clearance = 0.3
+
+obj2 = sv_ground_truth.moving_object.add()
+obj2.id.value = 15
+
+obj2.type = 2
+obj2.vehicle_classification.type = 2
+
+obj2.base.dimension.length = 5
+obj2.base.dimension.width = 2
+obj2.base.dimension.height = 1.5
 
 # Generate 10 OSI messages for 9 seconds
 for i in range(10):
@@ -54,20 +72,19 @@ for i in range(10):
     sensor_view.timestamp.seconds += 1
     sv_ground_truth.timestamp.seconds += 1
 
-    moving_object.type = 2
-    moving_object.vehicle_classification.type = 2
+    obj1.base.position.x = 30.0
+    obj1.base.position.y = 0.0
+    obj1.base.position.z = 0.0
+    obj1.base.orientation.roll = 0.0
+    obj1.base.orientation.pitch = 0.0
+    obj1.base.orientation.yaw = 0.0
 
-    moving_object.base.dimension.length = 5
-    moving_object.base.dimension.width = 2
-    moving_object.base.dimension.height = 1.5
-
-    moving_object.base.position.x = 400.0
-    moving_object.base.position.y = 0.0
-    moving_object.base.position.z = 0.0
-
-    moving_object.base.orientation.roll = 0.0
-    moving_object.base.orientation.pitch = 0.0
-    moving_object.base.orientation.yaw = 0.0
+    obj2.base.position.x = 50.0
+    obj2.base.position.y = 0.0
+    obj2.base.position.z = 0.0
+    obj2.base.orientation.roll = 0.0
+    obj2.base.orientation.pitch = 0.0
+    obj2.base.orientation.yaw = 0.0
 
     """Serialize"""
     bytes_buffer = sensor_view.SerializeToString()
