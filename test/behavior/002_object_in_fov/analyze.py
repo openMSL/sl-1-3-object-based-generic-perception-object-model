@@ -23,7 +23,7 @@ def main():
     exp_number_of_detected_objects = 1
 
     # Iterate over all time steps
-    for current_time_step in range(0, trace_file.timestep_count):
+    for current_time_step in range(2, trace_file.timestep_count):   # Start analysis at second timestep to account for tracking initialization
         current_message = trace_file.get_message_by_index(current_time_step)
         current_sensor_data = current_message.value.to_dict()
 
