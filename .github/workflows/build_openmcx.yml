@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Cache OpenMCx
         id: cache-openmcx
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: openmcx
           key: ${{ runner.os }}-openmcx

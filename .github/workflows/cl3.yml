@@ -1,51 +1,31 @@
-name: Credibility Assessment Level 2
+name: Credibility Assessment Level 3
 
 on:
   workflow_call:
 
 jobs:
-  build_tracefile_player:
-    name: Build Tracefile Player FMU
-    uses: ./.github/workflows/build_tracefile_player.yml
-
-  build_tracefile_writer:
-    name: Build Tracefile Writer FMU
-    uses: ./.github/workflows/build_tracefile_writer.yml
-
-  build_esmini:
-    name: Build esmini FMU
-    uses: ./.github/workflows/build_esmini.yml
-
-  build_osi_field_checker_fmu:
-    name: Build OSI Field Checker FMU
-    uses: ./.github/workflows/build_osi_field_checker.yml
-
-  build_openmcx:
-    name: Build OpenMCx
-    uses: ./.github/workflows/build_openmcx.yml
-
-  generate_integration_test_paths:
+  generate_behavior_test_paths:
     runs-on: ubuntu-latest
-    name: Generate Integration Test Paths
+    name: Generate Behavior Test Paths
 
     steps:
       - uses: actions/checkout@v4
-      - name: Generate matrix with all integration tests
+      - name: Generate matrix with all behavior tests
         id: set-matrix
-        working-directory: test/integration
+        working-directory: test/behavior
         run: |
           echo "matrix=$(ls -l | grep '^d' | awk -F ' ' '{print $9}' | grep -Po '\d{3}.*' | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> $GITHUB_OUTPUT
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
-  run_integration_test:
-    needs: [build_tracefile_player, build_tracefile_writer, build_openmcx, build_osi_field_checker_fmu, build_esmini, generate_integration_test_paths]
-    name: Integration Test
+  run_behavior_test:
+    needs: [generate_behavior_test_paths]
+    name: Behavior Test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        path: ${{ fromJson(needs.generate_integration_test_paths.outputs.matrix) }}
+        path: ${{ fromJson(needs.generate_behavior_test_paths.outputs.matrix) }}
 
     steps:
       - name: Print matrix path
@@ -109,16 +89,16 @@ jobs:
         run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
 
       - name: Create Output Folder
-        working-directory: ./test/integration/${{ matrix.path }}
+        working-directory: ./test/behavior/${{ matrix.path }}
         run: mkdir output
 
       - name: Run OpenMCx
         id: cosimulation
-        run: ./openmcx/install/openmcx ./test/integration/${{ matrix.path }}/SystemStructure.ssd
+        run: ./openmcx/install/openmcx ./test/behavior/${{ matrix.path }}/SystemStructure.ssd
 
       - name: Check For Trace Files
         id: check-for-trace-files
-        working-directory: ./test/integration/${{ matrix.path }}/output
+        working-directory: ./test/behavior/${{ matrix.path }}/output
         run: |
           ( count=`ls -1 *.osi 2>/dev/null | wc -l`
           if [ $count == 0 ]; then
@@ -139,11 +119,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.check-for-trace-files.outputs.trace_file_name }}
-          path: ./test/integration/${{ matrix.path }}/output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
+          path: ./test/behavior/${{ matrix.path }}/output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
           
       - name: Check For Python Scripts
         id: check-for-python-scripts
-        working-directory: ./test/integration/${{ matrix.path }}
+        working-directory: ./test/behavior/${{ matrix.path }}
         run: |
           ( count=`ls -1 *.py 2>/dev/null | wc -l`
           if [ $count == 0 ]; then
@@ -172,7 +152,7 @@ jobs:
           
       - name: Run Trace File Analysis
         if: steps.check-for-python-scripts.outputs.found_script == 1
-        working-directory: ./test/integration/${{ matrix.path }}
+        working-directory: ./test/behavior/${{ matrix.path }}
         run: python3 ${{ steps.check-for-python-scripts.outputs.python_file_name }} output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
 
       - name: Failed?
