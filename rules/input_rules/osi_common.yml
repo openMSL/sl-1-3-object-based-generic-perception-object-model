@@ -70,7 +70,6 @@ BaseMoving:
     - is_set:
   acceleration:
   orientation_rate:
-    - is_set:
   orientation_acceleration:
   base_polygon:
   bounding_box_section:

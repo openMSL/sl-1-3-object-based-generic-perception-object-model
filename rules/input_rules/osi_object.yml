@@ -61,7 +61,6 @@ MovingObject:
       - is_set:
     bbcenter_to_front:
     ground_clearance:
-      - is_set:
     wheel_data:
     steering_wheel_angle:
     WheelData:

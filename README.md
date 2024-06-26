@@ -219,13 +219,13 @@ Possible values are "flat" or "structured".
 | `sensor_view.global_ground_truth.moving_object.id`                                  | required            |
 | `sensor_view.global_ground_truth.moving_object.base.position`                       | required            |
 | `sensor_view.global_ground_truth.moving_object.base.orientation`                    | required            |
-| `sensor_view.global_ground_truth.moving_object.base.orientation_rate`               | required            |
+| `sensor_view.global_ground_truth.moving_object.base.orientation_rate`               | optional            |
 | `sensor_view.global_ground_truth.moving_object.base.velocity`                       | required            |
 | `sensor_view.global_ground_truth.moving_object.base.dimension`                      | required            |
 | `sensor_view.global_ground_truth.moving_object.type`                                | required            |
 | `sensor_view.global_ground_truth.moving_object.vehicle_classification.type`         | required            |
 | `sensor_view.global_ground_truth.moving_object.vehicle_attributes.bbcenter_to_rear` | required            |
-| `sensor_view.global_ground_truth.moving_object.vehicle_attributes.ground_clearance` | required            |
+| `sensor_view.global_ground_truth.moving_object.vehicle_attributes.ground_clearance` | optional            |
 
 ### Output: Fields in OSI3::SensorData Filled by the Sensor Model
 
