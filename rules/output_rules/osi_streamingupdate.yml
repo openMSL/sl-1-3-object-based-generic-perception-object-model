@@ -1,0 +1,12 @@
+StreamingUpdate:
+  version:
+    - is_set:
+  timestamp:
+    - is_set:
+  stationary_object_update:
+  moving_object_update:
+  traffic_sign_update:
+  traffic_light_update:
+  environmental_conditions_update:
+  host_vehicle_data_update:
+  obsolete_id:

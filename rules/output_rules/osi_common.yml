@@ -1,0 +1,132 @@
+Vector3d:
+  x:
+  y:
+  z:
+Vector2d:
+  x:
+  y:
+Timestamp:
+  seconds:
+    - is_greater_than_or_equal_to: 0
+  nanos:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 999999999
+Dimension3d:
+  length:
+    - is_greater_than_or_equal_to: 0
+  width:
+    - is_greater_than_or_equal_to: 0
+  height:
+    - is_greater_than_or_equal_to: 0
+Orientation3d:
+  roll:
+  pitch:
+  yaw:
+Identifier:
+  value:
+    - is_greater_than_or_equal_to: 0
+ExternalReference:
+  reference:
+  type:
+    - is_set:
+  identifier:
+MountingPosition:
+  position:
+  orientation:
+Spherical3d:
+  distance:
+    - is_greater_than_or_equal_to: 0
+  azimuth:
+  elevation:
+LogicalLaneAssignment:
+  assigned_lane_id:
+    - refers_to: LogicalLane
+  s_position:
+  t_position:
+  angle_to_lane:
+BoundingBox:
+  dimension:
+  position:
+  orientation:
+  contained_object_type:
+  model_reference:
+BaseStationary:
+  dimension:
+  position:
+  orientation:
+  base_polygon:
+  bounding_box_section:
+BaseMoving:
+  dimension:
+    - is_set:
+  position:
+    - is_set:
+  orientation:
+    - is_set:
+  velocity:
+    - is_set:
+  acceleration:
+  orientation_rate:
+  orientation_acceleration:
+  base_polygon:
+  bounding_box_section:
+StatePoint:
+  timestamp:
+  position:
+  orientation:
+WavelengthData:
+  start:
+  end:
+  samples_number:
+SpatialSignalStrength:
+  horizontal_angle:
+  vertical_angle:
+  signal_strength:
+ColorDescription:
+  grey:
+  rgb:
+  rgbir:
+  hsv:
+  luv:
+  cmyk:
+ColorGrey:
+  grey:
+ColorRGB:
+  red:
+  green:
+  blue:
+ColorRGBIR:
+  red:
+  green:
+  blue:
+  infrared:
+ColorHSV:
+  hue:
+  saturation:
+  value:
+ColorLUV:
+  luminance:
+  u:
+  v:
+ColorCMYK:
+  cyan:
+  magenta:
+  yellow:
+  key:
+Pedalry:
+  pedal_position_acceleration:
+  pedal_position_brake:
+  pedal_position_clutch:
+VehicleSteeringWheel:
+  angle:
+  angular_speed:
+  torque:
+GeodeticPosition:
+  longitude:
+  latitude:
+  altitude:
+KeyValuePair:
+  key:
+  value:
+Polygon3d:
+  vertex:

@@ -16,9 +16,9 @@ jobs:
     name: Build esmini FMU
     uses: ./.github/workflows/build_esmini.yml
 
-  build_osi_field_checker_fmu:
-    name: Build OSI Field Checker FMU
-    uses: ./.github/workflows/build_osi_field_checker.yml
+  build_osi-validation:
+    name: Build osi-validation
+    uses: ./.github/workflows/build_osi-validation.yml
 
   build_openmcx:
     name: Build OpenMCx
@@ -39,7 +39,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
 
   run_integration_test:
-    needs: [build_tracefile_player, build_tracefile_writer, build_openmcx, build_osi_field_checker_fmu, build_esmini, generate_integration_test_paths]
+    needs: [build_tracefile_player, build_tracefile_writer, build_osi-validation, build_openmcx, build_esmini, generate_integration_test_paths]
     name: Integration Test
     runs-on: ubuntu-latest
     strategy:
@@ -91,12 +91,12 @@ jobs:
           path: /tmp/esmini_fmu
           key: ${{ runner.os }}-esmini-fmu
 
-      - name: Cache OSI Field Checker
-        id: cache-osi-field-checker
+      - name: Cache osi-validation
+        id: cache-osi-validation
         uses: actions/cache@v4
         with:
-          path: /tmp/osi-field-checker
-          key: ${{ runner.os }}-osi-field-checker
+          path: /tmp/osi-validation
+          key: ${{ runner.os }}-osi-validation
 
       - name: Cache OpenMCx
         id: cache-openmcx
@@ -108,6 +108,35 @@ jobs:
       - name: Install dependencies
         run: sudo apt install -y libxml2-dev zlib1g-dev libzip-dev
 
+      - name: Check For Input Trace Files
+        id: check-for-input-trace-files
+        working-directory: ./test/integration/${{ matrix.path }}
+        run: |
+          ( count=`ls -1 *.osi 2>/dev/null | wc -l`
+          if [ $count == 0 ]; then
+          echo No trace file found.
+          echo "found_trace=0" >> $GITHUB_OUTPUT
+          elif [ $count == 1 ]; then
+          echo One trace file found.
+          echo "found_trace=1" >> $GITHUB_OUTPUT
+          filename=$(ls -1 *.osi)
+          else
+          echo More than one trace file.
+          echo "found_trace=1" >> $GITHUB_OUTPUT
+          fi
+          )
+
+      - name: Check Input Trace Files with osi-validation and model input rules
+        if: steps.check-for-input-trace-files.outputs.found_trace == 1
+        run: |
+          if [ -d "./rules/input_rules" ]; then
+            source /tmp/osi-validation/.venv/bin/activate
+            for filename in ./test/integration/${{ matrix.path }}/*.osi; do
+              osivalidator --rules ./rules/input_rules --data ${filename}
+            done
+          else echo "No custom input rules found in ./rules/input_rules";
+          fi
+
       - name: Create Output Folder
         working-directory: ./test/integration/${{ matrix.path }}
         run: mkdir output
@@ -116,8 +145,8 @@ jobs:
         id: cosimulation
         run: ./openmcx/install/openmcx ./test/integration/${{ matrix.path }}/SystemStructure.ssd
 
-      - name: Check For Trace Files
-        id: check-for-trace-files
+      - name: Check For Output Trace Files
+        id: check-for-output-trace-files
         working-directory: ./test/integration/${{ matrix.path }}/output
         run: |
           ( count=`ls -1 *.osi 2>/dev/null | wc -l`
@@ -125,22 +154,45 @@ jobs:
           echo No trace file found.
           echo "found_trace=0" >> $GITHUB_OUTPUT
           elif [ $count == 1 ]; then
+          echo One trace file found.
           echo "found_trace=1" >> $GITHUB_OUTPUT
           filename=$(ls -1 *.osi)
           echo "trace_file_name=${filename}" >> $GITHUB_OUTPUT
           else
           echo More than one trace file.
-          echo "found_trace=0" >> $GITHUB_OUTPUT
+          echo "found_trace=1" >> $GITHUB_OUTPUT
+          zip ${{ matrix.path }}.zip *.osi
+          echo "trace_file_name=${{ matrix.path }}.zip" >> $GITHUB_OUTPUT
           fi
           )
 
-      - name: Archive Trace File
-        if: steps.check-for-trace-files.outputs.found_trace == 1
+      - name: Archive Output Trace Files
+        if: steps.check-for-output-trace-files.outputs.found_trace == 1
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.check-for-trace-files.outputs.trace_file_name }}
-          path: ./test/integration/${{ matrix.path }}/output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
-          
+          name: ${{ steps.check-for-output-trace-files.outputs.trace_file_name }}
+          path: ./test/integration/${{ matrix.path }}/output/${{ steps.check-for-output-trace-files.outputs.trace_file_name }}
+
+      - name: Check Output Trace Files with osi-validation and default rules
+        if: steps.check-for-output-trace-files.outputs.found_trace == 1
+        working-directory: ./test/integration/${{ matrix.path }}/output
+        run: |
+          source /tmp/osi-validation/.venv/bin/activate
+          for filename in ./*.osi; do
+            osivalidator --rules /tmp/osi-validation/rules/ --data ${filename}
+          done
+
+      - name: Check Output Trace Files with osi-validation and model output rules
+        if: steps.check-for-output-trace-files.outputs.found_trace == 1
+        run: |
+          if [ -d "./rules/output_rules" ]; then
+            source /tmp/osi-validation/.venv/bin/activate
+            for filename in ./test/integration/${{ matrix.path }}/output/*.osi; do
+              osivalidator --rules ./rules/output_rules --data ${filename}
+            done
+          else echo "No custom output rules found in ./rules/output_rules";
+          fi
+
       - name: Check For Python Scripts
         id: check-for-python-scripts
         working-directory: ./test/integration/${{ matrix.path }}
@@ -173,7 +225,7 @@ jobs:
       - name: Run Trace File Analysis
         if: steps.check-for-python-scripts.outputs.found_script == 1
         working-directory: ./test/integration/${{ matrix.path }}
-        run: python3 ${{ steps.check-for-python-scripts.outputs.python_file_name }} output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
+        run: python3 ${{ steps.check-for-python-scripts.outputs.python_file_name }} output/${{ steps.check-for-output-trace-files.outputs.trace_file_name }}
 
       - name: Failed?
         if: steps.cosimulation.outputs.failed == 1

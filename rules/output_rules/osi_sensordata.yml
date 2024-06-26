@@ -1,0 +1,43 @@
+DetectedEntityHeader:
+  measurement_time:
+    - is_set:
+  cycle_counter:
+    - is_set:
+  data_qualifier:
+    - is_set:
+SensorData:
+  version:
+    - is_set:
+  timestamp:
+    - is_set:
+  host_vehicle_location:
+  host_vehicle_location_rmse:
+  sensor_id:
+    - is_set:
+  mounting_position:
+    - is_set:
+  mounting_position_rmse:
+  sensor_view:
+  last_measurement_time:
+  stationary_object_header:
+  stationary_object:
+  moving_object_header:
+  moving_object:
+  traffic_sign_header:
+  traffic_sign:
+  traffic_light_header:
+  traffic_light:
+  road_marking_header:
+  road_marking:
+  lane_boundary_header:
+  lane_boundary:
+  lane_header:
+  lane:
+  occupant_header:
+  occupant:
+  feature_data:
+  logical_detection_data:
+  VirtualDetectionArea:
+    polygon:
+  virtual_detection_area:
+  system_time:

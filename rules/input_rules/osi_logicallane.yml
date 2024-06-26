@@ -1,0 +1,68 @@
+LogicalLaneBoundary:
+  id:
+    - is_globally_unique:
+    - is_set:
+  boundary_line:
+  reference_line_id:
+    - refers_to: ReferenceLine
+  physical_boundary_id:
+    - refers_to: LaneBoundary
+  passing_rule:
+  source_reference:
+  LogicalBoundaryPoint:
+    position:
+    s_position:
+    t_position:
+LogicalLane:
+  id:
+    - is_globally_unique:
+  type:
+  source_reference:
+  physical_lane_reference:
+    - refers_to: Lane
+  reference_line_id:
+    - refers_to: ReferenceLine
+  start_s:
+  end_s:
+  move_direction:
+  right_adjacent_lane:
+  left_adjacent_lane:
+  overlapping_lane:
+  right_boundary_id:
+    - refers_to: LogicalLaneBoundary
+  left_boundary_id:
+    - refers_to: LogicalLaneBoundary
+  predecessor_lane:
+  successor_lane:
+  street_name:
+  traffic_rule:
+  PhysicalLaneReference:
+    physical_lane_id:
+      - refers_to: Lane
+    start_s:
+    end_s:
+  LaneConnection:
+    other_lane_id:
+      - refers_to: LogicalLane
+    at_begin_of_other_lane:
+  LaneRelation:
+    other_lane_id:
+      - refers_to: LogicalLane
+    start_s:
+    end_s:
+    start_s_other:
+    end_s_other:
+  TrafficRule:
+    traffic_rule_type:
+    traffic_rule_validity:
+    speed_limit:
+    TrafficRuleValidity:
+      start_s:
+      end_s:
+      valid_for_type:
+      TypeValidity:
+        type:
+        vehicle_type:
+        vehicle_role:
+    SpeedLimit:
+      speed_limit_value:

@@ -1,0 +1,56 @@
+SensorView:
+  version: any(list(include('rules', required=False)), null(), required=False)
+  timestamp: any(list(include('rules', required=False)), null(), required=False)
+  sensor_id: any(list(include('rules', required=False)), null(), required=False)
+  mounting_position: any(list(include('rules', required=False)), null(), required=False)
+  mounting_position_rmse: any(list(include('rules', required=False)), null(), required=False)
+  host_vehicle_data: any(list(include('rules', required=False)), null(), required=False)
+  global_ground_truth: any(list(include('rules', required=False)), null(), required=False)
+  host_vehicle_id: any(list(include('rules', required=False)), null(), required=False)
+  generic_sensor_view: any(list(include('rules', required=False)), null(), required=False)
+  radar_sensor_view: any(list(include('rules', required=False)), null(), required=False)
+  lidar_sensor_view: any(list(include('rules', required=False)), null(), required=False)
+  camera_sensor_view: any(list(include('rules', required=False)), null(), required=False)
+  ultrasonic_sensor_view: any(list(include('rules', required=False)), null(), required=False)
+GenericSensorView:
+  view_configuration: any(list(include('rules', required=False)), null(), required=False)
+RadarSensorView:
+  view_configuration: any(list(include('rules', required=False)), null(), required=False)
+  reflection: any(list(include('rules', required=False)), null(), required=False)
+  Reflection:
+    signal_strength: any(list(include('rules', required=False)), null(), required=False)
+    time_of_flight: any(list(include('rules', required=False)), null(), required=False)
+    doppler_shift: any(list(include('rules', required=False)), null(), required=False)
+    source_horizontal_angle: any(list(include('rules', required=False)), null(), required=False)
+    source_vertical_angle: any(list(include('rules', required=False)), null(), required=False)
+LidarSensorView:
+  view_configuration: any(list(include('rules', required=False)), null(), required=False)
+  reflection: any(list(include('rules', required=False)), null(), required=False)
+  Reflection:
+    signal_strength: any(list(include('rules', required=False)), null(), required=False)
+    time_of_flight: any(list(include('rules', required=False)), null(), required=False)
+    doppler_shift: any(list(include('rules', required=False)), null(), required=False)
+    normal_to_surface: any(list(include('rules', required=False)), null(), required=False)
+    object_id: any(list(include('rules', required=False)), null(), required=False)
+CameraSensorView:
+  view_configuration: any(list(include('rules', required=False)), null(), required=False)
+  image_data: any(list(include('rules', required=False)), null(), required=False)
+UltrasonicSensorView:
+  view_configuration: any(list(include('rules', required=False)), null(), required=False)
+---
+rules:
+  is_greater_than: num(required=False)
+  is_greater_than_or_equal_to: num(required=False)
+  is_less_than_or_equal_to: num(required=False)
+  is_less_than: num(required=False)
+  is_equal_to: any(num(), bool(), required=False)
+  is_different_to: num(required=False)
+  is_globally_unique: str(required=False)
+  refers_to: str(required=False)
+  is_iso_country_code: str(required=False)
+  is_set: str(required=False)
+  check_if: list(include('rules', required=False),required=False)
+  do_check: any(required=False)
+  target: any(required=False)
+  first_element: any(required=False)
+  last_element: any(required=False)

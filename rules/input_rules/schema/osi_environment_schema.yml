@@ -1,0 +1,41 @@
+EnvironmentalConditions:
+  ambient_illumination: any(list(include('rules', required=False)), null(), required=False)
+  time_of_day: any(list(include('rules', required=False)), null(), required=False)
+  unix_timestamp: any(list(include('rules', required=False)), null(), required=False)
+  atmospheric_pressure: any(list(include('rules', required=False)), null(), required=False)
+  temperature: any(list(include('rules', required=False)), null(), required=False)
+  relative_humidity: any(list(include('rules', required=False)), null(), required=False)
+  precipitation: any(list(include('rules', required=False)), null(), required=False)
+  fog: any(list(include('rules', required=False)), null(), required=False)
+  source_reference: any(list(include('rules', required=False)), null(), required=False)
+  clouds: any(list(include('rules', required=False)), null(), required=False)
+  wind: any(list(include('rules', required=False)), null(), required=False)
+  sun: any(list(include('rules', required=False)), null(), required=False)
+  TimeOfDay:
+    seconds_since_midnight: any(list(include('rules', required=False)), null(), required=False)
+  CloudLayer:
+    fractional_cloud_cover: any(list(include('rules', required=False)), null(), required=False)
+  Wind:
+    origin_direction: any(list(include('rules', required=False)), null(), required=False)
+    speed: any(list(include('rules', required=False)), null(), required=False)
+  Sun:
+    azimuth: any(list(include('rules', required=False)), null(), required=False)
+    elevation: any(list(include('rules', required=False)), null(), required=False)
+    intensity: any(list(include('rules', required=False)), null(), required=False)
+---
+rules:
+  is_greater_than: num(required=False)
+  is_greater_than_or_equal_to: num(required=False)
+  is_less_than_or_equal_to: num(required=False)
+  is_less_than: num(required=False)
+  is_equal_to: any(num(), bool(), required=False)
+  is_different_to: num(required=False)
+  is_globally_unique: str(required=False)
+  refers_to: str(required=False)
+  is_iso_country_code: str(required=False)
+  is_set: str(required=False)
+  check_if: list(include('rules', required=False),required=False)
+  do_check: any(required=False)
+  target: any(required=False)
+  first_element: any(required=False)
+  last_element: any(required=False)

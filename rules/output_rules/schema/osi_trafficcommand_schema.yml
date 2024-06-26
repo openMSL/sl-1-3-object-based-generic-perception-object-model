@@ -1,0 +1,91 @@
+TrafficCommand:
+  version: any(list(include('rules', required=False)), null(), required=False)
+  timestamp: any(list(include('rules', required=False)), null(), required=False)
+  traffic_participant_id: any(list(include('rules', required=False)), null(), required=False)
+  action: any(list(include('rules', required=False)), null(), required=False)
+TrafficAction:
+  follow_trajectory_action: any(list(include('rules', required=False)), null(), required=False)
+  follow_path_action: any(list(include('rules', required=False)), null(), required=False)
+  acquire_global_position_action: any(list(include('rules', required=False)), null(), required=False)
+  custom_action: any(list(include('rules', required=False)), null(), required=False)
+  longitudinal_distance_action: any(list(include('rules', required=False)), null(), required=False)
+  lane_offset_action: any(list(include('rules', required=False)), null(), required=False)
+  lateral_distance_action: any(list(include('rules', required=False)), null(), required=False)
+  teleport_action: any(list(include('rules', required=False)), null(), required=False)
+  ActionHeader:
+    action_id: any(list(include('rules', required=False)), null(), required=False)
+  DynamicConstraints:
+    max_acceleration: any(list(include('rules', required=False)), null(), required=False)
+    max_deceleration: any(list(include('rules', required=False)), null(), required=False)
+    max_speed: any(list(include('rules', required=False)), null(), required=False)
+  FollowTrajectoryAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    trajectory_point: any(list(include('rules', required=False)), null(), required=False)
+    constrain_orientation: any(list(include('rules', required=False)), null(), required=False)
+    following_mode: any(list(include('rules', required=False)), null(), required=False)
+  FollowPathAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    path_point: any(list(include('rules', required=False)), null(), required=False)
+    constrain_orientation: any(list(include('rules', required=False)), null(), required=False)
+    following_mode: any(list(include('rules', required=False)), null(), required=False)
+  AcquireGlobalPositionAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    position: any(list(include('rules', required=False)), null(), required=False)
+    orientation: any(list(include('rules', required=False)), null(), required=False)
+  LaneChangeAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    relative_target_lane: any(list(include('rules', required=False)), null(), required=False)
+    dynamics_shape: any(list(include('rules', required=False)), null(), required=False)
+    distance: any(list(include('rules', required=False)), null(), required=False)
+  SpeedAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    absolute_target_speed: any(list(include('rules', required=False)), null(), required=False)
+    dynamics_shape: any(list(include('rules', required=False)), null(), required=False)
+    distance: any(list(include('rules', required=False)), null(), required=False)
+  AbortActionsAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+  EndActionsAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+  CustomAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    command: any(list(include('rules', required=False)), null(), required=False)
+    command_type: any(list(include('rules', required=False)), null(), required=False)
+  LongitudinalDistanceAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    target_traffic_participant_id: any(list(include('rules', required=False)), null(), required=False)
+    distance: any(list(include('rules', required=False)), null(), required=False)
+    freespace: any(list(include('rules', required=False)), null(), required=False)
+    follow: any(list(include('rules', required=False)), null(), required=False)
+    dynamic_constraints: any(list(include('rules', required=False)), null(), required=False)
+  LateralDistanceAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    target_traffic_participant_id: any(list(include('rules', required=False)), null(), required=False)
+    distance: any(list(include('rules', required=False)), null(), required=False)
+    freespace: any(list(include('rules', required=False)), null(), required=False)
+    follow: any(list(include('rules', required=False)), null(), required=False)
+    dynamic_constraints: any(list(include('rules', required=False)), null(), required=False)
+  LaneOffsetAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    target_lane_offset: any(list(include('rules', required=False)), null(), required=False)
+    dynamics_shape: any(list(include('rules', required=False)), null(), required=False)
+  TeleportAction:
+    action_header: any(list(include('rules', required=False)), null(), required=False)
+    position: any(list(include('rules', required=False)), null(), required=False)
+    orientation: any(list(include('rules', required=False)), null(), required=False)
+---
+rules:
+  is_greater_than: num(required=False)
+  is_greater_than_or_equal_to: num(required=False)
+  is_less_than_or_equal_to: num(required=False)
+  is_less_than: num(required=False)
+  is_equal_to: any(num(), bool(), required=False)
+  is_different_to: num(required=False)
+  is_globally_unique: str(required=False)
+  refers_to: str(required=False)
+  is_iso_country_code: str(required=False)
+  is_set: str(required=False)
+  check_if: list(include('rules', required=False),required=False)
+  do_check: any(required=False)
+  target: any(required=False)
+  first_element: any(required=False)
+  last_element: any(required=False)

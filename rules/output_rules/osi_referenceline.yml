@@ -1,0 +1,10 @@
+ReferenceLine:
+  id:
+    - is_globally_unique:
+    - is_set:
+  type:
+  poly_line:
+  ReferenceLinePoint:
+    world_position:
+    s_position:
+    t_axis_yaw:

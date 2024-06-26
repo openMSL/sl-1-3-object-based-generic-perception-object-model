@@ -1,0 +1,135 @@
+Vector3d:
+  x: any(list(include('rules', required=False)), null(), required=False)
+  y: any(list(include('rules', required=False)), null(), required=False)
+  z: any(list(include('rules', required=False)), null(), required=False)
+Vector2d:
+  x: any(list(include('rules', required=False)), null(), required=False)
+  y: any(list(include('rules', required=False)), null(), required=False)
+Timestamp:
+  seconds: any(list(include('rules', required=False)), null(), required=False)
+  nanos: any(list(include('rules', required=False)), null(), required=False)
+Dimension3d:
+  length: any(list(include('rules', required=False)), null(), required=False)
+  width: any(list(include('rules', required=False)), null(), required=False)
+  height: any(list(include('rules', required=False)), null(), required=False)
+Orientation3d:
+  roll: any(list(include('rules', required=False)), null(), required=False)
+  pitch: any(list(include('rules', required=False)), null(), required=False)
+  yaw: any(list(include('rules', required=False)), null(), required=False)
+Identifier:
+  value: any(list(include('rules', required=False)), null(), required=False)
+ExternalReference:
+  reference: any(list(include('rules', required=False)), null(), required=False)
+  type: any(list(include('rules', required=False)), null(), required=False)
+  identifier: any(list(include('rules', required=False)), null(), required=False)
+MountingPosition:
+  position: any(list(include('rules', required=False)), null(), required=False)
+  orientation: any(list(include('rules', required=False)), null(), required=False)
+Spherical3d:
+  distance: any(list(include('rules', required=False)), null(), required=False)
+  azimuth: any(list(include('rules', required=False)), null(), required=False)
+  elevation: any(list(include('rules', required=False)), null(), required=False)
+LogicalLaneAssignment:
+  assigned_lane_id: any(list(include('rules', required=False)), null(), required=False)
+  s_position: any(list(include('rules', required=False)), null(), required=False)
+  t_position: any(list(include('rules', required=False)), null(), required=False)
+  angle_to_lane: any(list(include('rules', required=False)), null(), required=False)
+BoundingBox:
+  dimension: any(list(include('rules', required=False)), null(), required=False)
+  position: any(list(include('rules', required=False)), null(), required=False)
+  orientation: any(list(include('rules', required=False)), null(), required=False)
+  contained_object_type: any(list(include('rules', required=False)), null(), required=False)
+  model_reference: any(list(include('rules', required=False)), null(), required=False)
+BaseStationary:
+  dimension: any(list(include('rules', required=False)), null(), required=False)
+  position: any(list(include('rules', required=False)), null(), required=False)
+  orientation: any(list(include('rules', required=False)), null(), required=False)
+  base_polygon: any(list(include('rules', required=False)), null(), required=False)
+  bounding_box_section: any(list(include('rules', required=False)), null(), required=False)
+BaseMoving:
+  dimension: any(list(include('rules', required=False)), null(), required=False)
+  position: any(list(include('rules', required=False)), null(), required=False)
+  orientation: any(list(include('rules', required=False)), null(), required=False)
+  velocity: any(list(include('rules', required=False)), null(), required=False)
+  acceleration: any(list(include('rules', required=False)), null(), required=False)
+  orientation_rate: any(list(include('rules', required=False)), null(), required=False)
+  orientation_acceleration: any(list(include('rules', required=False)), null(), required=False)
+  base_polygon: any(list(include('rules', required=False)), null(), required=False)
+  bounding_box_section: any(list(include('rules', required=False)), null(), required=False)
+StatePoint:
+  timestamp: any(list(include('rules', required=False)), null(), required=False)
+  position: any(list(include('rules', required=False)), null(), required=False)
+  orientation: any(list(include('rules', required=False)), null(), required=False)
+WavelengthData:
+  start: any(list(include('rules', required=False)), null(), required=False)
+  end: any(list(include('rules', required=False)), null(), required=False)
+  samples_number: any(list(include('rules', required=False)), null(), required=False)
+SpatialSignalStrength:
+  horizontal_angle: any(list(include('rules', required=False)), null(), required=False)
+  vertical_angle: any(list(include('rules', required=False)), null(), required=False)
+  signal_strength: any(list(include('rules', required=False)), null(), required=False)
+ColorDescription:
+  grey: any(list(include('rules', required=False)), null(), required=False)
+  rgb: any(list(include('rules', required=False)), null(), required=False)
+  rgbir: any(list(include('rules', required=False)), null(), required=False)
+  hsv: any(list(include('rules', required=False)), null(), required=False)
+  luv: any(list(include('rules', required=False)), null(), required=False)
+  cmyk: any(list(include('rules', required=False)), null(), required=False)
+ColorGrey:
+  grey: any(list(include('rules', required=False)), null(), required=False)
+ColorRGB:
+  red: any(list(include('rules', required=False)), null(), required=False)
+  green: any(list(include('rules', required=False)), null(), required=False)
+  blue: any(list(include('rules', required=False)), null(), required=False)
+ColorRGBIR:
+  red: any(list(include('rules', required=False)), null(), required=False)
+  green: any(list(include('rules', required=False)), null(), required=False)
+  blue: any(list(include('rules', required=False)), null(), required=False)
+  infrared: any(list(include('rules', required=False)), null(), required=False)
+ColorHSV:
+  hue: any(list(include('rules', required=False)), null(), required=False)
+  saturation: any(list(include('rules', required=False)), null(), required=False)
+  value: any(list(include('rules', required=False)), null(), required=False)
+ColorLUV:
+  luminance: any(list(include('rules', required=False)), null(), required=False)
+  u: any(list(include('rules', required=False)), null(), required=False)
+  v: any(list(include('rules', required=False)), null(), required=False)
+ColorCMYK:
+  cyan: any(list(include('rules', required=False)), null(), required=False)
+  magenta: any(list(include('rules', required=False)), null(), required=False)
+  yellow: any(list(include('rules', required=False)), null(), required=False)
+  key: any(list(include('rules', required=False)), null(), required=False)
+Pedalry:
+  pedal_position_acceleration: any(list(include('rules', required=False)), null(), required=False)
+  pedal_position_brake: any(list(include('rules', required=False)), null(), required=False)
+  pedal_position_clutch: any(list(include('rules', required=False)), null(), required=False)
+VehicleSteeringWheel:
+  angle: any(list(include('rules', required=False)), null(), required=False)
+  angular_speed: any(list(include('rules', required=False)), null(), required=False)
+  torque: any(list(include('rules', required=False)), null(), required=False)
+GeodeticPosition:
+  longitude: any(list(include('rules', required=False)), null(), required=False)
+  latitude: any(list(include('rules', required=False)), null(), required=False)
+  altitude: any(list(include('rules', required=False)), null(), required=False)
+KeyValuePair:
+  key: any(list(include('rules', required=False)), null(), required=False)
+  value: any(list(include('rules', required=False)), null(), required=False)
+Polygon3d:
+  vertex: any(list(include('rules', required=False)), null(), required=False)
+---
+rules:
+  is_greater_than: num(required=False)
+  is_greater_than_or_equal_to: num(required=False)
+  is_less_than_or_equal_to: num(required=False)
+  is_less_than: num(required=False)
+  is_equal_to: any(num(), bool(), required=False)
+  is_different_to: num(required=False)
+  is_globally_unique: str(required=False)
+  refers_to: str(required=False)
+  is_iso_country_code: str(required=False)
+  is_set: str(required=False)
+  check_if: list(include('rules', required=False),required=False)
+  do_check: any(required=False)
+  target: any(required=False)
+  first_element: any(required=False)
+  last_element: any(required=False)

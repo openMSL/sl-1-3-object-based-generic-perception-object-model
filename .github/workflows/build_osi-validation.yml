@@ -1,0 +1,55 @@
+name: Build osi-validation
+
+on:
+  workflow_call:
+
+jobs:
+  build_esmini:
+    name: Build osi-validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cache osi-validation
+        id: cache-osi-validation
+        uses: actions/cache@v4
+        with:
+          path: /tmp/osi-validation
+          key: ${{ runner.os }}-osi-validation
+
+      - name: Get osi-validation
+        if: steps.cache-osi-validation.outputs.cache-hit != 'true'
+        working-directory: /tmp
+        env:
+          GIT_CLONE_PROTECTION_ACTIVE: false
+        run: git clone https://github.com/OpenSimulationInterface/osi-validation.git
+
+      - name: Update Submodules
+        if: steps.cache-osi-validation.outputs.cache-hit != 'true'
+        working-directory: /tmp/osi-validation
+        run: git submodule update --init
+
+      - name: Build osi-validation
+        if: steps.cache-osi-validation.outputs.cache-hit != 'true'
+        working-directory: /tmp/osi-validation
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r requirements_develop.txt
+          cd open-simulation-interface && python3 -m pip install . && cd ..
+          python3 -m pip install -r requirements.txt
+          python3 rules2yml.py -d rules
+          python3 -m pip install .
+
+      - name: Generate default rules
+        if: steps.cache-osi-validation.outputs.cache-hit != 'true'
+        working-directory: /tmp/osi-validation
+        run: |
+          source .venv/bin/activate
+          python3 rules2yml.py
+
+      - name: Add Commit ID to Cache
+        if: steps.cache-osi-validation.outputs.cache-hit != 'true'
+        working-directory: /tmp/osi-validation
+        run: |
+          git rev-parse --short HEAD > commit-id.txt

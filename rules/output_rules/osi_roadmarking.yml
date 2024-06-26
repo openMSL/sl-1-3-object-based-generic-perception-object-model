@@ -1,0 +1,81 @@
+RoadMarking:
+  id:
+    - is_set:
+  base:
+  classification:
+  source_reference:
+  color_description:
+  Classification:
+    type:
+    traffic_main_sign_type:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    monochrome_color:
+      - check_if:
+        - is_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_equal_to: 1
+          target: this.monochrome_color
+        do_check:
+        - is_set:
+    value:
+    value_text:
+    assigned_lane_id:
+      - refers_to: Lane
+    is_out_of_service:
+    country:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    country_revision:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    code:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    sub_code:
+      - check_if:
+        - is_greater_than_or_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+      - check_if:
+        - is_less_than_or_equal_to: 4
+          target: this.type
+        do_check:
+        - is_set:
+    logical_lane_assignment:

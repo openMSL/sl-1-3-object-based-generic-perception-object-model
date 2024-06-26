@@ -1,0 +1,11 @@
+Route:
+  route_id:
+    - is_set:
+  route_segment:
+  LogicalLaneSegment:
+    logical_lane_id:
+      - refers_to: LogicalLane
+    start_s:
+    end_s:
+  RouteSegment:
+    lane_segment:

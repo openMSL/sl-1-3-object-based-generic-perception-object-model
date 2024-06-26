@@ -1,0 +1,7 @@
+TrafficUpdate:
+  version:
+    - is_set:
+  timestamp:
+    - is_set:
+  update:
+  internal_state:

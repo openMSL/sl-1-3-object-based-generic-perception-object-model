@@ -1,0 +1,16 @@
+MotionRequest:
+  version:
+    - is_set:
+  timestamp:
+    - is_set:
+  motion_request_type:
+  desired_state:
+  desired_trajectory:
+  DesiredState:
+    timestamp:
+    position:
+    orientation:
+    velocity:
+    acceleration:
+  DesiredTrajectory:
+    trajectory_point:
