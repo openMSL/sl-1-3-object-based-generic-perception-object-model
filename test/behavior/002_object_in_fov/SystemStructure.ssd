@@ -33,7 +33,7 @@
                             <ssv:ParameterSet version="1.0" name="Internal Parameter-Set">
                                 <ssv:Parameters>
                                     <ssv:Parameter name="trace_path">
-                                        <ssv:String value="./test/integration/003_regression_test_7/"/>
+                                        <ssv:String value="./test/behavior/002_object_in_fov/"/>
                                     </ssv:Parameter>
                                 </ssv:Parameters>
                             </ssv:ParameterSet>
@@ -73,59 +73,63 @@
                     <ssd:ParameterBinding>
                         <ssd:ParameterValues>
                             <ssv:ParameterSet version="1.0" name="Internal Parameter-Set">
-                                <ssv:Parameters/>
+                                <ssv:Parameters>
+                                    <ssv:Parameter name="profile" description="">
+                                        <ssv:String value="SCALA_1"/>
+                                    </ssv:Parameter>
+                                </ssv:Parameters>
                             </ssv:ParameterSet>
                         </ssd:ParameterValues>
                     </ssd:ParameterBinding>
                 </ssd:ParameterBindings>
             </ssd:Component>
             <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_writer_fmu/osi-trace-file-writer.fmu" implementation="CoSimulation" name="osi-trace-file-writer" description="Write binary OSI SensorData trace files">
-                            <ssd:Connectors>
-                                <ssd:Connector name="OSIIn.size" kind="input">
-                                    <ssc:Integer/>
-                                    <ssd:ConnectorGeometry x="0.0" y="0.25"/>
-                                </ssd:Connector>
-                                <ssd:Connector name="OSIIn.base.hi" kind="input">
-                                    <ssc:Integer/>
-                                    <ssd:ConnectorGeometry x="0.0" y="0.5"/>
-                                </ssd:Connector>
-                                <ssd:Connector name="OSIIn.base.lo" kind="input">
-                                    <ssc:Integer/>
-                                    <ssd:ConnectorGeometry x="0.0" y="0.75"/>
-                                </ssd:Connector>
-                            </ssd:Connectors>
-                            <ssd:ElementGeometry x1="838.927918" y1="-193.076269" x2="1038.927918" y2="-33.076269"/>
-                            <ssd:ParameterBindings>
-                                <ssd:ParameterBinding>
-                                    <ssd:ParameterValues>
-                                        <ssv:ParameterSet version="1.0" name="Parameter-Set">
-                                            <ssv:Parameters>
-                                                <ssv:Parameter name="trace_path" description="">
-                                                    <ssv:String value="./test/integration/003_regression_test_7/output/"/>
-                                                </ssv:Parameter>
-                                                <ssv:Parameter name="protobuf_version" description="">
-                                                    <ssv:String value="2112"/>
-                                                </ssv:Parameter>
-                                                <ssv:Parameter name="custom_name" description="">
-                                                    <ssv:String value="003_regression_test_7"/>
-                                                </ssv:Parameter>
-                                                <ssv:Parameter name="type" description="">
-                                                    <ssv:String value="sd"/>
-                                                </ssv:Parameter>
-                                            </ssv:Parameters>
-                                        </ssv:ParameterSet>
-                                    </ssd:ParameterValues>
-                                </ssd:ParameterBinding>
-                            </ssd:ParameterBindings>
-                        </ssd:Component>
+                <ssd:Connectors>
+                    <ssd:Connector name="OSIIn.size" kind="input">
+                        <ssc:Integer/>
+                        <ssd:ConnectorGeometry x="0.0" y="0.25"/>
+                    </ssd:Connector>
+                    <ssd:Connector name="OSIIn.base.hi" kind="input">
+                        <ssc:Integer/>
+                        <ssd:ConnectorGeometry x="0.0" y="0.5"/>
+                    </ssd:Connector>
+                    <ssd:Connector name="OSIIn.base.lo" kind="input">
+                        <ssc:Integer/>
+                        <ssd:ConnectorGeometry x="0.0" y="0.75"/>
+                    </ssd:Connector>
+                </ssd:Connectors>
+                <ssd:ElementGeometry x1="838.927918" y1="-193.076269" x2="1038.927918" y2="-33.076269"/>
+                <ssd:ParameterBindings>
+                    <ssd:ParameterBinding>
+                        <ssd:ParameterValues>
+                            <ssv:ParameterSet version="1.0" name="Parameter-Set">
+                                <ssv:Parameters>
+                                    <ssv:Parameter name="trace_path" description="">
+                                        <ssv:String value="./test/behavior/002_object_in_fov/output/"/>
+                                    </ssv:Parameter>
+                                    <ssv:Parameter name="protobuf_version" description="">
+                                        <ssv:String value="2112"/>
+                                    </ssv:Parameter>
+                                    <ssv:Parameter name="custom_name" description="">
+                                        <ssv:String value="002_object_in_fov"/>
+                                    </ssv:Parameter>
+                                    <ssv:Parameter name="type" description="">
+                                        <ssv:String value="sd"/>
+                                    </ssv:Parameter>
+                                </ssv:Parameters>
+                            </ssv:ParameterSet>
+                        </ssd:ParameterValues>
+                    </ssd:ParameterBinding>
+                </ssd:ParameterBindings>
+            </ssd:Component>
         </ssd:Elements>
         <ssd:Connections>
             <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.base.hi" endElement="SensorModel" endConnector="OSMPSensorViewIn.base.hi" suppressUnitConversion="false"/>
             <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.size" endElement="SensorModel" endConnector="OSMPSensorViewIn.size" suppressUnitConversion="false"/>
             <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.base.lo" endElement="SensorModel" endConnector="OSMPSensorViewIn.base.lo" suppressUnitConversion="false"/>
             <ssd:Connection startElement="SensorModel" startConnector="OSMPSensorDataOut.base.hi" endElement="osi-trace-file-writer" endConnector="OSIIn.base.hi" suppressUnitConversion="false"/>
-                        <ssd:Connection startElement="osi-trace-file-writer" startConnector="OSIIn.base.lo" endElement="SensorModel" endConnector="OSMPSensorDataOut.base.lo" suppressUnitConversion="false"/>
-                        <ssd:Connection startElement="SensorModel" startConnector="OSMPSensorDataOut.size" endElement="osi-trace-file-writer" endConnector="OSIIn.size" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="osi-trace-file-writer" startConnector="OSIIn.base.lo" endElement="SensorModel" endConnector="OSMPSensorDataOut.base.lo" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="SensorModel" startConnector="OSMPSensorDataOut.size" endElement="osi-trace-file-writer" endConnector="OSIIn.size" suppressUnitConversion="false"/>
         </ssd:Connections>
         <ssd:SystemGeometry x1="-619.0" y1="-666.5" x2="1849.5" y2="126.5"/>
     </ssd:System>
