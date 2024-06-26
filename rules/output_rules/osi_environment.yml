@@ -1,0 +1,34 @@
+EnvironmentalConditions:
+  ambient_illumination:
+  time_of_day:
+  unix_timestamp:
+  atmospheric_pressure:
+    - is_greater_than_or_equal_to: 80000
+    - is_less_than_or_equal_to: 120000
+  temperature:
+    - is_greater_than_or_equal_to: 170
+    - is_less_than_or_equal_to: 340
+  relative_humidity:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  precipitation:
+  fog:
+  source_reference:
+  clouds:
+  wind:
+  sun:
+  TimeOfDay:
+    seconds_since_midnight:
+      - is_greater_than_or_equal_to: 0
+      - is_less_than: 86400
+  CloudLayer:
+    fractional_cloud_cover:
+  Wind:
+    origin_direction:
+    speed:
+      - is_greater_than_or_equal_to: 0
+  Sun:
+    azimuth:
+    elevation:
+    intensity:
+      - is_greater_than_or_equal_to: 0

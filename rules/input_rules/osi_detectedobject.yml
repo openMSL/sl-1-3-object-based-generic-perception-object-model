@@ -1,0 +1,66 @@
+DetectedItemHeader:
+  tracking_id:
+    - is_set:
+  ground_truth_id:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  age:
+  measurement_state:
+  sensor_id:
+DetectedStationaryObject:
+  header:
+  base:
+  base_rmse:
+  candidate:
+  color_description:
+  radar_specifics:
+  lidar_specifics:
+  camera_specifics:
+  ultrasonic_specifics:
+  CandidateStationaryObject:
+    probability:
+      - is_greater_than_or_equal_to: 0
+      - is_less_than_or_equal_to: 1
+    classification:
+DetectedMovingObject:
+  header:
+  base:
+  base_rmse:
+  reference_point:
+  movement_state:
+  percentage_side_lane_left:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  percentage_side_lane_right:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  candidate:
+  color_description:
+  radar_specifics:
+  lidar_specifics:
+  camera_specifics:
+  ultrasonic_specifics:
+  CandidateMovingObject:
+    probability:
+      - is_greater_than_or_equal_to: 0
+      - is_less_than_or_equal_to: 1
+    type:
+    vehicle_classification:
+      - check_if:
+        - is_equal_to: 2
+          target: this.type
+        do_check:
+        - is_set:
+    head_pose:
+      - check_if:
+        - is_equal_to: 3
+          target: this.type
+        do_check:
+        - is_set:
+    upper_body_pose:
+      - check_if:
+        - is_equal_to: 3
+          target: this.type
+        do_check:
+        - is_set:

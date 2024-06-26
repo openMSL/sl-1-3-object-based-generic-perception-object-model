@@ -204,28 +204,31 @@ Possible values are "flat" or "structured".
   * sensor_view_configuration.field_of_view_horizontal
   * sensor_view_configuration.field_of_view_vertical
 
-### Required Fields in OSI3 Sensor_View Filled at the Input by the Simulation Tool
+### Input: Required Fields in OSI3::SensorView
 
-* sensor_view.mounting_position
-* sensor_view.global_ground_truth.timestamp
-* sensor_view.global_ground_truth.host_vehicle_id
-* sensor_view.global_ground_truth.stationary_object.id
-* sensor_view.global_ground_truth.stationary_object.base.position
-* sensor_view.global_ground_truth.stationary_object.base.orientation
-* sensor_view.global_ground_truth.stationary_object.base.dimension
-* sensor_view.global_ground_truth.stationary_object.classification.type
-* sensor_view.global_ground_truth.moving_object.id
-* sensor_view.global_ground_truth.moving_object.base.position
-* sensor_view.global_ground_truth.moving_object.base.orientation
-* sensor_view.global_ground_truth.moving_object.base.orientation_rate
-* sensor_view.global_ground_truth.moving_object.base.velocity
-* sensor_view.global_ground_truth.moving_object.base.dimension
-* sensor_view.global_ground_truth.moving_object.type
-* sensor_view.global_ground_truth.moving_object.vehicle_classification.type
-* sensor_view.global_ground_truth.moving_object.vehicle_attributes.bbcenter_to_rear
-* sensor_view.global_ground_truth.moving_object.vehicle_attributes.ground_clearance
+| OSI Message                                                                         | Required / Optional |
+|-------------------------------------------------------------------------------------|---------------------|
+| `sensor_view.timestamp`                                                             | required            |
+| `sensor_view.mounting_position`                                                     | required            |
+| `sensor_view.global_ground_truth.timestamp`                                         | required            |  
+| `sensor_view.global_ground_truth.host_vehicle_id`                                   | required            |
+| `sensor_view.global_ground_truth.stationary_object.base.position`                   | required            |
+| `sensor_view.global_ground_truth.stationary_object.base.orientation`                | required            |
+| `sensor_view.global_ground_truth.stationary_object.base.dimension`                  | required            |
+| `sensor_view.global_ground_truth.stationary_object.classification.type`             | required            |
+| `sensor_view.global_ground_truth.moving_object.id`                                  | required            |
+| `sensor_view.global_ground_truth.moving_object.base.position`                       | required            |
+| `sensor_view.global_ground_truth.moving_object.base.orientation`                    | required            |
+| `sensor_view.global_ground_truth.moving_object.base.orientation_rate`               | required            |
+| `sensor_view.global_ground_truth.moving_object.base.velocity`                       | required            |
+| `sensor_view.global_ground_truth.moving_object.base.dimension`                      | required            |
+| `sensor_view.global_ground_truth.moving_object.type`                                | required            |
+| `sensor_view.global_ground_truth.moving_object.vehicle_classification.type`         | required            |
+| `sensor_view.global_ground_truth.moving_object.vehicle_attributes.bbcenter_to_rear` | required            |
+| `sensor_view.global_ground_truth.moving_object.vehicle_attributes.ground_clearance` | required            |
 
-### Additionally Filled Fields in OSI3 Sensor_Data by the Sensor Model
+
+### Output: Fields in OSI3::SensorData Filled by the Sensor Model
 
 ---
 
@@ -233,23 +236,24 @@ NOTE: Currently, all information on model input is passed to the output.
 
 ---
 
-* sensor_data.timestamp
-* sensor_data.moving_object_header.measurement_time
-* sensor_data.moving_object_header.cycle_counter
-* sensor_data.moving_object_header.data_qualifier
-* sensor_data.moving_object.header.ground_truth_id
-* sensor_data.moving_object.header.tracking_id
-* sensor_data.moving_object.header.age
-* sensor_data.moving_object.base.position
-* sensor_data.moving_object.base.orientation
-* sensor_data.moving_object.base.orientation_rate
-* sensor_data.moving_object.base.velocity
-* sensor_data.moving_object.base.acceleration
-* sensor_data.moving_object.base.dimension
-* sensor_data.moving_object.reference_point
-* sensor_data.moving_object.movement_state
-* sensor_data.moving_object.candidate.probability
-* sensor_data.moving_object.candidate.type
+| OSI Message                                         | Required / Optional |
+|-----------------------------------------------------|---------------------|
+| `sensor_data.timestamp`                             | required            |
+| `sensor_data.moving_object_header.measurement_time` | required            |
+| `sensor_data.moving_object_header.cycle_counter`    | required            |
+| `sensor_data.moving_object_header.data_qualifier`   | required            |
+| `sensor_data.moving_object.header.ground_truth_id`  | required            |
+| `sensor_data.moving_object.header.tracking_id`      | required            |
+| `sensor_data.moving_object.header.age`              | required            |
+| `sensor_data.moving_object.base.position`           | required            |
+| `sensor_data.moving_object.base.orientation`        | required            |
+| `sensor_data.moving_object.base.orientation_rate`   | required            |
+| `sensor_data.moving_object.base.velocity`           | required            |
+| `sensor_data.moving_object.base.dimension`          | required            |
+| `sensor_data.moving_object.reference_point`         | required            |
+| `sensor_data.moving_object.movement_state`          | required            |
+| `sensor_data.moving_object.candidate.probability`   | required            |
+| `sensor_data.moving_object.candidate.type`          | required            |
 
 ## Build Instructions in Windows 10
 

@@ -1,0 +1,76 @@
+HostVehicleData:
+  version: any(list(include('rules', required=False)), null(), required=False)
+  timestamp: any(list(include('rules', required=False)), null(), required=False)
+  host_vehicle_id: any(list(include('rules', required=False)), null(), required=False)
+  location: any(list(include('rules', required=False)), null(), required=False)
+  location_rmse: any(list(include('rules', required=False)), null(), required=False)
+  vehicle_basics: any(list(include('rules', required=False)), null(), required=False)
+  vehicle_powertrain: any(list(include('rules', required=False)), null(), required=False)
+  vehicle_brake_system: any(list(include('rules', required=False)), null(), required=False)
+  vehicle_steering: any(list(include('rules', required=False)), null(), required=False)
+  vehicle_wheels: any(list(include('rules', required=False)), null(), required=False)
+  vehicle_localization: any(list(include('rules', required=False)), null(), required=False)
+  vehicle_automated_driving_function: any(list(include('rules', required=False)), null(), required=False)
+  vehicle_motion: any(list(include('rules', required=False)), null(), required=False)
+  route: any(list(include('rules', required=False)), null(), required=False)
+  VehicleBasics:
+    curb_weight: any(list(include('rules', required=False)), null(), required=False)
+    operating_state: any(list(include('rules', required=False)), null(), required=False)
+  VehiclePowertrain:
+    pedal_position_acceleration: any(list(include('rules', required=False)), null(), required=False)
+    pedal_position_clutch: any(list(include('rules', required=False)), null(), required=False)
+    gear_transmission: any(list(include('rules', required=False)), null(), required=False)
+    motor: any(list(include('rules', required=False)), null(), required=False)
+    Motor:
+      type: any(list(include('rules', required=False)), null(), required=False)
+      rpm: any(list(include('rules', required=False)), null(), required=False)
+      torque: any(list(include('rules', required=False)), null(), required=False)
+  VehicleBrakeSystem:
+    pedal_position_brake: any(list(include('rules', required=False)), null(), required=False)
+  VehicleSteering:
+    vehicle_steering_wheel: any(list(include('rules', required=False)), null(), required=False)
+  VehicleWheels:
+    wheel_data: any(list(include('rules', required=False)), null(), required=False)
+    WheelData:
+      axle: any(list(include('rules', required=False)), null(), required=False)
+      index: any(list(include('rules', required=False)), null(), required=False)
+      rotation_rate: any(list(include('rules', required=False)), null(), required=False)
+      slip: any(list(include('rules', required=False)), null(), required=False)
+  VehicleLocalization:
+    position: any(list(include('rules', required=False)), null(), required=False)
+    orientation: any(list(include('rules', required=False)), null(), required=False)
+    geodetic_position: any(list(include('rules', required=False)), null(), required=False)
+  VehicleMotion:
+    position: any(list(include('rules', required=False)), null(), required=False)
+    orientation: any(list(include('rules', required=False)), null(), required=False)
+    velocity: any(list(include('rules', required=False)), null(), required=False)
+    orientation_rate: any(list(include('rules', required=False)), null(), required=False)
+    acceleration: any(list(include('rules', required=False)), null(), required=False)
+    current_curvature: any(list(include('rules', required=False)), null(), required=False)
+  VehicleAutomatedDrivingFunction:
+    name: any(list(include('rules', required=False)), null(), required=False)
+    custom_name: any(list(include('rules', required=False)), null(), required=False)
+    state: any(list(include('rules', required=False)), null(), required=False)
+    custom_state: any(list(include('rules', required=False)), null(), required=False)
+    driver_override: any(list(include('rules', required=False)), null(), required=False)
+    custom_detail: any(list(include('rules', required=False)), null(), required=False)
+    DriverOverride:
+      active: any(list(include('rules', required=False)), null(), required=False)
+      override_reason: any(list(include('rules', required=False)), null(), required=False)
+---
+rules:
+  is_greater_than: num(required=False)
+  is_greater_than_or_equal_to: num(required=False)
+  is_less_than_or_equal_to: num(required=False)
+  is_less_than: num(required=False)
+  is_equal_to: any(num(), bool(), required=False)
+  is_different_to: num(required=False)
+  is_globally_unique: str(required=False)
+  refers_to: str(required=False)
+  is_iso_country_code: str(required=False)
+  is_set: str(required=False)
+  check_if: list(include('rules', required=False),required=False)
+  do_check: any(required=False)
+  target: any(required=False)
+  first_element: any(required=False)
+  last_element: any(required=False)

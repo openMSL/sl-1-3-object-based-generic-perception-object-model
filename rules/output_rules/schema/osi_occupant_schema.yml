@@ -1,0 +1,25 @@
+Occupant:
+  id: any(list(include('rules', required=False)), null(), required=False)
+  classification: any(list(include('rules', required=False)), null(), required=False)
+  source_reference: any(list(include('rules', required=False)), null(), required=False)
+  Classification:
+    is_driver: any(list(include('rules', required=False)), null(), required=False)
+    seat: any(list(include('rules', required=False)), null(), required=False)
+    steering_control: any(list(include('rules', required=False)), null(), required=False)
+---
+rules:
+  is_greater_than: num(required=False)
+  is_greater_than_or_equal_to: num(required=False)
+  is_less_than_or_equal_to: num(required=False)
+  is_less_than: num(required=False)
+  is_equal_to: any(num(), bool(), required=False)
+  is_different_to: num(required=False)
+  is_globally_unique: str(required=False)
+  refers_to: str(required=False)
+  is_iso_country_code: str(required=False)
+  is_set: str(required=False)
+  check_if: list(include('rules', required=False),required=False)
+  do_check: any(required=False)
+  target: any(required=False)
+  first_element: any(required=False)
+  last_element: any(required=False)

@@ -1,0 +1,11 @@
+DetectedTrafficLight:
+  header:
+  base:
+  base_rmse:
+  candidate:
+  color_description:
+  CandidateTrafficLight:
+    probability:
+      - is_less_than_or_equal_to: 1
+      - is_greater_than_or_equal_to: 0
+    classification:

@@ -1,0 +1,110 @@
+StationaryObject:
+  id:
+    - is_globally_unique:
+    - is_set:
+  base:
+  classification:
+  model_reference:
+  source_reference:
+  color_description:
+  Classification:
+    type:
+    material:
+    density:
+    color:
+    emitting_structure_attribute:
+    assigned_lane_id:
+    assigned_lane_percentage:
+    logical_lane_assignment:
+    EmittingStructureAttribute:
+      wavelength_data:
+      emitted_spatial_signal_strength:
+MovingObject:
+  id:
+    - is_globally_unique:
+    - is_set:
+  base:
+  type:
+  assigned_lane_id:
+  vehicle_attributes:
+    - check_if:
+      - is_equal_to: 2
+        target: this.type
+      do_check:
+      - is_set:
+  vehicle_classification:
+    - check_if:
+      - is_equal_to: 2
+        target: this.type
+      do_check:
+      - is_set:
+  model_reference:
+  future_trajectory:
+  moving_object_classification:
+  source_reference:
+  color_description:
+  pedestrian_attributes:
+    - check_if:
+      - is_equal_to: 3
+        target: this.type
+      do_check:
+      - is_set:
+  VehicleAttributes:
+    driver_id:
+    radius_wheel:
+      - is_greater_than_or_equal_to: 0
+    number_wheels:
+      - is_greater_than_or_equal_to: 1
+    bbcenter_to_rear:
+    bbcenter_to_front:
+    ground_clearance:
+    wheel_data:
+    steering_wheel_angle:
+    WheelData:
+      axle:
+      index:
+      position:
+      wheel_radius:
+      rim_radius:
+      width:
+      orientation:
+      rotation_rate:
+      model_reference:
+      friction_coefficient:
+  MovingObjectClassification:
+    assigned_lane_id:
+    assigned_lane_percentage:
+    logical_lane_assignment:
+  VehicleClassification:
+    type:
+    light_state:
+    has_trailer:
+    trailer_id:
+      - check_if:
+        - is_equal_to: true
+          target: this.has_trailer
+        do_check:
+        - is_set:
+    role:
+    LightState:
+      indicator_state:
+      front_fog_light:
+      rear_fog_light:
+      head_light:
+      high_beam:
+      reversing_light:
+      brake_light_state:
+      license_plate_illumination_rear:
+      emergency_vehicle_illumination:
+      service_vehicle_illumination:
+  PedestrianAttributes:
+    bbcenter_to_root:
+    skeleton_bone:
+    Bone:
+      type:
+      position:
+      orientation:
+      length:
+      missing:
+      velocity:
+      orientation_rate:

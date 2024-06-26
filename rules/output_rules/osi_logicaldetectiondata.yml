@@ -1,0 +1,33 @@
+LogicalDetectionData:
+  version:
+    - is_set:
+  header:
+  logical_detection:
+LogicalDetectionDataHeader:
+  logical_detection_time:
+  data_qualifier:
+  number_of_valid_logical_detections:
+    - is_greater_than_or_equal_to: 0
+  sensor_id:
+LogicalDetection:
+  existence_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  object_id:
+    - refers_to: DetectedObject
+  position:
+  position_rmse:
+  velocity:
+  velocity_rmse:
+    - is_greater_than_or_equal_to: 0
+  intensity:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 100
+  snr:
+  point_target_probability:
+    - is_greater_than_or_equal_to: 0
+    - is_less_than_or_equal_to: 1
+  sensor_id:
+  classification:
+  echo_pulse_width:
+    - is_greater_than_or_equal_to: 0
