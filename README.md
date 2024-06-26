@@ -227,7 +227,6 @@ Possible values are "flat" or "structured".
 | `sensor_view.global_ground_truth.moving_object.vehicle_attributes.bbcenter_to_rear` | required            |
 | `sensor_view.global_ground_truth.moving_object.vehicle_attributes.ground_clearance` | required            |
 
-
 ### Output: Fields in OSI3::SensorData Filled by the Sensor Model
 
 ---
