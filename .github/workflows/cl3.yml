@@ -71,12 +71,12 @@ jobs:
           path: /tmp/esmini_fmu
           key: ${{ runner.os }}-esmini-fmu
 
-      - name: Cache OSI Field Checker
-        id: cache-osi-field-checker
+      - name: Cache osi-validation
+        id: cache-osi-validation
         uses: actions/cache@v4
         with:
-          path: /tmp/osi-field-checker
-          key: ${{ runner.os }}-osi-field-checker
+          path: /tmp/osi-validation
+          key: ${{ runner.os }}-osi-validation
 
       - name: Cache OpenMCx
         id: cache-openmcx
@@ -116,6 +116,35 @@ jobs:
         working-directory: ./test/behavior/${{ matrix.path }}
         run: python3 generate_test_trace.py
 
+      - name: Check For Input Trace Files
+        id: check-for-input-trace-files
+        working-directory: ./test/behavior/${{ matrix.path }}
+        run: |
+          ( count=`ls -1 *.osi 2>/dev/null | wc -l`
+          if [ $count == 0 ]; then
+          echo No trace file found.
+          echo "found_trace=0" >> $GITHUB_OUTPUT
+          elif [ $count == 1 ]; then
+          echo One trace file found.
+          echo "found_trace=1" >> $GITHUB_OUTPUT
+          filename=$(ls -1 *.osi)
+          else
+          echo More than one trace file.
+          echo "found_trace=1" >> $GITHUB_OUTPUT
+          fi
+          )
+
+      - name: Check Input Trace Files with osi-validation and model input rules
+        if: steps.check-for-input-trace-files.outputs.found_trace == 1
+        run: |
+          if [ -d "./rules/input_rules" ]; then
+            source /tmp/osi-validation/.venv/bin/activate
+            for filename in ./test/behavior/${{ matrix.path }}/*.osi; do
+              osivalidator --rules ./rules/input_rules --data ${filename}
+            done
+          else echo "No custom input rules found in ./rules/input_rules";
+          fi
+
       - name: Create Output Folder
         working-directory: ./test/behavior/${{ matrix.path }}
         run: mkdir output
@@ -124,8 +153,8 @@ jobs:
         id: cosimulation
         run: ./openmcx/install/openmcx ./test/behavior/${{ matrix.path }}/SystemStructure.ssd
 
-      - name: Check For Trace Files
-        id: check-for-trace-files
+      - name: Check For Output Trace Files
+        id: check-for-output-trace-files
         working-directory: ./test/behavior/${{ matrix.path }}/output
         run: |
           ( count=`ls -1 *.osi 2>/dev/null | wc -l`
@@ -133,26 +162,49 @@ jobs:
           echo No trace file found.
           echo "found_trace=0" >> $GITHUB_OUTPUT
           elif [ $count == 1 ]; then
+          echo One trace file found.
           echo "found_trace=1" >> $GITHUB_OUTPUT
           filename=$(ls -1 *.osi)
           echo "trace_file_name=${filename}" >> $GITHUB_OUTPUT
           else
           echo More than one trace file.
-          echo "found_trace=0" >> $GITHUB_OUTPUT
+          echo "found_trace=1" >> $GITHUB_OUTPUT
+          zip ${{ matrix.path }}.zip *.osi
+          echo "trace_file_name=${{ matrix.path }}.zip" >> $GITHUB_OUTPUT
           fi
           )
 
       - name: Archive Trace File
-        if: steps.check-for-trace-files.outputs.found_trace == 1
+        if: steps.check-for-output-trace-files.outputs.found_trace == 1
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.check-for-trace-files.outputs.trace_file_name }}
-          path: ./test/behavior/${{ matrix.path }}/output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
-          
+          name: ${{ steps.check-for-output-trace-files.outputs.trace_file_name }}
+          path: ./test/behavior/${{ matrix.path }}/output/${{ steps.check-for-output-trace-files.outputs.trace_file_name }}
+
+      - name: Check Output Trace Files with osi-validation and default rules
+        if: steps.check-for-output-trace-files.outputs.found_trace == 1
+        working-directory: ./test/behavior/${{ matrix.path }}/output
+        run: |
+          source /tmp/osi-validation/.venv/bin/activate
+          for filename in ./*.osi; do
+            osivalidator --rules /tmp/osi-validation/rules/ --data ${filename}
+          done
+
+      - name: Check Output Trace Files with osi-validation and model output rules
+        if: steps.check-for-output-trace-files.outputs.found_trace == 1
+        run: |
+          if [ -d "./rules/output_rules" ]; then
+            source /tmp/osi-validation/.venv/bin/activate
+            for filename in ./test/behavior/${{ matrix.path }}/output/*.osi; do
+              osivalidator --rules ./rules/output_rules --data ${filename}
+            done
+          else echo "No custom output rules found in ./rules/output_rules";
+          fi
+
       - name: Run Trace File Analysis
         if: steps.check_analysis_script.outputs.files_exists == 'true'
         working-directory: ./test/behavior/${{ matrix.path }}
-        run: python3 analyze.py output/${{ steps.check-for-trace-files.outputs.trace_file_name }}
+        run: python3 analyze.py output/${{ steps.check-for-output-trace-files.outputs.trace_file_name }}
 
       - name: Failed?
         if: steps.cosimulation.outputs.failed == 1
