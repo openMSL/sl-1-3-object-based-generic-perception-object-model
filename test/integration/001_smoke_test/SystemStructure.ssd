@@ -11,7 +11,7 @@
             </ssd:ParameterBinding>
         </ssd:ParameterBindings>
         <ssd:Elements>
-            <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_player_fmu/OSMPTraceFilePlayer.fmu" implementation="CoSimulation" name="OSMPTraceFilePlayer" description="Demonstration C++ SensorView Source FMU for OSI Sensor Model Packaging">
+            <ssd:Component type="application/x-fmu-sharedlibrary" source="/tmp/tracefile_player_fmu/sl-5-5-osi-trace-file-player.fmu" implementation="CoSimulation" name="sl-5-5-osi-trace-file-player" description="Demonstration C++ SensorView Source FMU for OSI Sensor Model Packaging">
                 <ssd:Connectors>
                     <ssd:Connector name="OSMPSensorViewOut.base.hi" kind="output">
                         <ssc:Integer/>
@@ -81,9 +81,9 @@
             </ssd:Component>
         </ssd:Elements>
         <ssd:Connections>
-            <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.base.hi" endElement="SensorModel" endConnector="OSMPSensorViewIn.base.hi" suppressUnitConversion="false"/>
-            <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.size" endElement="SensorModel" endConnector="OSMPSensorViewIn.size" suppressUnitConversion="false"/>
-            <ssd:Connection startElement="OSMPTraceFilePlayer" startConnector="OSMPSensorViewOut.base.lo" endElement="SensorModel" endConnector="OSMPSensorViewIn.base.lo" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="sl-5-5-osi-trace-file-player" startConnector="OSMPSensorViewOut.base.hi" endElement="SensorModel" endConnector="OSMPSensorViewIn.base.hi" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="sl-5-5-osi-trace-file-player" startConnector="OSMPSensorViewOut.size" endElement="SensorModel" endConnector="OSMPSensorViewIn.size" suppressUnitConversion="false"/>
+            <ssd:Connection startElement="sl-5-5-osi-trace-file-player" startConnector="OSMPSensorViewOut.base.lo" endElement="SensorModel" endConnector="OSMPSensorViewIn.base.lo" suppressUnitConversion="false"/>
         </ssd:Connections>
         <ssd:SystemGeometry x1="-619.0" y1="-666.5" x2="1849.5" y2="126.5"/>
     </ssd:System>
